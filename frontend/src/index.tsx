@@ -4,14 +4,24 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { SnackbarProvider } from 'notistack'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Login from './view/auth/login'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <SnackbarProvider maxSnack={1} preventDuplicate>
       <Router>
-        <App />
+        <Routes>
+          <Route path="/" element={<></>}>
+            <Route path="messages" element={<></>} />
+            <Route path="tasks" element={<></>} />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/logout" />
+        </Routes>
       </Router>
     </SnackbarProvider>
   </React.StrictMode>
