@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { Button, Checkbox, Form, Input, message } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -11,15 +11,41 @@ function Login() {
     try {
       message.success('Đăng nhập thành công!')
 
-      return navigate(state?.from || '/')
+      return navigate(state?.from || '/dashboard')
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' })
     }
   }
-  const handleClose = () => {
-    navigate('/')
-  }
-  return <></>
+
+  return (
+    <Form
+      name="basic"
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      style={{ maxWidth: 600 }}
+      initialValues={{ remember: true }}
+      onFinish={handleSubmit}
+      autoComplete="off"
+    >
+      <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
+        <Checkbox>Remember me</Checkbox>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  )
 }
 
 export default Login
