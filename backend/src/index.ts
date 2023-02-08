@@ -1,6 +1,7 @@
 import cors = require('cors')
 import express = require('express')
 import mongoose from 'mongoose'
+import router from '../src/routers/api'
 import { ReadConfig } from './config'
 
 const initiateMongoServer = async (MONGO_URL: string): Promise<void> => {
@@ -32,6 +33,7 @@ async function main() {
   /*******************************************************/
   // app.use("/", ExpressStaticFallback(config.app.dir));
   // app.use(HttpErrorHandler);
+  app.use('/api', router)
   console.log(`listen on ${config.server.port}`)
   app.listen(config.server.port, '0.0.0.0', () => {
     const err = arguments[0]

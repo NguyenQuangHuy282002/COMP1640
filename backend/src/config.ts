@@ -6,7 +6,7 @@ export async function ReadConfig() {
   const resolvedir = dir => (dir ? path.resolve(process.cwd(), dir) : undefined)
   const config = {
     server: {
-      port: +process.env.PORT || 3000,
+      port: +process.env.PORT || 8080,
     },
     database: {
       db_url: process.env.DB_URL,

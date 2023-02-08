@@ -1,15 +1,8 @@
 import mongoose from 'mongoose'
 
-enum Role {
-  ADMIN = 'admin',
-  STAFF = 'staff',
-  Manager = 'manager',
-  COORDINATOR = 'coordinator',
-}
-
 interface IUser {
   name: string
-  role: Role
+  role: 'admin' | 'staff' | 'manager' | 'coordinator'
   username: string
   birthday: string
   phone: string
@@ -18,7 +11,7 @@ interface IUser {
 const userSchema = new mongoose.Schema<IUser>(
   {
     name: String,
-    role: Role,
+    role: String,
     username: String,
     birthday: String,
     phone: String,
@@ -26,6 +19,6 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: { createdAt: true, updatedAt: true } }
 )
 
-const User = mongoose.model<IUser>('PublishedPageCount', userSchema)
+const User = mongoose.model<IUser>('User', userSchema)
 
 export default User
