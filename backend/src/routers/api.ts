@@ -1,8 +1,9 @@
-import express from 'express'
 import { userRouter } from './user'
+import authRouter from './auth.router';
 
-const router = express.Router()
+const apiRouter = (app) => {
+    app.use('/api/v1/users', userRouter);
+    app.use('/api/v1/auth', authRouter);
+}
 
-router.use('/user', userRouter)
-
-export default router
+export default apiRouter;
