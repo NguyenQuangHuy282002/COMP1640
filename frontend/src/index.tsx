@@ -1,11 +1,17 @@
+import { Layout } from 'antd'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import Login from './view/auth/login'
 import Dashboard from './view/dashboard'
+import EventsPage from './view/events'
+import HomePage from './view/home-page'
+import AppFooter from './view/layout/footer'
+import AppHeader from './view/layout/header'
+import UserProfile from './view/user-profile'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -13,12 +19,25 @@ root.render(
     <SnackbarProvider maxSnack={1} preventDuplicate>
       <Router>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="user" element={<></>} />
-            <Route path="category" element={<></>} />
-          </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Login />} />
           <Route path="/logout" />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <AppHeader />
+                <Layout.Content style={{ background: '#dbdbdb' }}></Layout.Content>
+                <Outlet />
+                <AppFooter />
+              </Layout>
+            }
+          >
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/event" element={<EventsPage />} />
+            <Route path="/account" element={<UserProfile />} />
+          </Route>
         </Routes>
       </Router>
     </SnackbarProvider>

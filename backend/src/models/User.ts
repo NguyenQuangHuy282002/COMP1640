@@ -11,7 +11,11 @@ interface IUser extends Document {
   role: string
   username: string
   birthday: string
-  phone: string
+  email: string
+  image?: string
+  phone?: string
+  courses?: string[]
+  interests?: string[] 
   isBanned: boolean
 }
 
