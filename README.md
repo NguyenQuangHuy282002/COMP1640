@@ -2,12 +2,14 @@
 
 cd frontend
 npm i
+npm start
 
 # Back-end:
 
 cd backend
-npm i
 cp .env.example .env
+npm i
+npm start
 
 # Git:
 

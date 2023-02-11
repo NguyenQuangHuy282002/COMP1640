@@ -17,7 +17,7 @@ async function main() {
   app.use(cookieParser())
   app.disable('x-powered-by')
   app.use(cors())
-  router(app);
+  router(app)
   app.use(serverErrorHandler)
   console.log(`listen on ${config.server.port}`)
   app.listen(config.server.port, '0.0.0.0', () => {
