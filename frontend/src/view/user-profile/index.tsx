@@ -1,13 +1,14 @@
 import { Card, Col, Image, Row, Space, Typography } from 'antd'
 import { useState } from 'react'
+import { IUserInfo } from '../../types/user'
 import { courses } from '../home-page'
 import EditProfileForm from './editProfile'
 import ListCourses from './listCourses'
 import UserInfomation from './userInformation'
 
-const { Title, Paragraph, Text, Link } = Typography
+const { Title, Text } = Typography
 
-const user = {
+const user: IUserInfo = {
   name: 'Nguyen Quang Huy',
   role: 'coordinator',
   username: 'huy282002',
@@ -70,7 +71,7 @@ function UserProfile() {
       <Col className="gutter-row" xs={24} sm={24} md={18} xxl={18}>
         <Card tabList={tabList} activeTabKey={activeTabKey} onTabChange={setActiveTabKey}>
           {activeTabKey === 'edit' ? (
-            <EditProfileForm />
+            <EditProfileForm userInfo={user} />
           ) : activeTabKey === 'about' ? (
             <UserInfomation />
           ) : (

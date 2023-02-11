@@ -89,7 +89,7 @@ function HomePage() {
 
 export default HomePage
 
-const ItemWrapper = styled(Space)`
+export const ItemWrapper = styled(Space)`
   padding: 16px;
   margin-bottom: 16px;
   border-radius: 8px;
