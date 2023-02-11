@@ -1,13 +1,15 @@
-Front-end:
+# Front-end:
 
-npm i: download libraries
+cd frontend
+npm i
 
-Back-end:
+# Back-end:
 
-npm i: download libraries
+cd backend
+npm i
 cp .env.example .env
 
-Git:
+# Git:
 
 git clone git@github.com:NguyenQuangHuy282002/COMP1640.git
 
