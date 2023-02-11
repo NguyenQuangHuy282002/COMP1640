@@ -13,11 +13,12 @@ root.render(
     <SnackbarProvider maxSnack={1} preventDuplicate>
       <Router>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />}>
+          <Route path="/" element={<Dashboard />}>
             <Route path="user" element={<></>} />
-            <Route path="category" element={<></>} />
+            <Route path="blogpost" element={<></>} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Login />} />
           <Route path="/logout" />
         </Routes>
       </Router>

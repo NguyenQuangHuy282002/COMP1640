@@ -6,7 +6,7 @@ function Dashboard() {
   const navigate = useNavigate()
   return (
     <Layout>
-      <Topbar></Topbar>
+      <Topbar />
       <Button onClick={() => navigate('/login')}>logout</Button>
     </Layout>
   )

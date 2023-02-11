@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function Topbar() {
   const navigate = useNavigate()
   return (
-    <Layout.Header className={'fid anm oh'}>
+    <Layout.Header>
       <Row align={'middle'}>huy</Row>
     </Layout.Header>
   )
