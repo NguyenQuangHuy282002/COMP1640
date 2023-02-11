@@ -5,7 +5,11 @@ interface IUser {
   role: 'admin' | 'staff' | 'manager' | 'coordinator'
   username: string
   birthday: string
-  phone: string
+  email: string
+  image?: string
+  phone?: string
+  courses?: string[]
+  interests?: string[]
 }
 
 const userSchema = new mongoose.Schema<IUser>(
