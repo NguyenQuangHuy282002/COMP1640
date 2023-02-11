@@ -1,4 +1,4 @@
-import { Button, Layout } from 'antd'
+import { Layout } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import Topbar from '../topbar'
 
@@ -7,7 +7,6 @@ function Dashboard() {
   return (
     <Layout>
       <Topbar />
-      <Button onClick={() => navigate('/login')}>logout</Button>
     </Layout>
   )
 }
