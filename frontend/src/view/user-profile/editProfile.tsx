@@ -1,5 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Col, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
+import TextEditor from '../../components/text-editor'
 import { IUserInfo } from '../../types/user'
 
 const { Title } = Typography
@@ -65,6 +66,7 @@ function EditProfileForm(props: IEditProfileForm) {
           </Title>
           <Form.Item name="description" label="Description" labelAlign="left">
             <Input defaultValue={userInfo.description} />
+            <TextEditor />
           </Form.Item>
           <Form.Item name="interests" label="Interests" labelAlign="left">
             <Input />

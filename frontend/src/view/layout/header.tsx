@@ -5,6 +5,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
   ProfileOutlined,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import styled from '@emotion/styled'
@@ -37,7 +38,11 @@ function AppHeader() {
       label: <Text style={{ fontSize: 20, margin: 0 }}>Events</Text>,
       icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
     },
-
+    {
+      key: 'accounts-manager',
+      label: <Text style={{ fontSize: 20, margin: 0 }}>Accounts</Text>,
+      icon: windowWidth < 750 && <TeamOutlined style={{ fontSize: 20 }} />,
+    },
     {
       key: 'courses',
       label: <Text style={{ fontSize: 20, margin: 0 }}>My Course</Text>,
