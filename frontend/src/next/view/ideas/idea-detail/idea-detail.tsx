@@ -77,8 +77,7 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-
-            <MenuBar commentCount={commentCount } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} />
+            <MenuBar commentCount={commentCount } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} files={data[0]?.files}/>
           </StyledContent>
 
           <StyledContent>

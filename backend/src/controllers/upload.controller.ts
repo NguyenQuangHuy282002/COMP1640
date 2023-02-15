@@ -30,9 +30,6 @@ const initS3AWS = () => {
 
 export const getPresignedUrl = (req: any, res: any, next: any) => {
   const s3 = initS3AWS()
-  // console.log(s3.config.credentials)
-  // console.log(req.query)
-  // console.log(req.payload);
   const extension = req.query.ext
   const type = req.query.type
   const key = `${req.payload.user.id}/${uuidv4()}.${req.query.ext}`
@@ -45,7 +42,7 @@ export const getPresignedUrl = (req: any, res: any, next: any) => {
       ContentType: type,
       // Conditions: [
       //   ['content-length-range', 0, 10000000],
-      //   // ['starts-with', '$Content-Type', 'image/'],
+        // ['starts-with', '$Content-Type', 'image/'],
       //   ['eq', '$Content-Type', type],
       // ],
       Expires: 15,
@@ -97,3 +94,5 @@ export const downloadFiles = async (req: any, res: any, next: any) => {
     return next(new ApiErrorResponse(`${err.message}`, 500))
   }
 }
+
+
