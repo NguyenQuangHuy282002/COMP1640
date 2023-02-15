@@ -1,4 +1,4 @@
-import { Card, Empty, Row, Typography } from 'antd'
+import { Card, Col, Empty, List, Row, Skeleton, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
@@ -35,16 +35,29 @@ export default function DepartmentDetail() {
       <Title style={{ margin: '20px 0px', fontSize: 18, color: '#1677ff' }}>Members in this department:</Title>
 
       {department?.users?.length ? (
-        <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
-          {department.users.map((userId, index) => (
-            <UserCard userId={userId} key={index} loading={loading} />
-          ))}
-        </Row>
+        <List
+          itemLayout="vertical"
+          size="large"
+          pagination={{
+            pageSize: 5,
+          }}
+          style={{
+            marginBottom: '50px',
+          }}
+          dataSource={department?.users}
+          renderItem={(userId, index) => (
+            <Col className="gutter-row"  key={index}>
+              <Skeleton loading={loading}>
+                <UserCard userId={userId} />
+              </Skeleton>
+            </Col>
+          )}
+        />
       ) : (
         <Empty
           image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
           imageStyle={{ height: 60 }}
-          description={<span>There is no any idea yet</span>}
+          description={<span>There is no any member yet</span>}
           style={{ width: '100%', padding: 20 }}
         ></Empty>
       )}

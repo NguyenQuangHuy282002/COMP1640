@@ -64,12 +64,19 @@ export default function CreateComment(props: Commentprops) {
   }
 
   return (
-    <div className="create_comment_wrap">
+    <div className="create_comment_wrap" style={{
+      position: 'relative',
+    }}>
       <div className="create_comment">
         <img src={user?.avatar} alt={user?.name} />
-        <div className="comment_input_wrap">
+        <div className="comment_input_wrap"
+        
+        >
           {picker && (
-            <div className="comment_emoji_picker">
+            <div className="comment_emoji_picker" style={{
+              position: 'absolute',
+              bottom: '50px'
+            }}>
               <Picker onEmojiClick={(emoji, event) => handleEmoji(event, emoji)} />
             </div>
           )}
@@ -80,6 +87,7 @@ export default function CreateComment(props: Commentprops) {
             placeholder="Write a comment..."
             onChange={e => setText(e.target.value)}
             onKeyDown={e => _handleKeyDown(e)}
+            autoComplete='off'
           />
           <div
             className="comment_circle_icon hover2"
