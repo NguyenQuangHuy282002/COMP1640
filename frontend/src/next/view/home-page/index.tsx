@@ -1,12 +1,11 @@
 import { SmileFilled } from '@ant-design/icons'
-import { Avatar, Badge, Col, Input, Layout, Row, Typography } from 'antd'
-import { useSnackbar } from 'notistack'
+import { Avatar, Badge, Col, Input, Layout, message, Row, Typography } from 'antd'
+import { Http } from 'next/api/http'
+import { handleFilter } from 'next/utils/handleFilter'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { Http } from '../../api/http'
 import { useSubscription } from '../../libs/global-state-hook'
-import { handleFilter } from '../../utils/handleFilter'
 import useWindowSize from '../../utils/useWindowSize'
 import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
@@ -16,35 +15,59 @@ const { Title } = Typography
 
 function HomePage() {
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
-  const [filter, setFilter] = useState('new')
-  const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
-  const [loading, setLoading] = useState(false)
   const [ideas, setIdeas] = useState([])
+  const [isEnd, setEnd] = useState(false)
+  const [filter, setFilter] = useState('new')
+  const [optionsQuery, setOptionsQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
   const { avatar } = useSubscription(userStore).state
-
-  console.log(ideas)
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+
   useEffect(() => {
-    setLoading(true)
-    const optionsQuery = handleFilter(filter)
-    const getAllIdeas = async () =>
-      await Http.get(`/api/v1/idea?${optionsQuery}`)
-        .then(res => setIdeas(res.data.data))
-        .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
-        .finally(() => setLoading(false))
-    getAllIdeas()
+    setEnd(false)
+    const query = handleFilter(filter)
+    setOptionsQuery(query)
+    loadMoreData(true, query, 1)
   }, [filter])
 
+  const loadMoreData = (reset: boolean = false, filter?, page?) => {
+    setLoading(true)
+    const tabQuery = filter ? filter : optionsQuery
+    const curPage = page ? page : currentPage
+    const getAllIdeas = async () =>
+      await Http.get(`/api/v1/idea?page=${curPage}&${tabQuery}`)
+        .then(res => {
+          console.log('res', res)
+          if (reset === true) {
+            setIdeas([...res.data.data])
+            if (res.data?.next?.page) {
+              setCurrentPage(res.data.next.page)
+            }
+            return
+          }
+          if (res.data?.next?.page) {
+            setCurrentPage(res.data.next.page)
+          } else {
+            setEnd(true)
+            setCurrentPage(1)
+          }
+          setIdeas([...ideas, ...res.data.data])
+        })
+        .catch(error => message.error('Failed to get all accounts !'))
+        .finally(() => setLoading(false))
+    getAllIdeas()
+  }
   return (
     <Layout.Content
       style={{
         display: 'block',
         padding: fitPadding,
-        height: '200vh',
+        height: 'auto',
       }}
     >
       <StyledRow style={{}}>
@@ -66,7 +89,7 @@ function HomePage() {
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} />
       </StyledRow>
-      <IdeasList ideas={ideas} isLoading={loading} />
+      <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
     </Layout.Content>
   )
 }

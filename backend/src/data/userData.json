@@ -2,9 +2,9 @@
   "_id": {
     "$oid": "63fd93dbb22017f2dd34ec54"
   },
-  "name": "Nguyen Van Yeah",
+  "name": "Lê Văn Yeah",
   "role": "staff",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "vanyeah",
@@ -14,6 +14,8 @@
     }
   },
   "phone": "0696229669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyeah@gmail.com",
   "description": "Just a friendly Tay Bac man. I began in finance, started writing on the side, and took it full-time. Living the dream. If you’d like free writing advice, and a step-by-step to online blogging",
 
@@ -23,9 +25,9 @@
   "_id": {
     "$oid": "63ff778b230c3805b4dc434b"
   },
-  "name": "Nguyen Van Fly",
+  "name": "Nguyễn Văn Fly",
   "role": "staff",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "flyawayyeah",
@@ -35,6 +37,8 @@
     }
   },
   "phone": "0696229889",
+  "comments": [],
+  "ideas": [],
   "email": "vanyeah@gmail.com",
   "description": "Just a friendly Thanh Hoa man. I began in finance, started writing on the side, and took it full-time. Living the dream. If you’d like free writing advice, and a step-by-step to online blogging",
 
@@ -44,9 +48,9 @@
   "_id": {
     "$oid": "63ff77a6afda4c4b35f50f80"
   },
-  "name": "Nguyen Thi Yeah",
+  "name": "Nguyễn Thị Yeah",
   "role": "staff",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "vaithat",
@@ -56,6 +60,8 @@
     }
   },
   "phone": "0694569669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyea123haaa@gmail.com",
   "description": "learn something and teach something every day",
 
@@ -65,9 +71,9 @@
   "_id": {
     "$oid": "63fd94dbb23317f3ed34ec54"
   },
-  "name": "Tran Thi Yeah",
+  "name": "Trần Thị Chơi Bời",
   "role": "coordinator",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "yessiroke",
@@ -77,6 +83,8 @@
     }
   },
   "phone": "0696969669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyeahqqqaaa@gmail.com",
   "description": "consistency is all I ask",
 
@@ -86,9 +94,9 @@
   "_id": {
     "$oid": "63ff77b489a6f6d3eb4447aa"
   },
-  "name": "Le Van Sky",
+  "name": "Lê Văn Sky",
   "role": "manager",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "chacchanlatheroi",
@@ -98,6 +106,8 @@
     }
   },
   "phone": "0696549669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyeahaatta@gmail.com",
   "description": "Once I correctly plugged in a USB on my first try.",
 
@@ -107,9 +117,9 @@
   "_id": {
     "$oid": "63ff77c6827c0f6dc73b7b15"
   },
-  "name": "Hoang Van Trien",
+  "name": "Hoàng Văn Triển",
   "role": "manager",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "chacchancaidb",
@@ -119,6 +129,8 @@
     }
   },
   "phone": "0693249669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyessahaatta123@gmail.com",
   "description": "No description",
 
@@ -128,9 +140,9 @@
   "_id": {
     "$oid": "63ff77ce8c8afc38f35367d3"
   },
-  "name": "Hoang Van Thien",
+  "name": "Hoàng Văn Thiện",
   "role": "coordinator",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "chacchancaidbrr",
@@ -140,6 +152,8 @@
     }
   },
   "phone": "0693249669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyessahaatta@gmail.com",
   "description": "No description",
 
@@ -149,9 +163,9 @@
   "_id": {
     "$oid": "63ff77d66891702252203edb"
   },
-  "name": "Khanh Sky-walker",
+  "name": "Khánh Sky-walker",
   "role": "staff",
-  "isActivate": false,
+  "isActivate": true,
   "isBanned": false,
   "password": "$2b$10$kdBHW46s/81AHOvudIXBLO9E3hutOzMaWV70jOl2AegGTGpxdXxIe",
   "username": "trunguykhanhsky",
@@ -161,6 +175,8 @@
     }
   },
   "phone": "0693249669",
+  "comments": [],
+  "ideas": [],
   "email": "vanyessahaatta322@gmail.com",
   "description": "No description",
 
@@ -170,7 +186,7 @@
   "_id": {
     "$oid": "63ff77e1bf93692f72b80462"
   },
-  "name": "Kha Van Banh",
+  "name": "Khá Văn Bảnh",
   "role": "staff",
   "isActivate": true,
   "isBanned": false,
@@ -182,6 +198,8 @@
     }
   },
   "phone": "0693245569",
+  "comments": [],
+  "ideas": [],
   "email": "iacokhac@gmail.com",
   "description": "Thomas Michael Shelby OBE DSM MM MP is a fictional character, and the protagonist of the British period crime drama Peaky Blinders. He is played by Irish actor Cillian Murphy, who has won an Irish Film & Television Award and National Television Award for his portrayal of Shelby. The character has received critical acclaim.",
 

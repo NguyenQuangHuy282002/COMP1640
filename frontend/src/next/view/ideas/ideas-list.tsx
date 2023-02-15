@@ -1,30 +1,39 @@
-import { List, Space } from 'antd'
-import React from 'react'
+import { Button, Divider, List, message } from 'antd'
+import { Http } from 'next/api/http'
+import { useSubscription } from 'next/libs/global-state-hook'
+import { handleFilter } from 'next/utils/handleFilter'
+import { useEffect, useState } from 'react'
+import { ideaCount } from '../layout/layout-wrapper'
 import IdeaCard from './idea-card'
 
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
-)
+function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
+  const { number } = useSubscription(ideaCount).state
+  const loadMore =
+    !isEnd && !loading && ideas?.length <= number ? (
+      <div
+        style={{
+          textAlign: 'center',
+          marginTop: 12,
+          height: 32,
+          lineHeight: '32px',
+        }}
+      >
+        <Button onClick={loadMoreData}>loading more</Button>
+      </div>
+    ) : (
+      <Divider plain>It is all, nothing more 🤐</Divider>
+    )
 
-function IdeasList({ ideas, isLoading }) {
   return (
     <List
+      loadMore={loadMore}
       itemLayout="vertical"
       size="large"
-      pagination={{
-        onChange: page => {
-          console.log(page)
-        },
-        pageSize: 5,
-      }}
+      dataSource={ideas}
       style={{
         marginBottom: '50px',
       }}
-      dataSource={ideas}
-      renderItem={idea => <IdeaCard key={`${idea}`} idea={idea} isLoading={isLoading}></IdeaCard>}
+      renderItem={idea => <IdeaCard key={`${idea}`} idea={idea} isLoading={loading}></IdeaCard>}
     />
   )
 }

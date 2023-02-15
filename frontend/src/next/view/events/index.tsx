@@ -34,6 +34,16 @@ function EventsPage() {
   }
 
   return (
+//<<<<<<< yesvansirevent
+//    <div style={{ padding: '10px', margin: 0 }}>
+//      <Button onClick={() => setOpenModal(true)}>Add new event</Button>
+//      <Divider />
+//      <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+//      <EventCardItem></EventCardItem>
+//      </Space>
+//      <CreateEventModal onClose={() => setOpenModal(false)} open={openModal} onFinish={() => setOpenModal(false)} />
+//    </div>
+//=======
     <>
       {openModal ? (
         <CreateEventField
@@ -79,7 +89,18 @@ function EventsPage() {
         </div>
       )}
     </>
+//>>>>>>> main
   )
 }
 
 export default EventsPage
+//<<<<<<< yesvansirevent
+
+
+
+
+// {data.map((event, index) => (
+//   <EventCardItem event={event} key={index} />
+// ))}
+//=======
+//>>>>>>> main

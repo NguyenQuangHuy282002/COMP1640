@@ -17,7 +17,10 @@ import IdeaDetail from './ideas/idea-detail/idea-detail'
 import AppHeader from './layout/header'
 import LayoutWrapper from './layout/layout-wrapper'
 import UserProfile from './user-profile'
+
 import EventDetails from './events/event-details'
+import LayoutAdmin from './admin/layout-admin'
+import DashboardAdmin from './dashboard'
 
 const App = () => {
   const navigate = useNavigate()
@@ -79,7 +82,6 @@ const App = () => {
           path="/"
           element={
             <Layout>
-              <AppHeader />
               <LayoutWrapper>
                 <Outlet />
               </LayoutWrapper>
@@ -93,10 +95,23 @@ const App = () => {
           <Route path="/departments" element={<DepartmentManager />} />
           <Route path="/categories" element={<CategoryManager />} />
           <Route path="/accounts-manager" element={<AccountManager />} />
-          <Route path="/ideas" element={<UserProfile />} />
+          <Route path="/ideas" element={<HomePage />} />
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />
+        </Route>
+        <Route path="/eventdetail" element={<EventDetails />} />
+        <Route
+          path="/admin"
+          element={
+            <Layout>
+              <LayoutAdmin>
+                <Outlet />
+              </LayoutAdmin>
+            </Layout>
+          }
+        >
+        <Route path="/admin/dashboard" element={<DashboardAdmin/>}></Route>
         </Route>
       </Routes>
     )
