@@ -1,10 +1,9 @@
-import { Button, Card, Checkbox, Col, Form, Input, message, Row, Space, Typography } from 'antd'
-import ky from 'ky'
+import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
 import { useSnackbar } from 'notistack'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { Http } from '../../../api/http'
-import { SERVER_ENPOINT } from '../../../api/server-url'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
+import { userStore } from '../user-store'
 
 const { Title } = Typography
 
@@ -15,14 +14,17 @@ function Login() {
   const [form] = Form.useForm()
 
   const handleSubmit = async (val: any) => {
-    const loginRes = await Http.post('/api/v1/auth/login', val).catch(error =>
+    const loginRes: any = await Http.post('/api/v1/auth/login', val).catch(error =>
       enqueueSnackbar(error.message, { variant: 'error' })
     )
 
     console.log(loginRes)
-    message.success('Đăng nhập thành công!')
-
-    // return navigate(state?.from || '/dashboard')
+    if (loginRes.data.success) {
+      message.success(loginRes.data.message)
+      localStorage.setItem(LOCALSTORAGE.TOKEN, loginRes.data.accessToken)
+      userStore.updateState(loginRes.data.userData)
+      return navigate(state?.from || '/dashboard')
+    }
   }
 
   return (

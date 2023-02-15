@@ -40,6 +40,7 @@ root.render(
             <Route path="/categories" element={<UserProfile />} />
             <Route path="/accounts-manager" element={<AccountManager />} />
             <Route path="/ideas" element={<UserProfile />} />
+            <Route path="/account" element={<UserProfile />} />
           </Route>
         </Routes>
       </Router>

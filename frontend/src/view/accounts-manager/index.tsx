@@ -1,6 +1,7 @@
-import { Card, Row, Table } from 'antd'
+import { Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Http } from '../../api/http'
 
 interface DataType {
   id: string
@@ -13,20 +14,16 @@ interface DataType {
 const columns: ColumnsType<DataType> = [
   {
     title: 'ID',
-    dataIndex: 'id',
+    dataIndex: '_id',
     width: '10%',
   },
   {
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'username',
     sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
     width: '30%',
   },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    width: '30%',
-  },
+
   {
     title: 'Role',
     dataIndex: 'role',
@@ -53,12 +50,24 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Active',
-    dataIndex: 'Active',
+    dataIndex: 'isActivate',
+    render: (_, record: any) => <Tag color="blue">{record.isActivate}</Tag>,
     width: '15%',
   },
 ]
 
 function AccountManager() {
+  const [account, setAccount] = useState([])
+
+  useEffect(() => {
+    const getAllUser = async () =>
+      await Http.get('/api/v1/users')
+        .then(res => setAccount(res.data))
+        .catch(error => console.log(error))
+
+    getAllUser()
+  }, [])
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -78,7 +87,7 @@ function AccountManager() {
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <Table rowSelection={rowSelection} columns={columns} dataSource={accounts} loading={loading} />
+        <Table rowSelection={rowSelection} columns={columns} dataSource={account} loading={loading} />
       </Card>
     </Row>
   )

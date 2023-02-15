@@ -1,7 +1,7 @@
 import { SERVER_ENPOINT } from './server-url'
 import axios from 'axios'
 
-const LOCALSTORAGE = {
+export const LOCALSTORAGE = {
   TOKEN: 'access_token',
   USER: 'user',
 }
@@ -13,7 +13,7 @@ export class Http {
       Authorization: `Bearer ${localStorage.getItem(LOCALSTORAGE.TOKEN) || ''}`,
     }
   }
-  static get = (endPoint: any, params: any) => {
+  static get = (endPoint: any, params?: any) => {
     const options = {
       headers: this._getHeader(),
       params: {},
