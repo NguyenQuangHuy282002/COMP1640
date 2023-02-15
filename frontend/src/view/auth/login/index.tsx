@@ -2,6 +2,8 @@ import { Button, Card, Checkbox, Col, Form, Input, message, Row, Space, Typograp
 import ky from 'ky'
 import { useSnackbar } from 'notistack'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { Http } from '../../../api/http'
+import { SERVER_ENPOINT } from '../../../api/server-url'
 import { imgDir } from '../../../constants/img-dir'
 
 const { Title } = Typography
@@ -13,12 +15,9 @@ function Login() {
   const [form] = Form.useForm()
 
   const handleSubmit = async (val: any) => {
-    const loginRes = await ky
-      .post('/api/v1/auth/login', {
-        json: { val },
-      })
-      .json()
-      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+    const loginRes = await Http.post('/api/v1/auth/login', val).catch(error =>
+      enqueueSnackbar(error.message, { variant: 'error' })
+    )
 
     console.log(loginRes)
     message.success('Đăng nhập thành công!')
