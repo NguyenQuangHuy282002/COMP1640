@@ -41,17 +41,16 @@ export const login = async (req: any, res: any, next: any) => {
     if (!checkPassword) {
       return next(new ApiErrorResponse('Invalid username or password', 400))
     } else if (!user.isActivate) {
-      sendTokenResponse(user, 200, res, next)
-      res.status(200).json({ message: 'Inactive account' })
+      sendTokenResponse(user, 200, 'Account is not activated', res, next)
     }
 
-    sendTokenResponse(user, 200, res, next)
+    sendTokenResponse(user, 200, 'Login successfully', res, next)
   } catch (err) {
     next()
   }
 }
 
-const sendTokenResponse = async (userData: any, statusCode: any, res: any, next: any) => {
+const sendTokenResponse = async (userData: any, statusCode: any, message: any, res: any, next: any) => {
   const payload = {
     user: {
       id: userData.id,
@@ -69,9 +68,12 @@ const sendTokenResponse = async (userData: any, statusCode: any, res: any, next:
 
   setRefreshToken(refreshToken, userData, next)
 
-  res.status(statusCode).cookie('token', refreshToken, cookieOptions).json({
+  res.status(statusCode)
+  .cookie('token', refreshToken, cookieOptions)
+  .json({
     success: true,
     userData,
+    message,
     accessToken: accessToken,
     refreshToken: refreshToken,
   })
