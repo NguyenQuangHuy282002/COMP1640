@@ -3,7 +3,7 @@ import * as path from 'path'
 
 export async function ReadConfig() {
   dotenv.config()
-  const resolvedir = (dir: any) => (dir ? path.resolve(process.cwd(), dir) : undefined)
+  const resolvedir = (dir: string) => (dir ? path.resolve(process.cwd(), dir) : undefined)
   const config = {
     server: {
       port: process.env.PORT || 9000,
