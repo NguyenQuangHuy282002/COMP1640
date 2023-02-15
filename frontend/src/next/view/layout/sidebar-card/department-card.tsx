@@ -1,7 +1,7 @@
-import { AppstoreOutlined } from '@ant-design/icons'
+import React, { useEffect, useState } from 'react'
+import { UsergroupAddOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
-import React, { useEffect, useState } from 'react'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -22,7 +22,7 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Department', 'menu', <AppstoreOutlined />, [
+  getItem('Department', 'menu', <UsergroupAddOutlined />, [
     getItem('Department 1', '1'),
     getItem('Department 2', '2'),
     getItem('Department 3', '3'),

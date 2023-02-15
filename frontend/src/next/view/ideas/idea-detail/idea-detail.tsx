@@ -69,7 +69,7 @@ function IdeaDetail() {
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">
-              
+
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
@@ -77,13 +77,14 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
+
             <MenuBar commentCount={commentCount } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} />
           </StyledContent>
 
           <StyledContent>
             <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
-              <Text strong>
-                Comment as <Text mark>{name}</Text>
+              <Text>
+                Comment as <Text strong>{name}</Text>
               </Text>
               {/* <RichTextEditor editorState={editorState} setEditorState={setEditorState} /> */}
               <CreateComment user={{avatar, name}} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email}/>

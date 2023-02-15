@@ -20,11 +20,20 @@ function HomePage() {
   const [optionsQuery, setOptionsQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalIdea, setTotalIdea] = useState(0)
   const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
   const { avatar } = useSubscription(userStore).state
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+  // const eventData: EventDetailProps = {
+  //   title: 'Sample Event Title',
+  //   description: 'Sample event description',
+  //   department: 'Sample Department',
+  //   startDate: '2022-01-01',
+  //   firstClosedDate: '2022-01-20',
+  //   finalClosedDate: '2022-02-01',
+  // };
 
   useEffect(() => {
     setEnd(false)
@@ -32,6 +41,16 @@ function HomePage() {
     setOptionsQuery(query)
     loadMoreData(true, query, 1)
   }, [filter])
+
+  const getTotalIdea = async () => {
+    await Http.get('/api/v1/idea/totalIdea')
+      .then(res => setTotalIdea(res.data?.total))
+      .catch(err => message.error('Failed to get total ideas!'))
+  }
+
+  useEffect(() => {
+    getTotalIdea()
+  },[])
 
   const loadMoreData = (reset: boolean = false, filter?, page?) => {
     setLoading(true)
@@ -60,6 +79,9 @@ function HomePage() {
     getAllIdeas()
   }
   return (
+
+
+
     <Layout.Content
       style={{
         display: 'block',
@@ -84,7 +106,7 @@ function HomePage() {
         </Col>
       </StyledRow>
       <StyledRow style={{}}>
-        <MenuFilter setFilter={setFilter} filter={filter} />
+        <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea}/>
       </StyledRow>
       <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
     </Layout.Content>
