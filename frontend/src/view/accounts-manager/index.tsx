@@ -1,7 +1,6 @@
-import { Card, Row, Spin, Table } from 'antd'
+import { Card, Row, Table } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
 import { useState } from 'react'
-import Spinner from '../../components/loading/spinner'
-import type { ColumnsType, TableProps } from 'antd/es/table'
 
 interface DataType {
   id: string

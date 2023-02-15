@@ -1,4 +1,5 @@
 import { Button, Card, Checkbox, Col, Form, Input, message, Row, Space, Typography } from 'antd'
+import ky from 'ky'
 import { useSnackbar } from 'notistack'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { imgDir } from '../../../constants/img-dir'
@@ -9,15 +10,20 @@ function Login() {
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { state } = useLocation()
+  const [form] = Form.useForm()
 
   const handleSubmit = async (val: any) => {
-    try {
-      message.success('Đăng nhập thành công!')
+    const loginRes = await ky
+      .post('/api/v1/auth/login', {
+        json: { val },
+      })
+      .json()
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
 
-      return navigate(state?.from || '/dashboard')
-    } catch (error: any) {
-      enqueueSnackbar(error.message, { variant: 'error' })
-    }
+    console.log(loginRes)
+    message.success('Đăng nhập thành công!')
+
+    // return navigate(state?.from || '/dashboard')
   }
 
   return (
@@ -34,6 +40,7 @@ function Login() {
             initialValues={{ remember: true }}
             onFinish={handleSubmit}
             autoComplete="off"
+            form={form}
           >
             <Form.Item
               label="Username"

@@ -20,7 +20,7 @@ async function main() {
   router(app)
   app.use(serverErrorHandler)
   console.log(`listen on ${config.server.port}`)
-  app.listen(config.server.port, '0.0.0.0', () => {
+  app.listen(Number(config.server.port), '0.0.0.0', () => {
     const err = arguments[0]
     if (err) {
       console.log(err)
