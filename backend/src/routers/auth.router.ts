@@ -1,11 +1,16 @@
 import express from 'express';
-import { createAccount, login } from '../controllers/auth.controller';
-
+import { 
+  createAccount, 
+  login, 
+  refreshToken 
+} from '../controllers/auth.controller';
+import { authProtect } from '../middlewares/auth';
 
 const authRouter = express.Router();
 
-authRouter.post('/create', createAccount);
+authRouter.post('/create', authProtect, createAccount);
 authRouter.post('/login', login);
+authRouter.get('/refreshToken', authProtect, refreshToken);
 
 
 export default authRouter;

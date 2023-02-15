@@ -4,12 +4,11 @@ import router from './routers/api'
 import cookieParser from 'cookie-parser'
 import { ReadConfig } from './config'
 import initiateMongoServer from './common/db'
-import { serverErrorHandler } from './middlewares/serverErrorHandler'
 
 async function main() {
   const config = await ReadConfig()
   console.log(config)
-  await initiateMongoServer(config.database.db_url)
+  await initiateMongoServer(config.database.db_url!)
 
   const app = express()
 
@@ -18,9 +17,8 @@ async function main() {
   app.disable('x-powered-by')
   app.use(cors())
   router(app);
-  app.use(serverErrorHandler)
-  console.log(`listen on ${config.server.port}`)
-  app.listen(config.server.port, '0.0.0.0', () => {
+  console.log(`Server are listening on port: ${config.server.port}`)
+  app.listen(config.server.port, '0.0.0.0', function() {
     const err = arguments[0]
     if (err) {
       console.log(err)
