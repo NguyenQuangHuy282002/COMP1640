@@ -10,8 +10,8 @@ interface RecordType {
   chosen: boolean
 }
 
-function Tags({ setCategories }) {
-  const [targetKeys, setTargetKeys] = useState<string[]>([])
+function Tags({ setCategories, selectedKeys } : {setCategories: any, selectedKeys?: any}) {
+  const [targetKeys, setTargetKeys] = useState<string[]>(selectedKeys || [])
   const [categoryList, setCategoryList] = useState([])
   const [disabled, setDisabled] = useState(false)
 

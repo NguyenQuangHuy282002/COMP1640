@@ -1,23 +1,21 @@
 import { ArrowLeftOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Switch, Typography } from 'antd'
+import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Spin, Switch, Typography } from 'antd'
 import axios from 'axios'
-import { convertToRaw, EditorState } from 'draft-js'
+import { ContentState, convertFromHTML, convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
 import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useQuery } from 'next/utils/use-query'
-import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Http } from '../../../api/http'
-import useWindowSize from '../../../utils/useWindowSize'
-import Tags from './tag'
-// import AddHastag from './add-hastag';
-// import Hastags from './hastag';
+import { Http } from '../../api/http'
+import useWindowSize from '../../utils/useWindowSize'
+import Tags from './create-new-idea/tag'
 import FormItem from 'antd/es/form/FormItem'
-import HashtagInput from './HastagInput';
+import HashtagInput from './create-new-idea/HastagInput'
+import FileDisplay from './idea-detail/file-display'
 
 const { Title } = Typography
 
@@ -48,28 +46,45 @@ const fetchAllToS3 = async (files: any) => {
   return Promise.all(requests)
 }
 
-export default function CreateIdea() {
+export default function EditIdea() {
+  const [data, setData] = useState([])
   const [form] = Form.useForm()
-  const { enqueueSnackbar } = useSnackbar()
   const navigate = useRoleNavigate()
   const query = useQuery()
-  const defaultEventId = query.get('event')
-
+  const id = query.get('id')
   const initialState = () => EditorState.createEmpty()
   const [editorState, setEditorState] = useState(initialState)
   const [openModal, setOpenModal] = useState(false)
-  const [openModal1, setOpenModal1] = useState(false)
   const [files, setFiles] = useState([])
   const [categories, setCategories] = useState([])
   const [isAnonymous, setAnonymous] = useState(false)
-  const [specialEvent, setSpecialEvent] = useState([])
+  const [isShown, setIsShown] = useState(false)
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsShown(true)
+    }, 600)
+    return () => clearTimeout(timer)
+  }, [])
 
+  useEffect(() => {
+    const getIdea = async () =>
+      await Http.get(`/api/v1/idea/detail?id=${id}`)
+        .then(res => {
+          setData([res.data.data])
+          const blocksFromHtml = convertFromHTML(`${res.data.data.content}`)
+          const initialState = () =>
+            EditorState.createWithContent(
+              ContentState.createFromBlockArray(blocksFromHtml.contentBlocks, blocksFromHtml.entityMap)
+            )
+          setEditorState(initialState)
+        })
+        .catch(error => message.error('Failed to fetch idea!'))
+    getIdea()
+  }, [])
 
-  const [hastags, setHastags] = useState([])
-  const [currentHastag, setCurrentHastag] = useState({ name: '' })
   const [allHastag, setAllHastag] = useState([])
 
   const getHastagList = async () => {
@@ -77,38 +92,14 @@ export default function CreateIdea() {
       .then(res => {
         setAllHastag(res.data.data)
       })
-      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .catch(error => message.error(error.message))
   }
 
   useEffect(() => {
     getHastagList()
-  }, [openModal1])
-
-
-
-  useEffect(() => {
-    if (defaultEventId) {
-      const getEventList = async () => {
-        await Http.get(`/api/v1/event?id=${defaultEventId}`)
-          .then(res => {
-            setSpecialEvent(res.data.data)
-          })
-          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-      }
-      getEventList()
-    } else {
-      const getEventList = async () => {
-        await Http.get('/api/v1/event/available')
-          .then(res => {
-            setSpecialEvent(res.data.data)
-          })
-          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-      }
-      getEventList()
-    }
   }, [])
+
   const normFile = (e: any) => {
-    // handle event file changes in upload and dragger components
     const fileList = e
     setFileState(fileList)
     return e
@@ -118,14 +109,9 @@ export default function CreateIdea() {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
-
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
-      specialEvent: defaultEventId || form.getFieldValue('specialevent'),
-    }
-    if (form.getFieldValue('specialevent')) {
-      postForm['specialevent'] = form.getFieldValue('specialevent')
     }
     if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
@@ -141,25 +127,22 @@ export default function CreateIdea() {
       postForm['files'] = fileNameList
     }
 
-    await Http.post('/api/v1/idea/create', postForm)
+    await Http.put(`/api/v1/idea/edit/${id}`, postForm)
       .then(res => {
-        message.success('Upload Idea successfully!!')
+        message.success('Edit Idea successfully!!')
         navigate('/')
       })
       .catch(error => message.error(error.message + '. Please try again'))
   }
 
   const windowWidth = useWindowSize()
-  const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
-  useEffect(() => { }, [])
-
-  return (
+  return isShown ? (
     <Card
       title={
         <Space align="center" size="middle">
           <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/')} />
-          <Title style={{ fontSize: 18, margin: 0 }}> Create idea form</Title>
+          <Title style={{ fontSize: 18, margin: 0 }}> Edit your idea</Title>
         </Space>
       }
       style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0, marginRight: 10 }}
@@ -172,32 +155,11 @@ export default function CreateIdea() {
         layout="horizontal"
         labelAlign="left"
       >
-        {defaultEventId ? (
-          <>
-            <Title level={3} style={{ marginTop: 0 }}>
-              Create idea for {specialEvent[0]?.title}
-            </Title>
-            <Divider />
-          </>
-        ) : (
-          <Form.Item name="specialevent" label="Special event" style={{ marginBottom: '15px' }}>
-            <Select
-              style={{
-                float: 'left',
-                width: '40%',
-              }}
-              placeholder="Choose Special Event"
-            >
-              {specialEvent.map((event, index) => (
-                <Select.Option value={event?._id} key={index}>
-                  {event?.title}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        )}
+        <Form.Item name="event" label="Chosen Special Event" initialValue={data[0]?.specialEvent?.title}>
+          <Input style={{ lineHeight: 2.15 }} disabled></Input>
+        </Form.Item>
 
-        <Form.Item name="title" required label="Title">
+        <Form.Item name="title" required label="Title" initialValue={data[0]?.title}>
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 50 characters to summary your idea)"
@@ -212,50 +174,19 @@ export default function CreateIdea() {
         </Form.Item>
 
         <DefaultUpload normFile={normFile} files={files}></DefaultUpload>
-        <DraggerUpload normFile={normFile} files={files}></DraggerUpload>
+
+        {data[0]?.files.length > 0 && (
+          <Form.Item name="addedFile" label="Original files(can't remove)">
+            <FileDisplay files={data[0]?.files} isFit={true}></FileDisplay>
+          </Form.Item>
+        )}
 
         <Form.Item label="Anonymous Mode">
-          <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
+          <Switch defaultChecked={data[0]?.isAnonymous ? true : false} onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
-          <Tags setCategories={setCategories} />
-
+          <Tags setCategories={setCategories} selectedKeys={data[0]?.categories?.map(cate => cate._id)} />
         </Form.Item>
-        {/* <Form.Item label="Tags (max: 5)">
-          <Hastags setCategories={setCategories} />
-
-        </Form.Item> */}
-        {/* <AddHastag
-          isOpen={openModal}
-          onCloseModal={() => setOpenModal(false)}
-          setHastags={setHastags}
-          hastags={hastags}
-          currentHastag={currentHastag}
-        /> */}
-        {/* <Form.Item>
-          {openModal1 ? (
-            <AddHastag
-              isOpen={openModal1}
-              onCloseModal={() => setOpenModal1(false)}
-              setHastags={setHastags}
-              hastags={hastags}
-              currentHastag={currentHastag}
-            />
-          ) : (
-            <div style={{ padding: '10px 20px 10px 10px', margin: 0, marginTop: "20px" }}>
-              <Button
-                style={{ marginLeft: '10px' }}
-                onClick={() => {
-                  setOpenModal1(true)
-                }}
-              >
-                Add hastag
-              </Button>
-
-            </div>
-          )}
-
-        </Form.Item> */}
 
         <FormItem label="HashTags (Optional)" style={{ width: '100%' }}>
           <HashtagInput />
@@ -272,7 +203,7 @@ export default function CreateIdea() {
             },
           ]}
         >
-          <Checkbox>
+          <Checkbox defaultChecked>
             I have read and agreed to{' '}
             <Button
               type="link"
@@ -292,11 +223,24 @@ export default function CreateIdea() {
         </Form.Item>
       </Form>
     </Card>
+  ) : (
+    <Space
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Spin tip="Loading, wait a few" size="large" style={{}}>
+        <div className="content" style={{ width: '200px', textAlign: 'center' }}>
+          {' '}
+          ...{' '}
+        </div>
+      </Spin>
+    </Space>
   )
 }
 
-const StyledFormItem = styled(Form.Item)`
-  margin-bottom: 15px;
-  border-radius: 5px;
-  background-color: #f6f7f8;
-`

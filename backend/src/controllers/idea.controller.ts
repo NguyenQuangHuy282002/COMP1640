@@ -316,7 +316,6 @@ export const getDataSuggestion = async (req: any, res: any, next: any) => {
 export const deleteIdea = async (req: any, res: any, next: any) => {
   try {
     const { ideaId } = req.params
-
     const deletedIdea = await Idea.findByIdAndDelete(ideaId)
     if (!deletedIdea) {
       return next(new ApiErrorResponse(`Idea id ${ideaId} not found`, 404))
@@ -335,17 +334,26 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
         path: 'ideas',
         populate: {
           path: 'comments',
-          populate: {
-            path: 'publisherId',
-          },
         },
       })
-
-    await Comment.deleteMany({ ideaId: deletedIdea._id })
+    Comment.deleteMany({ ideaId: deletedIdea._id })
 
     const newUserIdeas = user.ideas.filter(userI => userI._id.toString() !== deletedIdea._id)
     const newUserComment = user.comments.filter(userC => userC._id.toString() !== deletedIdea._id)
-
+    if(deletedIdea.categories.length > 0) {
+      const categories = await Category.find({ ideas: { $in: [deletedIdea._id] } })
+      categories.forEach(category => {
+        const newCategoryIdeas = category.ideas.filter(ideaI => ideaI._id.toString() !== deletedIdea._id)
+        category.ideas = newCategoryIdeas
+        category.save()
+      })
+    }
+    if(deletedIdea.specialEvent) {
+      const specialEvent = await SpecialEvent.findOne({ ideas: { $in: [deletedIdea._id] } })
+      const newSpecialEventIdeas = specialEvent.ideas.filter(ideaI => ideaI._id.toString() !== deletedIdea._id)
+      specialEvent.ideas = newSpecialEventIdeas
+      specialEvent.save()
+    }
     user.ideas = newUserIdeas
     user.comments = newUserComment
     user.save()
