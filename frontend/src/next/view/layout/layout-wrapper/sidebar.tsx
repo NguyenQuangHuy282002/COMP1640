@@ -71,19 +71,19 @@ function AppSidebar() {
 
   return (
     <>
-      {windowWidth > 768 ? (
-        <Layout.Sider width={300} style={{ background: 'transparent' }}>
+      {windowWidth > 1000 ? (
+        <Layout.Sider width={268} style={{ background: 'transparent' }}>
           <Layout.Sider
             // collapsible
             collapsed={collapsed}
             onCollapse={value => setCollapsed(value)}
-            width={300}
+            width={268}
             style={{
               backgroundColor: 'white',
               position: 'sticky',
               zIndex: 1,
               alignSelf: 'start',
-              height: '90vh',
+              height: '97vh',
               top: '50px',
               boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
               paddingTop: '12px',
@@ -106,7 +106,7 @@ function AppSidebar() {
             type="primary"
             style={{
               position: 'sticky',
-              zIndex: 2.5,
+              zIndex: 3,
               alignSelf: 'start',
               top: '10px',
               border: '1px solid #ccc',

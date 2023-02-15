@@ -98,7 +98,7 @@ export default function CreateIdea() {
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
-  const paddingForm = windowWidth < 768 ? '10px 5px' : '5% 5%'
+  const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
   return (
     <Form

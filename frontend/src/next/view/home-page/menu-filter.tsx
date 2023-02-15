@@ -2,6 +2,7 @@ import React from 'react'
 import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled } from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
+import useWindowSize from '../../utils/useWindowSize'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -24,6 +25,8 @@ function getItem(
 const { Text } = Typography
 
 function MenuFilter({ setFilter, filter }) {
+  const windowWidth = useWindowSize()
+  const display = windowWidth < 1000 ? 'block' : 'flex'
   const onClickFilter = (val: any) => {
     console.log('click ', val)
     setFilter(val)
@@ -69,7 +72,7 @@ function MenuFilter({ setFilter, filter }) {
       <Col>
         <p style={{ fontSize: '19px', fontWeight: '400', marginBottom: '3px 0' }}>11,699,432 Ideas</p>
       </Col>
-      <Col style={{ width: '100%', justifyContent: 'end', fontSize: '15px', display: 'flex' }}>
+      <Col style={{ width: '100%', justifyContent: 'end', fontSize: '15px', display: display }}>
         <Radio.Group defaultValue={filter} buttonStyle="solid" style={{}} onChange={e => onClickFilter(e.target.value)}>
           <StyledRadioButton value="new">
             <DingtalkCircleFilled /> Newest
