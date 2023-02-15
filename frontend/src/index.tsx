@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
+import AccountManager from './view/accounts-manager'
 import Login from './view/auth/login'
 import Dashboard from './view/dashboard'
 import EventsPage from './view/events'
@@ -36,7 +37,10 @@ root.render(
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/event" element={<EventsPage />} />
-            <Route path="/account" element={<UserProfile />} />
+            <Route path="/departments" element={<UserProfile />} />
+            <Route path="/categories" element={<UserProfile />} />
+            <Route path="/accounts-manager" element={<AccountManager />} />
+            <Route path="/ideas" element={<UserProfile />} />
           </Route>
         </Routes>
       </Router>

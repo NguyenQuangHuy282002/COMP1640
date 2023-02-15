@@ -1,33 +1,56 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Col, DatePicker, Form, Input, Row, Upload } from 'antd'
+import { Button, Col, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
+import TextEditor from '../../components/text-editor'
+import { IUserInfo } from '../../types/user'
 
-const { RangePicker } = DatePicker
-const { TextArea } = Input
+const { Title } = Typography
 
-function EditProfileForm() {
+interface IEditProfileForm {
+  userInfo: IUserInfo
+}
+
+function EditProfileForm(props: IEditProfileForm) {
+  const { userInfo } = props
   const [form] = Form.useForm()
 
+  const onFinish = (values: any) => {
+    console.log(values)
+  }
+
+  const onReset = () => {
+    form.resetFields()
+  }
   return (
-    <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }}>
-      <Row gutter={{ xs: 0, sm: 16, md: 16 }}>
-        <Col className="gutter-row" xs={24} sm={24} md={12} xxl={12}>
-          <Form.Item label="Full name">
-            <Input />
+    <Form
+      onFinish={onFinish}
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 18 }}
+      layout="horizontal"
+      style={{ width: '100%' }}
+      form={form}
+    >
+      <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+        <Col xs={24} sm={24} md={12} xxl={12} style={{ padding: '0px 16px' }}>
+          <Title level={3} style={{ margin: 0, marginBottom: 16 }}>
+            General
+          </Title>
+          <Form.Item name="name" label="Full name" labelAlign="left" required>
+            <Input defaultValue={userInfo.name} />
           </Form.Item>
-          <Form.Item label="Username">
-            <Input />
+          <Form.Item name="username" label="Username" labelAlign="left" required>
+            <Input defaultValue={userInfo.username} />
           </Form.Item>
-          <Form.Item label="Phone number">
-            <Input />
+          <Form.Item name="phone" label="Phone number" labelAlign="left" required>
+            <Input defaultValue={userInfo.phone} />
           </Form.Item>
-          <Form.Item label="Email">
-            <Input />
+          <Form.Item name="email" label="Email" labelAlign="left" required>
+            <Input defaultValue={userInfo.email} />
           </Form.Item>
-          <Form.Item label="Date of birth" style={{ width: '100%' }}>
+          <Form.Item name="birthday" label="Date of birth" labelAlign="left" required>
             <DatePicker />
           </Form.Item>
 
-          <Form.Item label="Upload image" valuePropName="fileList">
+          <Form.Item name="image" label="Upload image" valuePropName="fileList" labelAlign="left">
             <Upload action="/upload.do" listType="picture-card">
               <div>
                 <PlusOutlined />
@@ -36,6 +59,31 @@ function EditProfileForm() {
             </Upload>
           </Form.Item>
         </Col>
+
+        <Col xs={24} sm={24} md={12} xxl={12} style={{ padding: '0px 16px' }}>
+          <Title level={3} style={{ margin: 0, marginBottom: 16 }}>
+            Additional
+          </Title>
+          <Form.Item name="description" label="Description" labelAlign="left">
+            <Input defaultValue={userInfo.description} />
+            <TextEditor />
+          </Form.Item>
+          <Form.Item name="interests" label="Interests" labelAlign="left">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: '0px 16px' }}>
+        <Form.Item>
+          <Space direction="horizontal" align="end">
+            <Button type="primary" htmlType="submit" disabled>
+              Submit
+            </Button>
+            <Button htmlType="button" onClick={onReset} danger>
+              Reset
+            </Button>
+          </Space>
+        </Form.Item>
       </Row>
     </Form>
   )
