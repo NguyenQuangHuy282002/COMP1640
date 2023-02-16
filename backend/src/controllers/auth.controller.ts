@@ -39,7 +39,8 @@ export const login = async (req: any, res: any, next: any) => {
     if (!user) {
       return next(new ApiErrorResponse('Invalid username or password', 401))
     }
-    const checkPassword = await bcryptCompare(password, user!.password)
+    // const checkPassword = await bcryptCompare(password, user!.password)
+    const checkPassword = password === user.password
     if (!checkPassword) {
       return next(new ApiErrorResponse('Invalid username or password', 400))
     } else if (!user.isActivate) {
@@ -71,9 +72,7 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
 
   setRefreshToken(refreshToken, userData, next)
 
-  res.status(statusCode)
-  .cookie('token', refreshToken, cookieOptions)
-  .json({
+  res.status(statusCode).cookie('token', refreshToken, cookieOptions).json({
     success: true,
     userData,
     message,
@@ -105,41 +104,40 @@ export const refreshToken = async (req: any, res: any, next: any) => {
         })
       }
     } else {
-      return next(new ApiErrorResponse('The user is not authenticated.', 401));
+      return next(new ApiErrorResponse('The user is not authenticated.', 401))
     }
   } catch (error) {
     next(error)
   }
 }
 
-
 export const sendVerificationEmail = async (req: any, res: any, next: any) => {
   try {
-    const id = req.user.id;
-    const user = await User.findById(id);
+    const id = req.user.id
+    const user = await User.findById(id)
     if (!user) {
-      throw new Error(`User ${id} does not exist`);
+      throw new Error(`User ${id} does not exist`)
     }
     if (user!.isActivate) {
-      return next(new ApiErrorResponse(`User ${id} is already activated`, 400));
+      return next(new ApiErrorResponse(`User ${id} is already activated`, 400))
     }
 
     const verificationToken = generateJWToken(
       {
-        id: user._id.toString()
+        id: user._id.toString(),
       },
       process.env.JWT_FREQUENCY_SECRET,
       '30m'
-    );
-    const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`;
-    const isSent = await senVerification(user.email, user.name, verificationUrl);
+    )
+    const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
+    const isSent = await senVerification(user.email, user.name, verificationUrl)
     if (isSent) {
       res.status(200).json({
         success: true,
-        message: `send email successfully`
-      });
+        message: `send email successfully`,
+      })
     }
   } catch (error) {
-    next(new ApiErrorResponse('failed to send email'));
+    next(new ApiErrorResponse('failed to send email'))
   }
 }

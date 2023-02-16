@@ -15,7 +15,8 @@ interface IUser extends Document {
   image?: string
   phone?: string
   courses?: string[]
-  interests?: string[] 
+  description?: string
+  interests?: string[]
   isBanned: boolean
 }
 
@@ -55,9 +56,6 @@ const userSchema = new Schema<IUser>(
 
   { timestamps: { createdAt: true, updatedAt: true } }
 )
-
-
-
 
 const User: Model<IUser> = model<IUser>('User', userSchema)
 

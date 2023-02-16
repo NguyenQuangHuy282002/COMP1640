@@ -5,6 +5,8 @@ export const userRouter = express.Router()
 
 userRouter.get('/', async (req, res) => {
   try {
+    const data = await User.find({})
+    res.json(data)
   } catch (err) {
     res.json({ success: 0, err })
   }
