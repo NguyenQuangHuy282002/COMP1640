@@ -3,18 +3,18 @@ import ApiErrorResponse from '../utils/ApiErrorResponse'
 
 export const authProtect = async (req: any, res: any, next: any) => {
   try {
-    if (!req.headers.authorization || !req.headers.authorization.startWith('Bearer ')) {
-      return next(new ApiErrorResponse('Invalid authorization', 400))
+    if (!req.headers.authorization || req.headers.authorization.slice(0,7) !== 'Bearer ') {
+      return next(new ApiErrorResponse('Invalid authentication', 400))
     }
     let tmp = req.header('Authorization')
 
     const token = tmp ? tmp.slice(7, tmp.length) : ''
     if (!token) {
-      return next(new ApiErrorResponse('Invalid authorization', 401));
+      return next(new ApiErrorResponse('Invalid authentication', 401));
     }
     jwt.verify(token, process.env.JWT_ACCESS_SECRET!, (err: any, user: any) => {
       if (err) {
-        return next(new ApiErrorResponse('Invalid authorization', 401));
+        return next(new ApiErrorResponse('Invalid authentication', 401));
       }
       req.user = user
       next()

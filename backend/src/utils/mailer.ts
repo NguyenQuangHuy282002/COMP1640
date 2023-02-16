@@ -1,13 +1,12 @@
 import nodemailer from 'nodemailer';
-import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
+import ApiErrorResponse from './ApiErrorResponse';
 
-const { OAuth2 } = google.auth;
-const oauth_url = "https://developers.google.com/oauthplayground/";
-const { BASE_EMAIL, MAILER_ID, MAILER_SECRET, MAILER_REFRESH_TOKEN, MAILER_ACCESS_TOKEN } = process.env;
+const oauth_url = "https://developers.google.com/oauthplayground";
 
-const auth = new OAuth2(
-  MAILER_ID,
-  MAILER_SECRET,
+const auth = new OAuth2Client(
+  process.env.MAILER_ID,
+  process.env.MAILER_SECRET,
   oauth_url
 );
 
@@ -18,37 +17,41 @@ type mailOptions = {
   html: string
 }
 
-const initstmp = () => {
+const initstmp = async () => {
   auth.setCredentials({
-    refresh_token: MAILER_REFRESH_TOKEN,
+    refresh_token: process.env.MAILER_REFRESH_TOKEN,
   })
-  const accessToken: any = auth.getAccessToken();
+  console.log(process.env.MAILER_ID)
+  const accessTokenObject: any = await auth.getAccessToken();
+  const accessToken = accessTokenObject?.token;
+  console.log('access:',accessToken)
   const stmp = nodemailer.createTransport({
     service: "gmail",
     auth: {
       type: "OAuth2",
-      user: BASE_EMAIL,
-      clientId: MAILER_ID,
-      clientSecret: MAILER_SECRET,
-      refreshToken: MAILER_REFRESH_TOKEN,
-      accessToken,
+      user: process.env.BASE_EMAIL,
+      clientId: process.env.MAILER_ID,
+      clientSecret: process.env.MAILER_SECRET,
+      refreshToken: process.env.MAILER_REFRESH_TOKEN,
+      accessToken: accessToken
+      // accessToken: 'ya29.a0AVvZVspxpNUtkkrefGVRIW9WrNM3W3A_WfxWyzxlxt6IW8oSnipKdCYOsm2ZrPs2FGRmbELkLHORvYEmyoj8m6KTTUV_phMnK-5n1MJpIjGc93lgMwpKkr-kO__mQIH2qy1_i84GDosydlpDo-XvlGCAQdszaCgYKATwSARESFQGbdwaIh7gv4C4dMiOxDRXJKFvnvQ0163',
     }
   })
   return stmp;
-} 
+}
 
 export const sendEmailFunc = async (email: string, template: string, subject?: string, attachment?: any) => {
   try {
-    const stmp =  initstmp()
+    const stmp = await initstmp()
     const option: mailOptions = {
-      from: BASE_EMAIL!,
+      from: process.env.BASE_EMAIL!,
       to: email,
       subject: subject! || '',
       html: template
     }
-  
-    await stmp.sendMail(option);
-    return true;
+    const sendMailMetaData = await stmp.sendMail(option);
+
+    return sendMailMetaData;
   } catch (error) {
     return error;
   }
@@ -58,9 +61,16 @@ export const senVerification = async (email: string, name: string, url: string) 
   try {
     const template = `<!DOCTYPE html><html><head><title></title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><style type="text/css">@media screen{@font-face{font-family:Montserrat;font-style:normal;font-weight:400;src:local('Montserrat'),local('Montserrat'),url(https://fonts.google.com/share?selection.family=Montserrat:ital,wght@1,200)}@font-face{font-family:Montserrat;font-style:normal;font-weight:700;src:local('Montserrat Bold'),local('Montserrat-Bold'),url(https://fonts.google.com/share?selection.family=Montserrat%20Subrayada:wght@700%7CMontserrat:ital,wght@1,200)}a,body,table,td{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table,td{mso-table-lspace:0;mso-table-rspace:0}img{-ms-interpolation-mode:bicubic}img{border:0;height:auto;line-height:100%;outline:0;text-decoration:none}table{border-collapse:collapse!important}body{height:100%!important;margin:0!important;padding:0!important;width:100%!important}a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font-size:inherit!important;font-family:inherit!important;font-weight:inherit!important;line-height:inherit!important}@media screen and (max-width:600px){h1{font-size:32px!important;line-height:32px!important}}div[style*="margin: 16px 0;"]{margin:0!important}}</style></head><body style="background-color:#f4f4f4;margin:0!important;padding:0!important"><div style="display:none;font-size:1px;color:#fefefe;line-height:1px;font-family:'Montserrat'Helvetica,Arial,sans-serif;max-height:0;max-width:0;opacity:0;overflow:hidden">Ye5Sir!</div><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td bgcolor="#f4f4f4" align="center"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px"><tr><td align="center" valign="top" style="padding:40px 10px 40px 10px"></td></tr></table></td></tr><tr><td bgcolor="#f4f4f4" align="center" style="padding:0 10px 0 10px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px"><tr><td bgcolor="#ffffff" align="center" valign="top" style="padding:40px 20px 20px 20px;border-radius:2px 2px 0 0;color:#aadb1e;font-family:'Londrina Solid'Helvetica,Arial,sans-serif;font-size:45px;font-weight:700;letter-spacing:2px;line-height:48px"><h1 style="font-size:40px;font-weight:700;margin:w-50">Ye5Sir</h1></td></tr></table></td></tr><tr><td bgcolor="#f4f4f4" align="center" style="padding:0 10px 0 10px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px"><tr><td bgcolor="#ffffff" align="center" style="padding:20px 30px 40px 30px;color:#000;font-family:'Montserrat bold' Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:25px"><p>Kindly verify your email to complete your account registration.</p></td></tr><tr><td bgcolor="#ffffff" align="left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td bgcolor="#ffffff" align="center" style="padding:20px 30px 60px 30px"><table border="0" cellspacing="0" cellpadding="0"><tr><td align="center" style="border-radius:30px" bgcolor="#000000"><a href="${url}" target="_blank" style="font-size:20px;font-family:'Montserrat Bold'Helvetica,Arial,sans-serif;color:#fff;text-decoration:none;color:#fff;text-decoration:none;padding:10px 55px;border-radius:2px;display:inline-block">VERIFY NOW</a></td></tr></table></td></tr></table></td></tr><tr><td bgcolor="#ffffff" align="center" style="padding:0 30px 0 30px;color:#000;font-family:'Montserrat'Helvetica,Arial,sans-serif;font-size:14px;font-weight:550;line-height:25px"><p style="margin:0">Alternatively, you can copy this URL to your browser:</p></td></tr><tr><td bgcolor="#ffffff" align="center" style="padding:20px 30px 20px 30px;color:#666;font-family:'Montserrat'Helvetica,Arial,sans-serif;font-size:14px;font-weight:550;line-height:25px"><p style="margin:0"><a href="#" target="_blank" style="color:#29abe2">https://www.google.com/</a></p></td></tr><tr><td bgcolor="#ffffff" align="center" style="padding:0 30px 20px 30px;color:#000;font-family:'Montserrat'Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:25px"><p style="margin:0">The link will be valid for the next 24 hours.</p></td></tr><tr><td bgcolor="#ffffff" align="center" style="padding:0 30px 40px 30px;border-radius:0 0 4px 4px;color:#000;font-family:'Montserrat'Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:25px"><p style="margin:0">Contact us at<a href="#" target="_blank" style="color:#29abe2">support@anywheel.sg</a></p></td></tr><tr><td bgcolor="#ffffff" align="center" style="padding:0 30px 40px 30px;border-radius:0 0 4px 4px;color:#333;font-family:'Montserrat'Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:25px"><img src="https://img.icons8.com/ios-glyphs/30/000000/facebook-new.png"> <img src="https://img.icons8.com/material-outlined/30/000000/instagram-new.png"></td></tr></table></td></tr><tr><td bgcolor="#f4f4f4" align="center" style="padding:0 10px 0 10px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px"><tr><td bgcolor="#f4f4f4" align="center" style="padding:0 30px 30px 30px;color:#666;font-family:Lato,Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:18px"><br><p style="margin:0"><a href="" target="_blank" style="color:#111;font-weight:700"></p></td></tr></table></td></tr></table></body></html>`
     const result = await sendEmailFunc(email, template, 'Ye5Sir email verification');
-    return result;
+    if(result.response.status !== 200){
+      console.log(`Send Email Failed, status code: ${result.response.status}, \nData: error: ${result.response.data.error} \n error: ${result.response.data.error_description}`)
+      return new ApiErrorResponse(`Send Email Failed, status code: ${result.response.status}, \nData: error: ${result.response.data.error} \n error: ${result.response.data.error_description}`);
+    }
+    else{
+      console.log('Send mail result: ',result)
+      return true;
+    }
   } catch (error) {
-    return error;
+    throw error;
   }
 }
 
@@ -68,7 +78,12 @@ export const sendResetPassword = async (email: string, name: string, code: strin
   try {
     const template = 's';
     const result = await sendEmailFunc(email, template, 'Ye5Sir reset password');
-    return result;
+    if (result.response.status !== 200) {
+      throw new ApiErrorResponse(`Send Email Failed, status code: ${result.response.status}, \nData: ${result.response.data} \n`)
+    }
+    else {
+      return true;
+    }
   } catch (error) {
     return error;
   }
