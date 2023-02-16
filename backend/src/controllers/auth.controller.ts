@@ -4,6 +4,8 @@ import { bcryptHash, bcryptCompare } from '../helpers/bcrypt.helper'
 import ApiErrorResponse from '../utils/ApiErrorResponse'
 import { senVerification } from '../utils/mailer'
 
+
+
 export const createAccount = async (req: any, res: any, next: any) => {
   try {
     const { username, firstName, lastName, password, role, phone, birthday } = req.body
@@ -46,7 +48,7 @@ export const login = async (req: any, res: any, next: any) => {
 
     sendTokenResponse(user, 200, 'Login successfully', res, next)
   } catch (err) {
-    next()
+    next(err)
   }
 }
 
@@ -55,6 +57,7 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
     user: {
       id: userData.id,
       username: userData.username,
+      role: userData.role
     },
   }
 

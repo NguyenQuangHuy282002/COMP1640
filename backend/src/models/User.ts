@@ -30,7 +30,7 @@ const userSchema = new Schema<IUser>(
     },
     isActivate: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     isBanned: {
       type: Boolean,
