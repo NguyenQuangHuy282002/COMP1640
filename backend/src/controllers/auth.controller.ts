@@ -5,7 +5,7 @@ import ApiErrorResponse from '../utils/ApiErrorResponse'
 import { senVerification } from '../utils/mailer'
 
 
-
+// @route POST /api/v1/auth/create -- create user account
 export const createAccount = async (req: any, res: any, next: any) => {
   try {
     const { username, firstName, lastName, password, role, phone, birthday } = req.body
@@ -32,6 +32,10 @@ export const createAccount = async (req: any, res: any, next: any) => {
   }
 }
 
+
+
+
+// @route POST /api/v1/auth/login
 export const login = async (req: any, res: any, next: any) => {
   try {
     const { username, password } = req.body
@@ -90,6 +94,9 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
   }
 }
 
+
+
+// @route POST /api/v1/auth/refreshToken -- call for refresh the access token
 export const refreshToken = async (req: any, res: any, next: any) => {
   try {
     const refreshToken = await User.findOne({ _id: req.user.id }).select('token')
@@ -112,6 +119,9 @@ export const refreshToken = async (req: any, res: any, next: any) => {
   }
 }
 
+
+
+// @route POST /api/v1/auth/sendVerificationEmail
 export const sendVerificationEmail = async (req: any, res: any, next: any) => {
   try {
     const {id, isActivate, username} = req.user
@@ -129,7 +139,7 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     )
     const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
     const isSent = await senVerification(email, username, verificationUrl)
-    if (isSent) {
+    if (isSent == true) {
       res.status(200).json({
         success: isSent,
         message: `send email successfully`,
@@ -139,3 +149,32 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     next(new ApiErrorResponse(error))
   }
 }
+
+
+
+// @route POST /api/v1/auth/activateAccount -- active the account via a url sent in the verification email
+export const activateAccount = async (req: any, res: any, next: any) => {
+  try {
+    const validUser = req.user.id;
+    const { token } = req.body;
+    const user = await verifyJWTToken(token, process.env.TOKEN_SECRET);
+    const check = await User.findById(user);
+
+    if (validUser !== user) {
+      return next(new ApiErrorResponse("You don't have the authorization to complete this operation.", 403))
+    }
+    if (check.isActivate == true) {
+      return next(new ApiErrorResponse("This email is already activated.", 400))
+    } else {
+      await User.findByIdAndUpdate(user, { isActivate: true });
+      return res
+        .status(200)
+        .json({ 
+          success:true, 
+          message: "Account has beeen activated successfully." 
+        });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
