@@ -77,13 +77,25 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
   setRefreshToken(refreshToken, userData, next)
 
   res.status(statusCode)
-  .cookie('token', refreshToken, cookieOptions)
-  .json({
-    success: true,
-    userData,
-    message,
-    accessToken: accessToken,
-  })
+    .cookie('token', refreshToken, cookieOptions)
+    .json({
+      success: true,
+      userMetaData: {
+        username: userData.username,
+        role: userData.role,
+        name: userData.name,
+        isActivate: userData.isActivate,
+        birthday: userData.birthday || '',
+        email: userData.email || 'None',
+        image: userData.image || '',
+        phone: userData.phone || '',
+        description: userData.description || '',
+        interests: userData.interests || [],
+        isBanned: userData.isBanned || false
+      },
+      message,
+      accessToken: accessToken,
+    })
 }
 
 const setRefreshToken = async (token: string, userData: any, next: any) => {
@@ -124,7 +136,7 @@ export const refreshToken = async (req: any, res: any, next: any) => {
 // @route POST /api/v1/auth/sendVerificationEmail
 export const sendVerificationEmail = async (req: any, res: any, next: any) => {
   try {
-    const {id, isActivate, username} = req.user
+    const { id, isActivate, username } = req.user
     const { email } = req.body
     if (isActivate) {
       return next(new ApiErrorResponse(`User ${id} is already activated`, 400))
@@ -169,9 +181,9 @@ export const activateAccount = async (req: any, res: any, next: any) => {
       await User.findByIdAndUpdate(user, { isActivate: true });
       return res
         .status(200)
-        .json({ 
-          success:true, 
-          message: "Account has beeen activated successfully." 
+        .json({
+          success: true,
+          message: "Account has beeen activated successfully."
         });
     }
   } catch (error) {

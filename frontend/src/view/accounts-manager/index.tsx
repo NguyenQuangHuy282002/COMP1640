@@ -1,6 +1,6 @@
 import { Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import { Http } from '../../api/http'
 
 interface DataType {
@@ -62,8 +62,8 @@ function AccountManager() {
   useEffect(() => {
     const getAllUser = async () =>
       await Http.get('/api/v1/users')
-        .then(res => setAccount(res.data))
-        .catch(error => console.log(error))
+        .then((res: { data: SetStateAction<never[]> }) => setAccount(res.data))
+        .catch((error: any) => console.log(error))
 
     getAllUser()
   }, [])

@@ -14,7 +14,6 @@ interface IUser extends Document {
   email: string
   image?: string
   phone?: string
-  courses?: string[]
   description?: string
   interests?: string[]
   isBanned: boolean
