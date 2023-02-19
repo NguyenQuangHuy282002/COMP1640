@@ -14,7 +14,6 @@ interface IUser extends Document {
   email: string
   image?: string
   phone?: string
-  courses?: string[]
   description?: string
   interests?: string[]
   isBanned: boolean
@@ -31,7 +30,7 @@ const userSchema = new Schema<IUser>(
     },
     isActivate: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     isBanned: {
       type: Boolean,

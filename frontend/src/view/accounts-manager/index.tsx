@@ -1,7 +1,7 @@
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
 
@@ -81,7 +81,6 @@ function AccountManager() {
         .then(res => setAccounts(res.data))
         .then(() => setLoading(false))
         .catch(error => console.log(error))
-
     getAllUser()
   }, [])
 
