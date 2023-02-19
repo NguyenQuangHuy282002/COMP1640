@@ -24,7 +24,7 @@ export const authProtect = async (req: any, res: any, next: any) => {
   }
 }
 
-export const authorize = async (...roles: string[]) => {
+export const authorize = (...roles) => {
   return (req: any, res: any, next: any) => {
     if (!roles.includes(req.user.role)) {
       return next(new ApiErrorResponse(

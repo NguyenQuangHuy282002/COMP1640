@@ -1,5 +1,5 @@
 import { categoryRouter } from './category'
-import { usersRouter } from './users'
+import { usersRouter } from './users.router'
 import authRouter from './auth.router'
 import { serverErrorHandler } from '../middlewares/serverErrorHandler'
 import { Express } from 'express-serve-static-core'
