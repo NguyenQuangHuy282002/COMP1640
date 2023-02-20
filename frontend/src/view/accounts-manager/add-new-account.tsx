@@ -2,7 +2,7 @@ import { Col, Form, Input, Modal, Select } from 'antd'
 import { useSnackbar } from 'notistack'
 import { Http } from '../../api/http'
 
-export default function AddAccountModal({ isOpen, onCloseModal }) {
+export default function AddAccountModal({ isOpen, onCloseModal, setAccounts, accounts }) {
   const { enqueueSnackbar } = useSnackbar()
   const [form] = Form.useForm()
 
@@ -15,8 +15,12 @@ export default function AddAccountModal({ isOpen, onCloseModal }) {
       email: form.getFieldValue('email'),
       role: form.getFieldValue('role'),
     }
-    console.log(accountForm)
-    await Http.post('/api/v1/users', accountForm).catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+    await Http.post('/api/v1/users', accountForm)
+      .then(() => {
+        // setAccounts([accountForm, ...accounts])
+        onCloseModal()
+      })
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
   }
 
   return (

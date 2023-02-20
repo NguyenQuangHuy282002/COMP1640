@@ -26,7 +26,7 @@ const userSchema = new Schema<IUser>(
     token: String,
     role: {
       type: String,
-      enum: ['staff', 'coordinator', 'QAmanager'],
+      enum: ['staff', 'coordinator', 'manager'],
       default: 'staff',
     },
     isActivate: {
