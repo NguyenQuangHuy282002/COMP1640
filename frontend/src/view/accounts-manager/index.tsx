@@ -102,7 +102,12 @@ function AccountManager() {
       >
         <Table rowSelection={rowSelection} columns={columns} dataSource={accounts} loading={loading} />
       </Card>
-      <AddAccountModal isOpen={openModal} onCloseModal={() => setOpenModal(false)}></AddAccountModal>
+      <AddAccountModal
+        isOpen={openModal}
+        onCloseModal={() => setOpenModal(false)}
+        setAccounts={setAccounts}
+        accounts={accounts}
+      />
     </Row>
   )
 }
