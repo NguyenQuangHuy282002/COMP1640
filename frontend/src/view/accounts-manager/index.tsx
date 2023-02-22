@@ -1,6 +1,7 @@
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import { useSnackbar } from 'notistack'
 import { SetStateAction, useEffect, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
@@ -43,7 +44,7 @@ const columns: ColumnsType<DataType> = [
       },
       {
         text: 'QA Manager',
-        value: 'QAmanager',
+        value: 'manager',
       },
       {
         text: 'Coordinator',
@@ -69,6 +70,7 @@ const AddAccount = ({ openModal }) => (
 )
 
 function AccountManager() {
+  const { enqueueSnackbar } = useSnackbar()
   const [accounts, setAccounts] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
@@ -78,9 +80,9 @@ function AccountManager() {
     setLoading(true)
     const getAllUser = async () =>
       await Http.get('/api/v1/users')
-        .then(res => setAccounts(res.data))
-        .then(() => setLoading(false))
-        .catch(error => console.log(error))
+        .then(res => setAccounts(res.data.data))
+        .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+        .finally(() => setLoading(false))
     getAllUser()
   }, [])
 
