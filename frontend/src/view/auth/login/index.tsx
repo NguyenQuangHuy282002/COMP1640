@@ -14,17 +14,17 @@ function Login() {
   const [form] = Form.useForm()
 
   const handleSubmit = async (val: any) => {
-    const loginRes: any = await Http.post('/api/v1/auth/login', val).catch(error =>
-      enqueueSnackbar(error.message, { variant: 'error' })
-    )
-
-    console.log(loginRes)
-    if (loginRes.data.success) {
-      message.success(loginRes.data.message)
-      localStorage.setItem(LOCALSTORAGE.TOKEN, loginRes.data.accessToken)
-      userStore.updateState(loginRes.data.userData)
-      return navigate(state?.from || '/dashboard')
-    }
+    await Http.post('/api/v1/auth/login', val)
+      .then(res => {
+        if (res.data?.success) {
+          message.success('Login successful')
+          message.warning(res.data.message)
+          localStorage.setItem(LOCALSTORAGE.TOKEN, res.data.accessToken)
+          userStore.updateState(res.data.userData)
+          return navigate(state?.from || '/dashboard')
+        }
+      })
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
   }
 
   return (
