@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "./src",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,7 +22,16 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "paths": {
+    "@/*": [
+      "next/*"
+    ],
+    "@t/*": [
+      "types/*"
+    ]
+  },
   "include": [
-    "../frontend/src"
+    "src/next",
+    "src/types"
   ]
 }

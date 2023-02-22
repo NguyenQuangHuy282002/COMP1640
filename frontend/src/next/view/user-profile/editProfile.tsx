@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Col, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
 import TextEditor from '../../components/text-editor'
-import { IUserInfo } from '../../types/user'
+import { IUserInfo } from '../../../types/user'
 
 const { Title } = Typography
 
