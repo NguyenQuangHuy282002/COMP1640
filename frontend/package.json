@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/draft-js": "^0.11.10"
+    "@types/draft-js": "^0.11.10",
+    "@types/styled-components": "^5.1.26"
   }
 }

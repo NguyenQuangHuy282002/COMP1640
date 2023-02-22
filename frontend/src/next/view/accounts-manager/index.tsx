@@ -2,13 +2,14 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
-import { SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
+import SearchField from './search-field'
 
 interface DataType {
   id: string
-  name: string
+  username: string
   email: string
   role: string
   active: boolean
@@ -24,7 +25,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: 'Name',
     dataIndex: 'username',
-    sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
+    sorter: (a: DataType, b: DataType) => a.username.length - b.username.length,
     width: '30%',
     key: 'username',
   },
@@ -75,6 +76,10 @@ function AccountManager() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [searchKey, setSearchKey] = useState('')
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
+  }, [accounts, searchKey])
 
   useEffect(() => {
     setLoading(true)
@@ -93,6 +98,7 @@ function AccountManager() {
     selectedRowKeys,
     onChange: onSelectChange,
   }
+
   return (
     <Row gutter={16} style={{ padding: '20px', margin: 0 }}>
       <Card
@@ -102,7 +108,8 @@ function AccountManager() {
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <Table rowSelection={rowSelection} columns={columns} dataSource={accounts} loading={loading} />
+        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} />
+        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
       </Card>
       <AddAccountModal
         isOpen={openModal}
