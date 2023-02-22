@@ -7,31 +7,28 @@
       "esnext"
     ],
     "baseUrl": "./src",
+    "paths": {
+      "@/*": [
+        "next/*"
+      ],
+      "@t/*": [
+        "types/*"
+      ]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  },
-  "paths": {
-    "@/*": [
-      "next/*"
-    ],
-    "@t/*": [
-      "types/*"
-    ]
   },
   "include": [
     "src/next",
     "src/types"
-  ]
+, "src/index.tsx"  ]
 }

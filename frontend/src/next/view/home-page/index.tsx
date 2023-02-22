@@ -1,5 +1,5 @@
-import styled from '@emotion/styled'
 import { Col, Divider, Row, Space, Typography } from 'antd'
+import styled from 'styled-components'
 import { imgDir } from '../../constants/img-dir'
 
 const { Title } = Typography
