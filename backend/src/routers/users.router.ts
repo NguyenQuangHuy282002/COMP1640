@@ -1,15 +1,15 @@
 import User from '../models/User'
 import express from 'express'
-import { authorize, authProtect } from '../middlewares/auth'
-import {
-  changePassword,
-  deleteUser,
-  find,
-  findUser,
-  search,
-  updateProfilePicture,
-  updateUser,
-} from '../controllers/user.controller'
+import { authorize, authProtect } from '../middlewares/auth';
+import { 
+  changePassword, 
+  deleteUser, 
+  find, 
+  findUser, 
+  search, 
+  updateProfilePicture, 
+  updateUser } from '../controllers/user.controller'
+
 
 export const usersRouter = express.Router()
 

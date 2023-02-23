@@ -1,6 +1,8 @@
-import { Col, Divider, Row, Space, Typography } from 'antd'
+
+import { Col, Divider, Row, Space, Typography, Input } from 'antd'
 import styled from 'styled-components'
 import { imgDir } from '../../constants/img-dir'
+import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -63,6 +65,11 @@ export const courses = [
 ]
 
 function HomePage() {
+  const navigate = useNavigate()
+
+  const handleClickTyping = async () => {
+    navigate('/submit')
+  }
   return (
     <>
       <Row gutter={16} style={{ padding: '20px 20px 0px', margin: 0 }}>
@@ -70,6 +77,9 @@ function HomePage() {
           Course categories
         </Title>
         <Divider style={{ margin: '10px 0px' }} />
+      </Row>
+      <Row gutter={8} style={{ padding: 20 }}>
+        <Input style={{ lineHeight: 2.15 }} placeholder="Create Your Idea" onClick={()=>{handleClickTyping()}}></Input>
       </Row>
       <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
         {courses.map((course: any, idx: number) => (

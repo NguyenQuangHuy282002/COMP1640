@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
+
 import AccountManager from './next/view/accounts-manager'
 import Login from './next/view/auth/login'
 import Dashboard from './next/view/dashboard'
@@ -12,10 +13,11 @@ import HomePage from './next/view/home-page'
 import AppFooter from './next/view/layout/footer'
 import AppHeader from './next/view/layout/header'
 import UserProfile from './next/view/user-profile'
+import CreateIdea from './next/view/ideas/create-new-idea'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <SnackbarProvider maxSnack={1} preventDuplicate>
       <Router>
         <Routes>
@@ -40,11 +42,12 @@ root.render(
             <Route path="/accounts-manager" element={<AccountManager />} />
             <Route path="/ideas" element={<UserProfile />} />
             <Route path="/account" element={<UserProfile />} />
+            <Route path="/submit" element={<CreateIdea />} />
           </Route>
         </Routes>
       </Router>
     </SnackbarProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function
