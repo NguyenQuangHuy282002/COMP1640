@@ -1,13 +1,15 @@
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { SetStateAction, useEffect, useState } from 'react'
+import { useSnackbar } from 'notistack'
+import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
+import SearchField from './search-field'
 
 interface DataType {
   id: string
-  name: string
+  username: string
   email: string
   role: string
   active: boolean
@@ -23,7 +25,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: 'Name',
     dataIndex: 'username',
-    sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
+    sorter: (a: DataType, b: DataType) => a.username.length - b.username.length,
     width: '30%',
     key: 'username',
   },
@@ -43,7 +45,7 @@ const columns: ColumnsType<DataType> = [
       },
       {
         text: 'QA Manager',
-        value: 'QAmanager',
+        value: 'manager',
       },
       {
         text: 'Coordinator',
@@ -69,18 +71,23 @@ const AddAccount = ({ openModal }) => (
 )
 
 function AccountManager() {
+  const { enqueueSnackbar } = useSnackbar()
   const [accounts, setAccounts] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [searchKey, setSearchKey] = useState('')
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
+  }, [accounts, searchKey])
 
   useEffect(() => {
     setLoading(true)
     const getAllUser = async () =>
       await Http.get('/api/v1/users')
-        .then(res => setAccounts(res.data))
-        .then(() => setLoading(false))
-        .catch(error => console.log(error))
+        .then(res => setAccounts(res.data.data))
+        .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+        .finally(() => setLoading(false))
     getAllUser()
   }, [])
 
@@ -91,6 +98,7 @@ function AccountManager() {
     selectedRowKeys,
     onChange: onSelectChange,
   }
+
   return (
     <Row gutter={16} style={{ padding: '20px', margin: 0 }}>
       <Card
@@ -100,9 +108,15 @@ function AccountManager() {
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <Table rowSelection={rowSelection} columns={columns} dataSource={accounts} loading={loading} />
+        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} />
+        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
       </Card>
-      <AddAccountModal isOpen={openModal} onCloseModal={() => setOpenModal(false)}></AddAccountModal>
+      <AddAccountModal
+        isOpen={openModal}
+        onCloseModal={() => setOpenModal(false)}
+        setAccounts={setAccounts}
+        accounts={accounts}
+      />
     </Row>
   )
 }

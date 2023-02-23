@@ -8,10 +8,10 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import styled from '@emotion/styled'
 import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, Row, Typography } from 'antd'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { imgDir } from '../../constants/img-dir'
 import useWindowSize from '../../utils/useWindowSize'
 

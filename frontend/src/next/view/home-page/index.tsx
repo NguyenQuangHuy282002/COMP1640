@@ -1,5 +1,6 @@
-import styled from '@emotion/styled'
+
 import { Col, Divider, Row, Space, Typography, Input } from 'antd'
+import styled from 'styled-components'
 import { imgDir } from '../../constants/img-dir'
 import { useNavigate } from 'react-router-dom'
 
