@@ -14,7 +14,7 @@ import {
 export const usersRouter = express.Router()
 
 usersRouter.get('/', authProtect, find)
-usersRouter.delete('/deleteUser', authProtect, authorize(['admin']), deleteUser)
+usersRouter.delete('/deleteUser', authProtect,  deleteUser)
 usersRouter.put('/changePassword', authProtect, changePassword)
 usersRouter.put('/updateProfile', authProtect, updateUser)
 usersRouter.put('/updateProfilePicture', authProtect, updateProfilePicture)

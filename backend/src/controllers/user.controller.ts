@@ -40,7 +40,7 @@ export const updateProfilePicture = async (req: any, res: any, next: any) => {
   try {
     const { url } = req.body
 
-    await User.findByIdAndUpdate(req.user.id, {
+    await User.findByIdAndUpdate(req.payload.user.id, {
       image: url,
     })
     res.json(url)
