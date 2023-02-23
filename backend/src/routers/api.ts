@@ -3,15 +3,15 @@ import { usersRouter } from './users.router'
 import authRouter from './auth.router'
 import { serverErrorHandler } from '../middlewares/serverErrorHandler'
 import { Express } from 'express-serve-static-core'
-import { ideaRouter } from './idea'
+import { ideaRouter } from './idea.router'
 import { specialEventRouter } from './specialEvent'
 
 const apiRouter = (app: Express) => {
   app.use('/api/v1/users', usersRouter)
   app.use('/api/v1/auth', authRouter)
-  app.use('/api/category', categoryRouter)
-  app.use('/api/event', specialEventRouter)
-  app.use('/api/idea', ideaRouter)
+  app.use('/api/v1/category', categoryRouter)
+  app.use('/api/v1/event', specialEventRouter)
+  app.use('/api/v1/idea', ideaRouter)
   app.use(serverErrorHandler)
 }
 

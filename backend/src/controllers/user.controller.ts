@@ -1,6 +1,6 @@
-import { bcryptHash } from "helpers/bcrypt.helper";
-import User from "models/User";
-import ApiErrorResponse from "utils/ApiErrorResponse";
+import { bcryptHash } from "../helpers/bcrypt.helper";
+import User from "../models/User";
+import ApiErrorResponse from "../utils/ApiErrorResponse";
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 
 

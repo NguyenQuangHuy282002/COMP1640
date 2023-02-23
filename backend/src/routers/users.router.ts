@@ -1,6 +1,6 @@
 import User from '../models/User'
 import express from 'express'
-import { authorize, authProtect } from 'middlewares/auth';
+import { authorize, authProtect } from '../middlewares/auth';
 import { 
   changePassword, 
   deleteUser, 

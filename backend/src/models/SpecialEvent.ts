@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { IBlogPost } from './BlogPost'
+import { IBlogPost } from './Idea'
 
 interface ISpecialEvent {
   title: string

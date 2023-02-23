@@ -10,13 +10,14 @@ import Login from './view/auth/login'
 import Dashboard from './view/dashboard'
 import EventsPage from './view/events'
 import HomePage from './view/home-page'
+import CreateIdea from './view/ideas/create-new-idea'
 import AppFooter from './view/layout/footer'
 import AppHeader from './view/layout/header'
 import UserProfile from './view/user-profile'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <SnackbarProvider maxSnack={1} preventDuplicate>
       <Router>
         <Routes>
@@ -41,11 +42,12 @@ root.render(
             <Route path="/accounts-manager" element={<AccountManager />} />
             <Route path="/ideas" element={<UserProfile />} />
             <Route path="/account" element={<UserProfile />} />
+            <Route path="/submit" element={<CreateIdea />} />
           </Route>
         </Routes>
       </Router>
     </SnackbarProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function
