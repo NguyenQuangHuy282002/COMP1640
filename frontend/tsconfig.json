@@ -29,6 +29,7 @@
   },
   "include": [
     "src/next",
-    "src/types"
-, "src/index.tsx"  ]
+    "src/types",
+    "src/index.tsx"
+ ]
 }

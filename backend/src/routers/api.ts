@@ -10,6 +10,7 @@ const apiRouter = (app: Express) => {
   app.use('/api/v1/users', usersRouter)
   app.use('/api/v1/auth', authRouter)
   app.use('/api/v1/category', categoryRouter)
+  app.use('/api/v1/department', categoryRouter)
   app.use('/api/v1/event', specialEventRouter)
   app.use('/api/v1/idea', ideaRouter)
   app.use(serverErrorHandler)

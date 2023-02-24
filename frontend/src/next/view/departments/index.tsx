@@ -84,7 +84,7 @@ function DepartmentManager() {
   useEffect(() => {
     setLoading(true)
     const getAllUser = async () =>
-      await Http.get('/api/v1/users')
+      await Http.get('/api/v1/department')
         .then(res => setAccounts(res.data.data))
         .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
         .finally(() => setLoading(false))

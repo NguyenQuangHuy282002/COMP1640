@@ -44,6 +44,11 @@ function AppHeader() {
       icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
     },
     {
+      key: 'categories',
+      label: <Text style={{ fontSize: 20, margin: 0 }}>Categories</Text>,
+      icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
+    },
+    {
       key: 'accounts-manager',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Accounts</Text>,
       icon: windowWidth < 750 && <TeamOutlined style={{ fontSize: 20 }} />,
