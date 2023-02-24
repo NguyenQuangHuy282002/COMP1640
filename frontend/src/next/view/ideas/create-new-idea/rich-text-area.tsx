@@ -54,12 +54,22 @@ const RichTextArea = ({ editorState, setEditorState }) => {
         onEditorStateChange={(value: any) => {
           onChange(value);
         }}
+        toolbarStyle={{
+          background: "#f7fbfa",
+          border: "0.5px solid #ccc"
+        }}
         editorStyle={{ 
-          border: "1px #ccc black",
+          border: "1px #ccc solid",
           background: 'white',
           padding: '0 10px',
           wordBreak: 'break-word',
-          borderRadius: 20 +'px !important',
+          fontWeight: "400",
+          resize: 'vertical',
+          height: '160px',
+          width: '100%',
+          borderRadius: '5px',
+          overflow: 'auto',
+          boxShadow: 'inset 0px 1px 1px #ccc',
         }}
         toolbar={toolBarOptions}
         stripPastedStyles
