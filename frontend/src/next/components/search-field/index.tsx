@@ -8,7 +8,6 @@ function SearchField({ searchKey, setSearchKey, placeholder }) {
       placeholder={placeholder}
       allowClear
       onSearch={() => {}}
-      style={{ width: '40%', marginBottom: 16 }}
       value={searchKey}
       onChange={e => setSearchKey(e.target.value)}
     />

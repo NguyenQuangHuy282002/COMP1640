@@ -39,8 +39,8 @@ export const login = async (req: any, res: any, next: any) => {
     if (!user) {
       return next(new ApiErrorResponse('Invalid username or password', 401))
     }
-    const checkPassword = await bcryptCompare(password, user!.password)
-    // const checkPassword = password === user.password
+    // const checkPassword = await bcryptCompare(password, user!.password)
+    const checkPassword = password === user.password
     if (!checkPassword) {
       return next(new ApiErrorResponse('Invalid username or password', 400))
     } else if (!user.isActivate) {

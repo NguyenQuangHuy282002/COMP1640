@@ -1,5 +1,5 @@
-import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Table, Tag } from 'antd'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Card, Row, Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
@@ -19,7 +19,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: 'ID',
     dataIndex: '_id',
-    width: '10%',
+    width: '20%',
     key: 'id',
   },
   {
@@ -54,13 +54,27 @@ const columns: ColumnsType<DataType> = [
     ],
     onFilter: (value: any, record: DataType) => record.role.indexOf(value) === 0,
     key: 'role',
+    align: 'center',
   },
   {
     title: 'Status',
     dataIndex: 'isBanned',
     render: (_, record: any) => <Tag color="blue">{record.isBanned ? 'Active' : 'Inactive'}</Tag>,
-    width: '45%',
+    width: '15%',
     key: 'Status',
+    align: 'center',
+  },
+  {
+    title: 'Actions',
+    render: (_, record: any) => (
+      <Space wrap>
+        <Button type="text" icon={<EditOutlined />} />
+        <Button type="text" danger icon={<DeleteOutlined />} />
+      </Space>
+    ),
+    width: '20%',
+    key: 'Actions',
+    align: 'center',
   },
 ]
 

@@ -1,8 +1,9 @@
+import CategoryManager from './next/view/categories'
 import { Layout } from 'antd'
 import { SnackbarProvider } from 'notistack'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
-import reportWebVitals from './reportWebVitals'
+import './index.css'
 import AccountManager from './next/view/accounts-manager'
 import Login from './next/view/auth/login'
 import Dashboard from './next/view/dashboard'
@@ -13,6 +14,7 @@ import CreateIdea from './next/view/ideas/create-new-idea'
 import AppFooter from './next/view/layout/footer'
 import AppHeader from './next/view/layout/header'
 import UserProfile from './next/view/user-profile'
+import reportWebVitals from './reportWebVitals'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -37,7 +39,7 @@ root.render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/event" element={<EventsPage />} />
           <Route path="/departments" element={<DepartmentManager />} />
-          <Route path="/categories" element={<UserProfile />} />
+          <Route path="/categories" element={<CategoryManager />} />
           <Route path="/accounts-manager" element={<AccountManager />} />
           <Route path="/ideas" element={<UserProfile />} />
           <Route path="/account" element={<UserProfile />} />
