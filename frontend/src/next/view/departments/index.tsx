@@ -1,91 +1,65 @@
 import SearchField from '../../components/search-field'
-import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Table, Tag } from 'antd'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Card, Row, Space, Table, Tag, Typography } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
 import AddDepartmentModal from './add-new-department'
 
+const { Text } = Typography
+
 interface DataType {
   id: string
-  username: string
-  email: string
-  role: string
-  active: boolean
+  name: string
 }
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'ID',
-    dataIndex: '_id',
-    width: '10%',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'username',
-    sorter: (a: DataType, b: DataType) => a.username.length - b.username.length,
-    width: '30%',
-    key: 'username',
+    title: 'Department Name',
+    dataIndex: 'name',
+    sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
+    width: '60%',
+    key: 'name',
   },
 
   {
-    title: 'Role',
-    dataIndex: 'role',
-    width: '15%',
-    filters: [
-      {
-        text: 'Admin',
-        value: 'admin',
-      },
-      {
-        text: 'Staff',
-        value: 'staff',
-      },
-      {
-        text: 'QA Manager',
-        value: 'manager',
-      },
-      {
-        text: 'Coordinator',
-        value: 'coordinator',
-      },
-    ],
-    onFilter: (value: any, record: DataType) => record.role.indexOf(value) === 0,
-    key: 'role',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'isBanned',
-    render: (_, record: any) => <Tag color="blue">{record.isBanned ? 'Active' : 'Inactive'}</Tag>,
-    width: '15%',
-    key: 'Status',
+    title: 'Actions',
+    render: (_, record: any) => (
+      <Space wrap>
+        <Button type="text" icon={<EditOutlined />} />
+        <Button type="text" danger icon={<DeleteOutlined />} />
+      </Space>
+    ),
+    width: '40%',
+    key: 'Actions',
+    align: 'center',
   },
 ]
-
 const AddAccount = ({ openModal }) => (
   <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
-    Add new account
+    Add new department
   </Button>
 )
 
 function DepartmentManager() {
   const { enqueueSnackbar } = useSnackbar()
-  const [accounts, setAccounts] = useState([])
+  const [deparments, setDeparments] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [searchKey, setSearchKey] = useState('')
-  const filteredAccounts = useMemo(() => {
-    return accounts.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
-  }, [accounts, searchKey])
+  const filteredDeparments = useMemo(() => {
+    return deparments.filter((deparment: DataType) =>
+      deparment.name.toLowerCase().includes(searchKey.toLowerCase().trim())
+    )
+  }, [deparments, searchKey])
 
   useEffect(() => {
     setLoading(true)
     const getAllUser = async () =>
       await Http.get('/api/v1/department')
-        .then(res => setAccounts(res.data.data))
+        .then(res => setDeparments(res.data.data))
         .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
         .finally(() => setLoading(false))
     getAllUser()
@@ -108,14 +82,17 @@ function DepartmentManager() {
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search departments by name" />
-        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
+        <Space align="center" wrap={true} style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
+          <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search departments by name" />
+          <Text style={{ fontWeight: 600 }}>Number of departments: {filteredDeparments?.length}</Text>
+        </Space>
+        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredDeparments} loading={loading} />
       </Card>
       <AddDepartmentModal
         isOpen={openModal}
         onCloseModal={() => setOpenModal(false)}
-        setAccounts={setAccounts}
-        accounts={accounts}
+        setDeparments={setDeparments}
+        deparments={deparments}
       />
     </Row>
   )

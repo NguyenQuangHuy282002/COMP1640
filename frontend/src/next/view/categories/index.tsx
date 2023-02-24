@@ -14,13 +14,7 @@ interface DataType {
   name: string
 }
 
-const columns = pagination => [
-  {
-    title: 'No.',
-    render: (_, record: any, index) => <p>{index + (pagination - 1) * 10 + 1}</p>,
-    width: '10%',
-    key: 'no.',
-  },
+const columns: ColumnsType<DataType> = [
   {
     title: 'Category Name',
     dataIndex: 'name',
@@ -37,7 +31,7 @@ const columns = pagination => [
         <Button type="text" danger icon={<DeleteOutlined />} />
       </Space>
     ),
-    width: '30%',
+    width: '40%',
     key: 'Actions',
     align: 'center',
   },
@@ -92,17 +86,7 @@ function CategoryManager() {
           <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search categories by name" />
           <Text style={{ fontWeight: 600 }}>Number of categories: {filteredCategories?.length}</Text>
         </Space>
-        <Table
-          rowSelection={rowSelection}
-          pagination={{
-            onChange(current) {
-              setPagination(current)
-            },
-          }}
-          columns={columns(pagination) as ColumnsType<DataType>}
-          dataSource={filteredCategories}
-          loading={loading}
-        />
+        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredCategories} loading={loading} />
       </Card>
       <AddCategoryModal
         isOpen={openModal}

@@ -1,5 +1,5 @@
 import express from 'express'
-import Department from 'models/Department'
+import Department from '../models/Department'
 
 export const departmentRouter = express.Router()
 
