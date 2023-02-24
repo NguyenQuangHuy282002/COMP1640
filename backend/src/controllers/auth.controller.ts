@@ -39,8 +39,8 @@ export const login = async (req: any, res: any, next: any) => {
     if (!user) {
       return next(new ApiErrorResponse('Invalid username or password', 401))
     }
-    // const checkPassword = await bcryptCompare(password, user!.password)
-    const checkPassword = password === user.password
+    const checkPassword = await bcryptCompare(password, user!.password)
+    // const checkPassword = password === user.password
     if (!checkPassword) {
       return next(new ApiErrorResponse('Invalid username or password', 400))
     } else if (!user.isActivate) {
@@ -105,7 +105,7 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
 // @route POST /api/v1/auth/refreshToken -- call for refresh the access token
 export const refreshToken = async (req: any, res: any, next: any) => {
   try {
-    const refreshToken = await User.findOne({ _id: req.user.id }).select('token')
+    const refreshToken = await User.findOne({ _id: req.payload.user.id }).select('token')
     if (refreshToken) {
       const accessOption = {
         expriresIn: 300,
@@ -128,7 +128,7 @@ export const refreshToken = async (req: any, res: any, next: any) => {
 // @route POST /api/v1/auth/sendVerificationEmail
 export const sendVerificationEmail = async (req: any, res: any, next: any) => {
   try {
-    const { id, isActivate, username } = req.user
+    const { id, isActivate, username } = req.payload.user
     const { email } = req.body
     if (isActivate) {
       return next(new ApiErrorResponse(`User ${id} is already activated`, 400))
@@ -157,7 +157,7 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
 // @route POST /api/v1/auth/activateAccount -- active the account via a url sent in the verification email
 export const activateAccount = async (req: any, res: any, next: any) => {
   try {
-    const validUser = req.user.id
+    const validUser = req.payload.user.id
     const { token } = req.body
     const user = await verifyJWTToken(token, process.env.TOKEN_SECRET)
     const check = await User.findById(user)

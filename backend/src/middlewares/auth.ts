@@ -16,7 +16,7 @@ export const authProtect = async (req: any, res: any, next: any) => {
       if (err) {
         return next(new ApiErrorResponse('Invalid authentication', 401));
       }
-      req.user = user
+      req.payload = user
       next()
     })
   } catch (error: any) {
@@ -26,9 +26,9 @@ export const authProtect = async (req: any, res: any, next: any) => {
 
 export const authorize = (...roles) => {
   return (req: any, res: any, next: any) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.payload.user.role)) {
       return next(new ApiErrorResponse(
-        `Not authorized, user role ${req.user.role} is not allowed to access this route`,
+        `Not authorized, user role ${req.payload.user.role} is not allowed to access this route`,
         403
       )
       );

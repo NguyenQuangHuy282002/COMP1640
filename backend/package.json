@@ -26,6 +26,8 @@
   "dependencies": {
     "@socket.io/admin-ui": "^0.5.1",
     "@socket.io/redis-adapter": "^8.1.0",
+    "@types/uuid": "^9.0.0",
+    "aws-sdk": "^2.1318.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -42,6 +44,7 @@
     "nodemailer": "^6.7.6",
     "path": "^0.12.7",
     "redis": "^4.6.4",
-    "socket.io": "^4.6.0"
+    "socket.io": "^4.6.0",
+    "uuid": "^9.0.0"
   }
 }
