@@ -69,11 +69,9 @@ export default function CreateIdea() {
       department: form.getFieldValue('department'),
       content: editorState,
     }
-
-    console.log('files: ', files)
-    console.log(postForm.content)
-
-    fetchAll(files).then(a => console.log(JSON.stringify(a)))
+    const fileNameList = await fetchAll(files);
+    postForm['files'] = fileNameList;
+    console.log('idea info: ', postForm)
   }
 
   return (
