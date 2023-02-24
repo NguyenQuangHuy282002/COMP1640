@@ -29,10 +29,11 @@ const initS3AWS = () => {
 export const getPresignedUrl = (req: any, res: any, next: any) => {
   const s3 = initS3AWS();
   console.log(s3.config.credentials)
-
-  const extension = req.params.ext;
-  const type = req.params.type;
-  const key = `${req.user.id}/${uuidv4()}.${extension}`;
+  console.log(req.query)
+  console.log(req.payload);
+  const extension = req.query.ext;
+  const type = req.query.type;
+  const key = `${req.payload.user.id}/${uuidv4()}.${extension}`;
 
   s3.getSignedUrl('putObject', {
     Bucket: 'yessir-bucket-tqt',
