@@ -1,11 +1,11 @@
+import SearchField from '../../components/search-field'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Row, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
-import AddAccountModal from './add-new-account'
-import SearchField from '../../components/search-field'
+import AddDepartmentModal from './add-new-department'
 
 interface DataType {
   id: string
@@ -59,7 +59,7 @@ const columns: ColumnsType<DataType> = [
     title: 'Status',
     dataIndex: 'isBanned',
     render: (_, record: any) => <Tag color="blue">{record.isBanned ? 'Active' : 'Inactive'}</Tag>,
-    width: '45%',
+    width: '15%',
     key: 'Status',
   },
 ]
@@ -70,7 +70,7 @@ const AddAccount = ({ openModal }) => (
   </Button>
 )
 
-function AccountManager() {
+function DepartmentManager() {
   const { enqueueSnackbar } = useSnackbar()
   const [accounts, setAccounts] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -86,7 +86,7 @@ function AccountManager() {
     const getAllUser = async () =>
       await Http.get('/api/v1/users')
         .then(res => setAccounts(res.data.data))
-        .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+        .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
         .finally(() => setLoading(false))
     getAllUser()
   }, [])
@@ -102,16 +102,16 @@ function AccountManager() {
   return (
     <Row gutter={16} style={{ padding: '20px', margin: 0 }}>
       <Card
-        title="All accounts"
+        title="All departments"
         extra={<AddAccount openModal={() => setOpenModal(true)} />}
         bordered={false}
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search accounts by name" />
+        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search departments by name" />
         <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
       </Card>
-      <AddAccountModal
+      <AddDepartmentModal
         isOpen={openModal}
         onCloseModal={() => setOpenModal(false)}
         setAccounts={setAccounts}
@@ -121,15 +121,4 @@ function AccountManager() {
   )
 }
 
-export default AccountManager
-
-const accountc = [
-  {
-    key: '1',
-    id: '238456776345',
-    name: 'huy',
-    email: 'huy1234@gmail.com',
-    role: 'admin',
-    active: true,
-  },
-]
+export default DepartmentManager

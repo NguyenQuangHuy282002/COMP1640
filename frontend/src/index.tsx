@@ -12,6 +12,7 @@ import HomePage from './next/view/home-page'
 import AppFooter from './next/view/layout/footer'
 import AppHeader from './next/view/layout/header'
 import UserProfile from './next/view/user-profile'
+import DepartmentManager from './next/view/departments'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -35,7 +36,7 @@ root.render(
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/event" element={<EventsPage />} />
-            <Route path="/departments" element={<UserProfile />} />
+            <Route path="/departments" element={<DepartmentManager />} />
             <Route path="/categories" element={<UserProfile />} />
             <Route path="/accounts-manager" element={<AccountManager />} />
             <Route path="/ideas" element={<UserProfile />} />
