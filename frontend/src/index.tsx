@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
-
+import '.index.css'
 import AccountManager from './next/view/accounts-manager'
 import Login from './next/view/auth/login'
 import Dashboard from './next/view/dashboard'

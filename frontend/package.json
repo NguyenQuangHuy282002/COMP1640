@@ -19,6 +19,7 @@
     "ky": "^0.33.2",
     "lexical": "^0.8.0",
     "notistack": "^2.0.8",
+    "rc-tween-one": "^3.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form, Layout, Select, Input, Upload, Button, Switch } from 'antd'
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import RichTextArea from './rich-text-area'
@@ -7,6 +7,8 @@ import { Http } from '../../../api/http'
 import axios from 'axios'
 import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
+// import Tags from '../../../components/tag'
+import Tags from './tag'
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -52,6 +54,10 @@ export default function CreateIdea() {
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
+
+  useEffect(() => {
+
+  })
 
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
@@ -106,7 +112,7 @@ export default function CreateIdea() {
         style={{
           border: '0.1px solid #f6f7f8',
           borderRadius: '5px',
-          padding: '10px',
+          padding: '10px 15px',
           backgroundColor: 'white',
         }}
       >
@@ -158,8 +164,12 @@ export default function CreateIdea() {
         <Form.Item label="Incognito Mode">
           <Switch 
           onChange={() => setIncognito(!incognito)} 
-          checkedChildren="On" unCheckedChildren="Off"
+          checkedChildren="On" 
+          unCheckedChildren="Off"
           />
+        </Form.Item>
+        <Form.Item label="Tags (max: 5)">
+          <Tags/>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 15 }}>
           <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()}>
