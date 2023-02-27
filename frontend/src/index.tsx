@@ -3,6 +3,7 @@ import { Layout } from 'antd'
 import { SnackbarProvider } from 'notistack'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom'
+
 import './index.css'
 import AccountManager from './next/view/accounts-manager'
 import Login from './next/view/auth/login'
@@ -15,6 +16,9 @@ import AppFooter from './next/view/layout/footer'
 import AppHeader from './next/view/layout/header'
 import UserProfile from './next/view/user-profile'
 import reportWebVitals from './reportWebVitals'
+import React from 'react'
+import AppSidebar from './next/view/layout/layout-wrapper/sidebar'
+import LayoutWrapper from './next/view/layout/layout-wrapper/LayoutWrapper'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
@@ -29,9 +33,12 @@ root.render(
           element={
             <Layout>
               <AppHeader />
-              <Layout.Content style={{ background: '#dbdbdb' }}></Layout.Content>
+              {/* <Layout.Content style={{ background: '#dbdbdb' }}></Layout.Content> */}
+              <LayoutWrapper>
               <Outlet />
-              <AppFooter />
+              </LayoutWrapper>
+              {/* <Outlet /> */}
+              {/* <AppFooter /> */}
             </Layout>
           }
         >

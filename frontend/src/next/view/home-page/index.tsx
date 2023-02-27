@@ -1,12 +1,15 @@
-
-import { Col, Divider, Row, Space, Typography, Input } from 'antd'
+import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge } from 'antd'
 import styled from 'styled-components'
-import { imgDir } from '../../constants/img-dir'
 import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import IdeaCard from '../ideas/idea-card'
+import { SmileFilled } from '@ant-design/icons'
+import MenuFilter from './menu-filter'
+import useWindowSize from '../../utils/useWindowSize'
 
 const { Title } = Typography
 
-export const courses = [
+export const ideas = [
   {
     id: '1',
     name: 'Computing',
@@ -64,48 +67,59 @@ export const courses = [
   },
 ]
 
+
 function HomePage() {
   const navigate = useNavigate()
-
+  const windowWidth = useWindowSize()
+  const [filter, setFilter] = useState('new')
+  const fitPadding = windowWidth < 768 ? '10px 0' : '10px 40px'
   const handleClickTyping = async () => {
     navigate('/submit')
   }
   return (
-    <>
-      <Row gutter={16} style={{ padding: '20px 20px 0px', margin: 0 }}>
-        <Title level={4} ellipsis style={{ margin: 0 }}>
-          Course categories
-        </Title>
-        <Divider style={{ margin: '10px 0px' }} />
-      </Row>
-      <Row gutter={8} style={{ padding: 20 }}>
-        <Input style={{ lineHeight: 2.15 }} placeholder="Create Your Idea" onClick={()=>{handleClickTyping()}}></Input>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
-        {courses.map((course: any, idx: number) => (
-          <Col className="gutter-row" xs={24} sm={12} md={6} xxl={3} key={idx}>
-            <ItemWrapper direction="vertical" align="center">
-              <img src={course?.img || `${imgDir}course-placeholder.png`} width="100%" alt="course" />
-              <Title level={4} ellipsis style={{ margin: 0 }}>
-                {course.name}
-              </Title>
-            </ItemWrapper>
-          </Col>
-        ))}
-      </Row>
-    </>
+    <Layout.Content
+      style={{
+        display: 'block',
+        padding: fitPadding,
+      }}
+    >
+      <StyledRow
+        style={{}}
+      >
+        <Col flex="60px" >
+          <Badge status="success" count={<SmileFilled  style={{color: '#52c41a'}}/>}>
+            <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src="https://joesch.moe/api/v1/random" />
+          </Badge>
+        </Col>
+        <Col flex="auto">
+          <Input
+            style={{ lineHeight: 2.15, background: '#f6f7f8' }}
+            placeholder="Create Your Idea"
+            onClick={() => {
+              handleClickTyping()
+            }}
+          ></Input>
+        </Col>
+      </StyledRow>
+      <StyledRow
+        style={{}}
+      >
+        <MenuFilter setFilter={setFilter} filter={filter}/>
+      </StyledRow>
+      {ideas.map((_, index) => {
+        return <IdeaCard key={`${index}`} />
+      })}
+    </Layout.Content>
   )
 }
 
 export default HomePage
 
-export const ItemWrapper = styled(Space)`
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  background: #5597e7;
-  cursor: pointer;
-  :hover {
-    transform: scale(1.03);
-  }
+export const StyledRow = styled(Row)`
+  padding: 10px;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  margin-bottom: 15px;
 `
