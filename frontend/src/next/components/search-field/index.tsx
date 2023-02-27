@@ -1,15 +1,13 @@
-import { Input, Space } from 'antd'
-import React from 'react'
+import { Input } from 'antd'
 
 const { Search } = Input
 
-function SearchField({ searchKey, setSearchKey }) {
+function SearchField({ searchKey, setSearchKey, placeholder }) {
   return (
     <Search
-      placeholder="Seach accounts by name"
+      placeholder={placeholder}
       allowClear
       onSearch={() => {}}
-      style={{ width: '40%', marginBottom: 16 }}
       value={searchKey}
       onChange={e => setSearchKey(e.target.value)}
     />

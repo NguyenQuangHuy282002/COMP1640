@@ -1,11 +1,11 @@
-import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Table, Tag } from 'antd'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Card, Row, Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
-import SearchField from './search-field'
+import SearchField from '../../components/search-field'
 
 interface DataType {
   id: string
@@ -19,7 +19,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: 'ID',
     dataIndex: '_id',
-    width: '10%',
+    width: '20%',
     key: 'id',
   },
   {
@@ -54,6 +54,7 @@ const columns: ColumnsType<DataType> = [
     ],
     onFilter: (value: any, record: DataType) => record.role.indexOf(value) === 0,
     key: 'role',
+    align: 'center',
   },
   {
     title: 'Status',
@@ -61,6 +62,19 @@ const columns: ColumnsType<DataType> = [
     render: (_, record: any) => <Tag color="blue">{record.isBanned ? 'Active' : 'Inactive'}</Tag>,
     width: '15%',
     key: 'Status',
+    align: 'center',
+  },
+  {
+    title: 'Actions',
+    render: (_, record: any) => (
+      <Space wrap>
+        <Button type="text" icon={<EditOutlined />} />
+        <Button type="text" danger icon={<DeleteOutlined />} />
+      </Space>
+    ),
+    width: '20%',
+    key: 'Actions',
+    align: 'center',
   },
 ]
 
@@ -108,7 +122,7 @@ function AccountManager() {
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
-        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} />
+        <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search accounts by name" />
         <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
       </Card>
       <AddAccountModal

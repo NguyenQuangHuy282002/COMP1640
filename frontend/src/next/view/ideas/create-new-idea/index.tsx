@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
 // import Tags from '../../../components/tag'
 import Tags from './tag'
+import React from 'react'
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -87,7 +88,7 @@ export default function CreateIdea() {
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
-  const paddingForm = windowWidth < 750 ? '10px 5px' : '5% 20%'
+  const paddingForm = windowWidth < 750 ? '10px 5px' : '5% 5%'
 
   return (
     <Form

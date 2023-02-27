@@ -5,6 +5,8 @@ export const categoryRouter = express.Router()
 
 categoryRouter.get('/', async (req, res) => {
   try {
+    const data = await Category.find({})
+    res.status(200).json({ success: 1, data: data })
   } catch (err) {
     res.json({ success: 0, err })
   }
