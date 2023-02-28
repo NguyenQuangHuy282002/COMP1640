@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import { Form, Layout, Select, Input, Upload, Button, Switch } from 'antd'
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import RichTextArea from './rich-text-area'
-import { EditorState } from 'draft-js'
+import { convertToRaw, EditorState } from 'draft-js'
 import { Http } from '../../../api/http'
 import axios from 'axios'
 import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
+import draftToHtml from 'draftjs-to-html';
 // import Tags from '../../../components/tag'
 import Tags from './tag'
 import React from 'react'
+import { useSnackbar } from 'notistack'
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -29,9 +31,8 @@ const fetchPresignedUrl = async (url: any, file: any) => {
         'Content-Type': type,
       },
     })
-
-    console.log(`Upload Result: ${uploadConfig}, ${uploadFileToS3}`)
-    return uploadConfig.data.key
+    console.log(uploadFileToS3)
+    return `https://yessir-bucket-tqt.s3.ap-northeast-1.amazonaws.com/${uploadConfig.data.key}`
   } catch (error) {
     console.error(error)
   }
@@ -49,6 +50,8 @@ const fetchAllToS3 = async (files: any) => {
 export default function CreateIdea() {
   const [form] = Form.useForm()
   const initialState = () => EditorState.createEmpty()
+  const { enqueueSnackbar } = useSnackbar()
+  const [loading, setLoading] = useState(false)
   const [editorState, setEditorState] = useState(initialState)
   const [files, setFiles] = useState([])
   const [incognito, setIncognito] = useState(false)
@@ -56,9 +59,7 @@ export default function CreateIdea() {
     setFiles(value)
   }
 
-  useEffect(() => {
-
-  })
+  useEffect(() => {})
 
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
@@ -78,13 +79,27 @@ export default function CreateIdea() {
   }
 
   const onSubmitPost = async () => {
+    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
-      department: form.getFieldValue('department'),
-      content: editorState,
+      // department: form.getFieldValue('department') || undefined,
+      content: `${content}`,
     }
-    const fileNameList = await fetchAllToS3(files)
-    postForm['files'] = fileNameList
+    if (files) {
+      let fileNameList = await fetchAllToS3(files)
+      console.log('fileNameList: ', fileNameList)
+      postForm['files'] = fileNameList
+    }
+
+    console.log('postForm: ', postForm)
+    setLoading(true)
+    await Http.post('/api/v1/idea/create', postForm)
+      .then((res) => {
+        console.log('response', res)
+        enqueueSnackbar("Upload Idea successfully!!")
+      })
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
@@ -163,14 +178,10 @@ export default function CreateIdea() {
           </Form.Item>
         </Form.Item>
         <Form.Item label="Incognito Mode">
-          <Switch 
-          onChange={() => setIncognito(!incognito)} 
-          checkedChildren="On" 
-          unCheckedChildren="Off"
-          />
+          <Switch onChange={() => setIncognito(!incognito)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
-          <Tags/>
+          <Tags />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 15 }}>
           <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()}>

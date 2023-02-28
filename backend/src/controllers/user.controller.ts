@@ -29,7 +29,7 @@ export const findUser = async (req: any, res: any, next: any) => {
     }
     return res.status(200).json({
       email: user.email,
-      picture: user.image,
+      picture: user.avatar,
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))

@@ -1,101 +1,44 @@
-import { Document, Schema, model, Model } from 'mongoose'
+import { Document, Schema, model, Model, Types } from 'mongoose'
+import { ICategory } from './Category'
+import { IComment } from './Comment'
+import { ISpecialEvent } from './SpecialEvent'
+import { IUser } from './User'
 
-interface IComments {
-  userId: string
-  content: string
-}
 
-interface ICategory {
-  categoryId: string
-  name: string
-}
-
-export interface IIdea {
-  publisherId: string
-  categories: Array<ICategory>
+export interface IIdea extends Document{
+  publisherId: IUser['_id'],
+  categories?: ICategory['_id'][]
   title: string
   content: string
   files?: string[]
-  views: number
-  votes: number
-  comments: Array<IComments>
+  views?: number
+  like?: number
+  dislike?: number
+  comments?: IComment['_id'][]
+  createdAt?: Date
+  specialEvent: ISpecialEvent['_id']
+  isIncognito?: boolean
 }
 
-const ideaSchema = new mongoose.Schema<IBlogPost>(
+const ideaSchema = new Schema<IIdea>(
   {
-    publisherId: String,
-    category: String,
+    publisherId: { type: Types.ObjectId, ref: 'User'},
+    categories: [{ type: Types.ObjectId, ref: 'Category' }],
     title: String,
-    description: String,
+    content: String,
     files: Array<String>,
-    views: Number,
-    like: Number,
-    dislike: Number,
-    comments: Array<IComments>,
+    views: { type: Number, required: false, default: 0 },
+    like: { type: Number, required: false, default: 0 },
+    dislike: { type: Number, required: false, default: 0 },
+    comments: [ { type: Types.ObjectId, ref: 'Comment'}],
+    createdAt: { type: Date, default: Date.now },
+    specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
+    isIncognito: { type: Boolean, default: false, required: false }
   },
-  { timestamps: { createdAt: true, updatedAt: true } }
-)
-const User: Model<IUser> = model<IUser>('User', userSchema)
-
-const BlogPost: Model<IUser> = mongoose.model<IBlogPost>('BlogPost', blogPostSchema)
-
-export default BlogPost
-
-
-interface IUser extends Document {
-  name: string
-  token: string
-  password: string
-  resetPasswordToken: string
-  resetPasswordData: Date
-  isActivate: boolean
-  role: string
-  username: string
-  birthday: string
-  email: string
-  image?: string
-  phone?: string
-  description?: string
-  interests?: string[]
-  isBanned: boolean
-}
-
-const userSchema = new Schema<IUser>(
-  {
-    name: String,
-    token: String,
-    role: {
-      type: String,
-      enum: ['staff', 'coordinator', 'manager'],
-      default: 'staff',
-    },
-    isActivate: {
-      type: Boolean,
-      default: false,
-    },
-    isBanned: {
-      type: Boolean,
-      default: false,
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 8,
-      select: false,
-    },
-    resetPasswordToken: String,
-    resetPasswordData: Date,
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    birthday: String,
-    phone: String,
-  },
-
-  { timestamps: { createdAt: true, updatedAt: true } }
+  { timestamps: { updatedAt: true } }
 )
 
-const User: Model<IUser> = model<IUser>('User', userSchema)
+const Idea: Model<IIdea> = model<IIdea>('Idea', ideaSchema)
+
+export default Idea
 

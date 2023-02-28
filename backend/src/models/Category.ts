@@ -1,16 +1,19 @@
-import mongoose from 'mongoose'
+import { Document, Schema, model, Model, Types } from 'mongoose'
+import { IIdea } from './Idea'
 
-interface ICategory {
+export interface ICategory extends Document{
   name: string
+  ideas?: IIdea['_id'][]
 }
 
-const categorySchema = new mongoose.Schema<ICategory>(
+const categorySchema = new Schema<ICategory>(
   {
     name: String,
+    ideas: [{ type: Types.ObjectId, ref: 'Idea'}]
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 )
 
-const Category = mongoose.model<ICategory>('Category', categorySchema)
+const Category: Model<ICategory> = model<ICategory>('Category', categorySchema)
 
 export default Category

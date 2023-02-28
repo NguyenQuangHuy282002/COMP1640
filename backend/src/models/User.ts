@@ -1,30 +1,37 @@
-import { Document, Schema, model, Model } from 'mongoose'
+import { bcryptHash } from '../helpers/bcrypt.helper'
+import { Document, Schema, model, Model, Types } from 'mongoose'
+import { IDepartment } from './Department'
+import { IIdea } from './Idea'
+import { IComment } from './Comment'
 
-interface IUser extends Document {
+export interface IUser extends Document {
   name: string
   token: string
   password: string
   resetPasswordToken: string
-  resetPasswordData: Date
+  resetPasswordDate: Date
   isActivate: boolean
   role: string
   username: string
   birthday: string
   email: string
-  image?: string
+  avatar?: string
   phone?: string
   description?: string
   interests?: string[]
   isBanned: boolean
+  department?: IDepartment['_id']
+  ideas?: IIdea['_id'][]
+  comments?: IComment['_id'][]
 }
 
-const userSchema = new Schema<IUser>(
+export const userSchema = new Schema<IUser>(
   {
     name: String,
     token: String,
     role: {
       type: String,
-      enum: ['staff', 'coordinator', 'manager'],
+      enum: ['staff', 'coordinator', 'manager', 'admin'],
       default: 'staff',
     },
     isActivate: {
@@ -42,19 +49,48 @@ const userSchema = new Schema<IUser>(
       select: false,
     },
     resetPasswordToken: String,
-    resetPasswordData: Date,
+    resetPasswordDate: Date,
     username: {
       type: String,
       required: true,
       unique: true,
     },
+    avatar: { type: String, required: false, default: 'https://images.ladbible.com/resize?type=jpeg&url=http://20.theladbiblegroup.com/s3/content/1f1749975876b1a1df3e9670a0e7c733.jpg&quality=70&width=720&aspectratio=16:9&extend=white'},
     birthday: String,
     phone: String,
+    department: { type: Types.ObjectId, required: false},
+    ideas: [ { type: Types.ObjectId, ref: 'Idea'}],
+    comments: [ { type: Types.ObjectId, ref: 'Comment'}]
   },
 
   { timestamps: { createdAt: true, updatedAt: true } }
 )
 
-const User: Model<IUser> = model<IUser>('User', userSchema)
+interface UserModel extends Model<IUser> {
+  seedAdmin: () => Promise<IUser>;
+}
+
+userSchema.statics.seedAdmin = async () => {
+  try {
+    const users: IUser[] = await User.find({});
+    if (users.length > 0) return;
+    const password = 'admin';
+    const passwordHash = await bcryptHash(password)
+    const newAccount = await new User({
+      username: 'admin',
+      name: 'Nguyen Van Yeah',
+      password: passwordHash,
+      role: 'admin',
+      phone: '0696969669',
+      birthday: '6-9-1969',
+      isActive: true,
+    }).save()
+} catch (error) {
+    console.log(error);
+}
+}
+
+
+const User: UserModel = model<IUser, UserModel>('User', userSchema)
 
 export default User

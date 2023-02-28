@@ -1,3 +1,4 @@
+import { LOCALSTORAGE } from '../../api/http'
 import {
   CarryOutOutlined,
   DashboardOutlined,
@@ -14,12 +15,14 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { imgDir } from '../../constants/img-dir'
 import useWindowSize from '../../utils/useWindowSize'
+import { useSnackbar } from 'notistack'
 
 const { Text } = Typography
 
 function AppHeader() {
   const navigate = useNavigate()
   const windowWidth = useWindowSize()
+  const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
 
   const menuItems: MenuProps['items'] = [
@@ -92,12 +95,21 @@ function AppHeader() {
     },
   ]
 
+  const handleLogout = () => {
+    localStorage.setItem(LOCALSTORAGE.TOKEN, '')
+    console.log(localStorage.getItem(LOCALSTORAGE.TOKEN));
+    navigate('/login')
+    enqueueSnackbar("You're fxking logout! man")
+  }
+
   const handleClickMenu = async (val: any) => {
     if (tabKey === val.key || tabKey.includes('courses')) return
     switch (val.key) {
       case 'home':
         navigate('/')
-
+        break
+      case 'logout':
+        handleLogout()
         break
       default:
         navigate(`/${val.key}`)

@@ -1,27 +1,27 @@
-import mongoose from 'mongoose'
-import { IBlogPost } from './Idea'
+import { Document, Schema, model, Model, Types } from 'mongoose'
+import { IIdea } from './Idea'
 
-interface ISpecialEvent {
+export interface ISpecialEvent extends Document {
   title: string
-  description: string
+  description?: string
   startDate: Date
   firstCloseDate: Date
   finalCloseDate: Date
-  blogPosts: Array<IBlogPost>
+  ideas?: IIdea['_id'][]
 }
 
-const eventSchema = new mongoose.Schema<ISpecialEvent>(
+const eventSchema = new Schema<ISpecialEvent>(
   {
     title: String,
     description: String,
     startDate: Date,
     firstCloseDate: Date,
     finalCloseDate: Date,
-    blogPosts: Array<IBlogPost>,
+    ideas: [{ type: Types.ObjectId, ref: 'Idea'}],
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 )
 
-const SpecialEvent = mongoose.model<ISpecialEvent>('SpecialEvent', eventSchema)
+const SpecialEvent: Model<ISpecialEvent> = model<ISpecialEvent>('SpecialEvent', eventSchema)
 
 export default SpecialEvent
