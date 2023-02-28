@@ -1,4 +1,4 @@
-import { categoryRouter } from './category'
+import { categoryRouter } from './category.router'
 import { usersRouter } from './users.router'
 import authRouter from './auth.router'
 import { serverErrorHandler } from '../middlewares/serverErrorHandler'
