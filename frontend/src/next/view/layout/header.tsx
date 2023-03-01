@@ -29,37 +29,37 @@ function AppHeader() {
     {
       key: 'home',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Home</Text>,
-      icon: windowWidth < 750 && <HomeOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <HomeOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'dashboard',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Dashboard</Text>,
-      icon: windowWidth < 750 && <DashboardOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <DashboardOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'event',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Events</Text>,
-      icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'departments',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Departments</Text>,
-      icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'categories',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Categories</Text>,
-      icon: windowWidth < 750 && <CarryOutOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'accounts-manager',
       label: <Text style={{ fontSize: 20, margin: 0 }}>Accounts</Text>,
-      icon: windowWidth < 750 && <TeamOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <TeamOutlined style={{ fontSize: 20 }} />,
     },
     {
       key: 'courses',
       label: <Text style={{ fontSize: 20, margin: 0 }}>My Course</Text>,
-      icon: windowWidth < 750 && <ProfileOutlined style={{ fontSize: 20 }} />,
+      icon: windowWidth < 768 && <ProfileOutlined style={{ fontSize: 20 }} />,
 
       children: [
         {
@@ -97,7 +97,7 @@ function AppHeader() {
 
   const handleLogout = () => {
     localStorage.setItem(LOCALSTORAGE.TOKEN, '')
-    console.log(localStorage.getItem(LOCALSTORAGE.TOKEN));
+    console.log(localStorage.getItem(LOCALSTORAGE.TOKEN))
     navigate('/login')
     enqueueSnackbar("You're fxking logout! man")
   }
@@ -122,7 +122,7 @@ function AppHeader() {
         <a href={'/'} style={{ marginRight: 20, display: 'contents' }}>
           <img src={imgDir + 'logo.png'} height="60" alt="Logo" />
         </a>
-        {windowWidth < 750 ? (
+        {windowWidth < 768 ? (
           <Dropdown
             menu={{ items: [...menuItems, ...userMenu] }}
             trigger={['click']}
