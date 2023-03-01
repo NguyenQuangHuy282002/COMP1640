@@ -55,26 +55,31 @@ export const userSchema = new Schema<IUser>(
       required: true,
       unique: true,
     },
-    avatar: { type: String, required: false, default: 'https://images.ladbible.com/resize?type=jpeg&url=http://20.theladbiblegroup.com/s3/content/1f1749975876b1a1df3e9670a0e7c733.jpg&quality=70&width=720&aspectratio=16:9&extend=white'},
+    avatar: {
+      type: String,
+      required: false,
+      default:
+        'https://images.ladbible.com/resize?type=jpeg&url=http://20.theladbiblegroup.com/s3/content/1f1749975876b1a1df3e9670a0e7c733.jpg&quality=70&width=720&aspectratio=16:9&extend=white',
+    },
     birthday: String,
     phone: String,
-    department: { type: Types.ObjectId, required: false},
-    ideas: [ { type: Types.ObjectId, ref: 'Idea'}],
-    comments: [ { type: Types.ObjectId, ref: 'Comment'}]
+    department: { type: Types.ObjectId, required: false },
+    ideas: [{ type: Types.ObjectId, ref: 'Idea' }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
   },
 
   { timestamps: { createdAt: true, updatedAt: true } }
 )
 
 interface UserModel extends Model<IUser> {
-  seedAdmin: () => Promise<IUser>;
+  seedAdmin: any
 }
 
 userSchema.statics.seedAdmin = async () => {
   try {
-    const users: IUser[] = await User.find({});
-    if (users.length > 0) return;
-    const password = 'admin';
+    const users: IUser[] = await User.find({})
+    if (users.length > 0) return
+    const password = 'admin'
     const passwordHash = await bcryptHash(password)
     const newAccount = await new User({
       username: 'admin',
@@ -83,13 +88,14 @@ userSchema.statics.seedAdmin = async () => {
       role: 'admin',
       phone: '0696969669',
       birthday: '6-9-1969',
-      isActive: true,
+      isActivate: true,
     }).save()
-} catch (error) {
-    console.log(error);
-}
-}
 
+    console.log(newAccount)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const User: UserModel = model<IUser, UserModel>('User', userSchema)
 

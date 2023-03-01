@@ -7,7 +7,7 @@ import { Http } from '../../../api/http'
 import axios from 'axios'
 import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
-import draftToHtml from 'draftjs-to-html';
+import draftToHtml from 'draftjs-to-html'
 // import Tags from '../../../components/tag'
 import Tags from './tag'
 import React from 'react'
@@ -94,16 +94,16 @@ export default function CreateIdea() {
     console.log('postForm: ', postForm)
     setLoading(true)
     await Http.post('/api/v1/idea/create', postForm)
-      .then((res) => {
+      .then(res => {
         console.log('response', res)
-        enqueueSnackbar("Upload Idea successfully!!")
+        enqueueSnackbar('Upload Idea successfully!!')
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
       .finally(() => setLoading(false))
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
-  const paddingForm = windowWidth < 750 ? '10px 5px' : '5% 5%'
+  const paddingForm = windowWidth < 768 ? '10px 5px' : '5% 5%'
 
   return (
     <Form

@@ -58,16 +58,15 @@ function AppSidebar() {
   }
 
   const handleClickMenu = async (val: any) => {
-    if (tabKey === val.key || tabKey.includes('home')) return
     switch (val.key) {
       case 'idea':
         navigate('/idea')
         break
       case 'tag':
-        navigate('/tags')
+        navigate('/categories')
         break
       case 'user':
-        navigate('/users')
+        navigate('/accounts-manager')
         break
       case 'department':
         navigate('/departments')
@@ -79,29 +78,23 @@ function AppSidebar() {
 
   return (
     <>
-      {windowWidth > 750 ? (
+      {windowWidth > 768 ? (
         <Layout.Sider
           // collapsible
           collapsed={collapsed}
           onCollapse={value => setCollapsed(value)}
+          width={300}
           style={{
             backgroundColor: 'white',
-            // transition: 'box-shadow ease-in-out .1s,transform ease-in-out .1s',
             position: 'sticky',
             zIndex: 1,
             alignSelf: 'start',
             height: '100vh',
             top: 0,
             boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
-            marginTop: '10px',
           }}
         >
-          <Menu
-            onClick={handleClickMenu}
-            defaultSelectedKeys={['home']}
-            mode="inline"
-            items={items}
-          />
+          <Menu onClick={handleClickMenu} defaultSelectedKeys={['home']} mode="inline" items={items} />
           <Button
             type="primary"
             onClick={toggleCollapsed}
@@ -121,7 +114,8 @@ function AppSidebar() {
               alignSelf: 'start',
               top: 0,
               border: '1px solid #ccc',
-              boxShadow: 'rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset',
+              boxShadow:
+                'rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset',
               marginTop: '10px',
             }}
           />

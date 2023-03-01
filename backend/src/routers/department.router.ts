@@ -14,7 +14,18 @@ departmentRouter.get('/', async (req, res) => {
 
 departmentRouter.post('/', express.json(), async (req, res) => {
   try {
-    await Department.collection.insertOne(req.body)
+    const { name, oldName } = req.body
+    await Department.findOneAndUpdate({ oldName }, { name }, { upsert: true })
+    res.status(200).json({ success: 1 })
+  } catch (err) {
+    res.json({ success: 0, err })
+  }
+})
+
+departmentRouter.post('/delete', express.json(), async (req, res) => {
+  try {
+    const { name } = req.body
+    await Department.findOneAndDelete({ name })
     res.status(200).json({ success: 1 })
   } catch (err) {
     res.json({ success: 0, err })

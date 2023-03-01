@@ -7,17 +7,17 @@ export default function AddAccountModal({ isOpen, onCloseModal, setAccounts, acc
   const [form] = Form.useForm()
 
   const onFinish = async () => {
-    console.log(form.getFieldValue('name'))
     const accountForm = {
       name: form.getFieldValue('name'),
       username: form.getFieldValue('username'),
       password: form.getFieldValue('password'),
       email: form.getFieldValue('email'),
       role: form.getFieldValue('role'),
+      isActivate: true,
     }
-    await Http.post('/api/v1/users', accountForm)
+    await Http.post('/api/v1/auth/create', accountForm)
       .then(() => {
-        // setAccounts([accountForm, ...accounts])
+        setAccounts([accountForm, ...accounts])
         onCloseModal()
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))

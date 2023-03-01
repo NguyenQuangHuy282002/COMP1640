@@ -18,7 +18,6 @@ function Login() {
       .then(res => {
         if (res.data?.success) {
           message.success('Login successful')
-          message.warning(res.data.message)
           localStorage.setItem(LOCALSTORAGE.TOKEN, res.data.accessToken)
           userStore.updateState(res.data.userData)
           return navigate(state?.from || '/dashboard')

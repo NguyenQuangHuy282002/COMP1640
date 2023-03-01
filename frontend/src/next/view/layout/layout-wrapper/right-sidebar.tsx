@@ -9,11 +9,11 @@ const RightSideBar: React.FC = () => {
 
   return (
     <>
-      {windowSize < 750 ? (
+      {windowSize < 1000 ? (
         <></>
       ) : (
         <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box' }}>
-          <EventCard/ >
+          <EventCard />
         </Layout.Sider>
       )}
     </>

@@ -15,69 +15,6 @@ interface DataType {
   active: boolean
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'ID',
-    dataIndex: '_id',
-    width: '20%',
-    key: 'id',
-  },
-  {
-    title: 'Name',
-    dataIndex: 'username',
-    sorter: (a: DataType, b: DataType) => a.username.length - b.username.length,
-    width: '30%',
-    key: 'username',
-  },
-
-  {
-    title: 'Role',
-    dataIndex: 'role',
-    width: '15%',
-    filters: [
-      {
-        text: 'Admin',
-        value: 'admin',
-      },
-      {
-        text: 'Staff',
-        value: 'staff',
-      },
-      {
-        text: 'QA Manager',
-        value: 'manager',
-      },
-      {
-        text: 'Coordinator',
-        value: 'coordinator',
-      },
-    ],
-    onFilter: (value: any, record: DataType) => record.role.indexOf(value) === 0,
-    key: 'role',
-    align: 'center',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'isBanned',
-    render: (_, record: any) => <Tag color="blue">{record.isBanned ? 'Active' : 'Inactive'}</Tag>,
-    width: '15%',
-    key: 'Status',
-    align: 'center',
-  },
-  {
-    title: 'Actions',
-    render: (_, record: any) => (
-      <Space wrap>
-        <Button type="text" icon={<EditOutlined />} />
-        <Button type="text" danger icon={<DeleteOutlined />} />
-      </Space>
-    ),
-    width: '20%',
-    key: 'Actions',
-    align: 'center',
-  },
-]
-
 const AddAccount = ({ openModal }) => (
   <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
     Add new account
@@ -92,18 +29,90 @@ function AccountManager() {
   const [openModal, setOpenModal] = useState(false)
   const [searchKey, setSearchKey] = useState('')
   const filteredAccounts = useMemo(() => {
-    return accounts.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
+    return accounts?.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
   }, [accounts, searchKey])
 
+  const handleDeleteAccount = async id => {
+    await await Http.delete('/api/v1/users/deleteUser', id)
+      .then(res => setAccounts(accounts.filter(acc => acc._id !== id)))
+      .catch(error => enqueueSnackbar('Failed to delete account !', { variant: 'error' }))
+  }
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'ID',
+      dataIndex: '_id',
+      width: '20%',
+      key: 'id',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'username',
+      sorter: (a: DataType, b: DataType) => a.username.length - b.username.length,
+      width: '30%',
+      key: 'username',
+    },
+
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      width: '15%',
+      filters: [
+        {
+          text: 'Admin',
+          value: 'admin',
+        },
+        {
+          text: 'Staff',
+          value: 'staff',
+        },
+        {
+          text: 'QA Manager',
+          value: 'manager',
+        },
+        {
+          text: 'Coordinator',
+          value: 'coordinator',
+        },
+      ],
+      onFilter: (value: any, record: DataType) => record.role.indexOf(value) === 0,
+      key: 'role',
+      align: 'center',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'isActivate',
+      render: (_, record: any) =>
+        record.isActivate ? <Tag color="success">Active</Tag> : <Tag color="error">Inactive</Tag>,
+      width: '15%',
+      key: 'Status',
+      align: 'center',
+    },
+    {
+      title: 'Actions',
+      render: (_, record: any) => (
+        <Space wrap>
+          <Button type="text" icon={<EditOutlined />} />
+          <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteAccount(record._id)} />
+        </Space>
+      ),
+      width: '20%',
+      key: 'Actions',
+      align: 'center',
+    },
+  ]
+
   useEffect(() => {
-    setLoading(true)
-    const getAllUser = async () =>
-      await Http.get('/api/v1/users')
-        .then(res => setAccounts(res.data.data))
-        .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
-        .finally(() => setLoading(false))
-    getAllUser()
-  }, [])
+    if (!openModal) {
+      setLoading(true)
+      const getAllUser = async () =>
+        await Http.get('/api/v1/users')
+          .then(res => setAccounts(res.data.data))
+          .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+          .finally(() => setLoading(false))
+      getAllUser()
+    }
+  }, [openModal])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys)

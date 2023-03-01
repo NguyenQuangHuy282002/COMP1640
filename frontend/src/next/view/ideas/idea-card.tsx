@@ -19,7 +19,7 @@ const { Text, Link } = Typography
 
 const IdeaCard: React.FC = idea => {
   const windowWidth = useWindowSize()
-  const orientation = windowWidth < 750 ? 'horizontal' : 'vertical'
+  const orientation = windowWidth < 768 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(!checked)
@@ -59,7 +59,7 @@ const IdeaCard: React.FC = idea => {
       >
         <Skeleton loading={loading} avatar active>
           <Row>
-            <Col flex={0.5} style={{ borderRight : '1px solid #edeff1', marginRight: '5px'}}>
+            <Col flex={0.5} style={{ borderRight: '1px solid #edeff1', marginRight: '5px' }}>
               <Space direction={orientation} style={{ textAlign: 'right', padding: '5px -5px' }}>
                 <Text strong>
                   <FireTwoTone style={{ padding: '5px' }} />
@@ -79,11 +79,13 @@ const IdeaCard: React.FC = idea => {
             <Col flex={4.5}>
               <Space direction="vertical" style={{ width: '100%' }}>
                 <Space wrap>
-                  <Avatar src="https://joesch.moe/api/v1/random" style={{ background: '#f6f7f8' }}/>
+                  <Avatar src="https://joesch.moe/api/v1/random" style={{ background: '#f6f7f8' }} />
                   <Link href="#" style={{ marginRight: '10px', fontSize: '15px', fontWeight: '500' }}>
                     {data.author}
                   </Link>
-                  <Text type="secondary" style={{ marginTop: '10px' }}>. Posted {formatDayTime(data.createdAt)}</Text>
+                  <Text type="secondary" style={{ marginTop: '10px' }}>
+                    . Posted {formatDayTime(data.createdAt)}
+                  </Text>
                 </Space>
                 <Link href="#" style={{ fontSize: '25px', fontWeight: '600', marginBottom: 0 }}>
                   {data.title}

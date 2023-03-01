@@ -1,10 +1,10 @@
-import SearchField from '../../components/search-field'
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Space, Table, Tag, Typography } from 'antd'
+import { Button, Card, message, Row, Space, Table, Typography } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
+import SearchField from '../../components/search-field'
 import AddDepartmentModal from './add-new-department'
 
 const { Text } = Typography
@@ -14,28 +14,6 @@ interface DataType {
   name: string
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Department Name',
-    dataIndex: 'name',
-    sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
-    width: '60%',
-    key: 'name',
-  },
-
-  {
-    title: 'Actions',
-    render: (_, record: any) => (
-      <Space wrap>
-        <Button type="text" icon={<EditOutlined />} />
-        <Button type="text" danger icon={<DeleteOutlined />} />
-      </Space>
-    ),
-    width: '40%',
-    key: 'Actions',
-    align: 'center',
-  },
-]
 const AddAccount = ({ openModal }) => (
   <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
     Add new department
@@ -49,11 +27,52 @@ function DepartmentManager() {
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [searchKey, setSearchKey] = useState('')
+  const [currentDepartment, setCurrentDepartment] = useState({ name: '' })
+
   const filteredDeparments = useMemo(() => {
     return deparments.filter((deparment: DataType) =>
       deparment.name.toLowerCase().includes(searchKey.toLowerCase().trim())
     )
   }, [deparments, searchKey])
+
+  async function handleDeleteDepartment(name: string) {
+    await Http.post('/api/v1/department/delete', { name })
+      .then(res => {
+        message.success(`Deleted ${name} successful!`)
+        setDeparments(deparments.filter((deparment: DataType) => deparment.name !== name))
+      })
+      .catch(error => message.error(`Failed to delete ${name}!`))
+  }
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Department Name',
+      dataIndex: 'name',
+      sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
+      width: '60%',
+      key: 'name',
+    },
+
+    {
+      title: 'Actions',
+      render: (_, record: any) => (
+        <Space wrap>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setOpenModal(true)
+              setCurrentDepartment({ name: record.name })
+            }}
+          />
+          <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteDepartment(record.name)} />
+        </Space>
+      ),
+      width: '40%',
+      key: 'Actions',
+      align: 'center',
+    },
+  ]
 
   useEffect(() => {
     setLoading(true)
@@ -74,10 +93,17 @@ function DepartmentManager() {
   }
 
   return (
-    <Row gutter={16} style={{ padding: '20px', margin: 0 }}>
+    <Row gutter={16} style={{ padding: '10px', margin: 0 }}>
       <Card
         title="All departments"
-        extra={<AddAccount openModal={() => setOpenModal(true)} />}
+        extra={
+          <AddAccount
+            openModal={() => {
+              setOpenModal(true)
+              setCurrentDepartment({ name: '' })
+            }}
+          />
+        }
         bordered={false}
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
@@ -93,6 +119,7 @@ function DepartmentManager() {
         onCloseModal={() => setOpenModal(false)}
         setDeparments={setDeparments}
         deparments={deparments}
+        currentDepartment={currentDepartment}
       />
     </Row>
   )

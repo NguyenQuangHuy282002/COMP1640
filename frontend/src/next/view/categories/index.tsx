@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Space, Table, Tag, Typography } from 'antd'
+import { Button, Card, message, Row, Space, Table, Tag, Typography } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
@@ -14,29 +14,6 @@ interface DataType {
   name: string
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Category Name',
-    dataIndex: 'name',
-    sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
-    width: '60%',
-    key: 'name',
-  },
-
-  {
-    title: 'Actions',
-    render: (_, record: any) => (
-      <Space wrap>
-        <Button type="text" icon={<EditOutlined />} />
-        <Button type="text" danger icon={<DeleteOutlined />} />
-      </Space>
-    ),
-    width: '40%',
-    key: 'Actions',
-    align: 'center',
-  },
-]
-
 const AddCategory = ({ openModal }) => (
   <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
     Add new category
@@ -46,7 +23,7 @@ const AddCategory = ({ openModal }) => (
 function CategoryManager() {
   const { enqueueSnackbar } = useSnackbar()
   const [categoriesList, setCategoriesList] = useState([])
-  const [pagination, setPagination] = useState(1)
+  const [currentCategory, setCurrentCategory] = useState({ name: '' })
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
@@ -54,6 +31,45 @@ function CategoryManager() {
   const filteredCategories = useMemo(() => {
     return categoriesList.filter((cat: any) => cat.name.toLowerCase().includes(searchKey.toLowerCase().trim()))
   }, [categoriesList, searchKey])
+
+  async function handleDeleteDepartment(name: string) {
+    await Http.post('/api/v1/department/delete', { name })
+      .then(res => {
+        message.success(`Deleted ${name} successful!`)
+        setCategoriesList(categoriesList.filter((deparment: DataType) => deparment.name !== name))
+      })
+      .catch(error => message.error(`Failed to delete ${name}!`))
+  }
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Category Name',
+      dataIndex: 'name',
+      sorter: (a: DataType, b: DataType) => a.name.length - b.name.length,
+      width: '60%',
+      key: 'name',
+    },
+
+    {
+      title: 'Actions',
+      render: (_, record: any) => (
+        <Space wrap>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => {
+              setOpenModal(true)
+              setCurrentCategory({ name: record.name })
+            }}
+          />
+          <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteDepartment(record.name)} />
+        </Space>
+      ),
+      width: '40%',
+      key: 'Actions',
+      align: 'center',
+    },
+  ]
 
   useEffect(() => {
     setLoading(true)
@@ -74,10 +90,17 @@ function CategoryManager() {
   }
 
   return (
-    <Row gutter={16} style={{ padding: '20px', margin: 0 }}>
+    <Row gutter={16} style={{ padding: '10px', margin: 0 }}>
       <Card
         title="All categories"
-        extra={<AddCategory openModal={() => setOpenModal(true)} />}
+        extra={
+          <AddCategory
+            openModal={() => {
+              setOpenModal(true)
+              setCurrentCategory({ name: '' })
+            }}
+          />
+        }
         bordered={false}
         style={{ width: '100%' }}
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
@@ -93,6 +116,7 @@ function CategoryManager() {
         onCloseModal={() => setOpenModal(false)}
         setCategoriesList={setCategoriesList}
         categoriesList={categoriesList}
+        currentCategory={currentCategory}
       />
     </Row>
   )
