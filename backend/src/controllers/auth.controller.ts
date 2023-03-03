@@ -23,6 +23,8 @@ export const createAccount = async (req: any, res: any, next: any) => {
       role,
       phone,
       birthday,
+      isActivate: true,
+      isBanned: false,
     }).save()
 
     res.status(200).json({ success: true, savedUser: newAccount })
@@ -179,5 +181,3 @@ export const activateAccount = async (req: any, res: any, next: any) => {
     res.status(500).json({ message: error.message })
   }
 }
-
-
