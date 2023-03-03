@@ -13,7 +13,6 @@ export default function AddAccountModal({ isOpen, onCloseModal, setAccounts, acc
       password: form.getFieldValue('password'),
       email: form.getFieldValue('email'),
       role: form.getFieldValue('role'),
-      isActivate: true,
     }
     await Http.post('/api/v1/auth/create', accountForm)
       .then(() => {
