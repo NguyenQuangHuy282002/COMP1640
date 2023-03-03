@@ -77,13 +77,14 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
     .json({
       success: true,
       userMetaData: {
+        _id: userData._id,
         username: userData.username,
         role: userData.role,
         name: userData.name,
         isActivate: userData.isActivate,
         birthday: userData.birthday || '',
         email: userData.email || 'None',
-        image: userData.image || '',
+        avatar: userData.avatar || '',
         phone: userData.phone || '',
         description: userData.description || '',
         interests: userData.interests || [],

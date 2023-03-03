@@ -10,8 +10,6 @@ const Card = styled(AntCard)`
 const EventCard = () => {
   const [state, setState] = useState(false)
 
-  const CARD_COLOR_ACTIVE = '#d2d2d2'
-
   return (
     <>
       <StyledCard
@@ -19,7 +17,6 @@ const EventCard = () => {
         extra={<a href="#">More</a>}
         style={{ width: '100%', backgroundColor: '#F6FFFD' }}
         // hoverable={true}
-        color={state && CARD_COLOR_ACTIVE}
       >
         <p>Card content</p>
         <p>Card content</p>

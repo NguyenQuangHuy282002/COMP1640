@@ -12,7 +12,7 @@ const RightSideBar: React.FC = () => {
       {windowSize < 1000 ? (
         <></>
       ) : (
-        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box' }}>
+        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px' }}>
           <EventCard />
         </Layout.Sider>
       )}

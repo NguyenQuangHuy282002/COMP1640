@@ -19,7 +19,7 @@ function Login() {
         if (res.data?.success) {
           message.success('Login successful')
           localStorage.setItem(LOCALSTORAGE.TOKEN, res.data.accessToken)
-          userStore.updateState(res.data.userData)
+          userStore.updateState(res.data.userMetaData)
           return navigate(state?.from || '/dashboard')
         }
       })

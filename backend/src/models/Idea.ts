@@ -17,7 +17,7 @@ export interface IIdea extends Document{
   comments?: IComment['_id'][]
   createdAt?: Date
   specialEvent: ISpecialEvent['_id']
-  isIncognito?: boolean
+  isAnonymous?: boolean
 }
 
 const ideaSchema = new Schema<IIdea>(
@@ -33,7 +33,7 @@ const ideaSchema = new Schema<IIdea>(
     comments: [ { type: Types.ObjectId, ref: 'Comment'}],
     createdAt: { type: Date, default: Date.now },
     specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
-    isIncognito: { type: Boolean, default: false, required: false }
+    isAnonymous: { type: Boolean, default: false, required: false }
   },
   { timestamps: { updatedAt: true } }
 )

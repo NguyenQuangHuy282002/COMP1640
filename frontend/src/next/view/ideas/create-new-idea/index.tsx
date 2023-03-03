@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Form, Layout, Select, Input, Upload, Button, Switch } from 'antd'
+import { Form, Layout, Select, Input, Upload, Button, Switch, message } from 'antd'
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import RichTextArea from './rich-text-area'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -19,11 +19,6 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     const fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1)
     const type = file.type
     console.log('file: ', fileExtension + '/' + type)
-    // const requestURL = url+`?ext=${fileExtension}&type=${type}`;
-    // const paramsOptions = {
-    //   ext: fileExtension,
-    //   type: type,
-    // };
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
     const uploadFileToS3 = await axios.put(uploadConfig.data.url, file, {
@@ -51,15 +46,14 @@ export default function CreateIdea() {
   const [form] = Form.useForm()
   const initialState = () => EditorState.createEmpty()
   const { enqueueSnackbar } = useSnackbar()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const [editorState, setEditorState] = useState(initialState)
   const [files, setFiles] = useState([])
-  const [incognito, setIncognito] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [isAnonymous, setAnonymous] = useState(false)
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
-
-  useEffect(() => {})
 
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
@@ -82,8 +76,9 @@ export default function CreateIdea() {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
-      // department: form.getFieldValue('department') || undefined,
       content: `${content}`,
+      categories: categories,
+      isAnonymous: isAnonymous
     }
     if (files) {
       let fileNameList = await fetchAllToS3(files)
@@ -92,14 +87,14 @@ export default function CreateIdea() {
     }
 
     console.log('postForm: ', postForm)
-    setLoading(true)
+    // setLoading(true)
     await Http.post('/api/v1/idea/create', postForm)
       .then(res => {
         console.log('response', res)
         enqueueSnackbar('Upload Idea successfully!!')
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-      .finally(() => setLoading(false))
+      // .finally(() => setLoading(false))
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
@@ -113,13 +108,13 @@ export default function CreateIdea() {
         padding: paddingForm,
       }}
     >
-      <Form.Item name="department" style={{ marginBottom: '15px' }}>
+      <Form.Item name="specialevent" style={{ marginBottom: '15px' }}>
         <Select
           style={{
             float: 'left',
             width: '40%',
           }}
-          placeholder="Choose department"
+          placeholder="Choose Special Event"
         >
           <Select.Option value="ok">Oke</Select.Option>
         </Select>
@@ -177,11 +172,11 @@ export default function CreateIdea() {
             </Upload.Dragger>
           </Form.Item>
         </Form.Item>
-        <Form.Item label="Incognito Mode">
-          <Switch onChange={() => setIncognito(!incognito)} checkedChildren="On" unCheckedChildren="Off" />
+        <Form.Item label="Anonymous Mode">
+          <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
-          <Tags />
+          <Tags setCategories={setCategories}/>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 15 }}>
           <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()}>

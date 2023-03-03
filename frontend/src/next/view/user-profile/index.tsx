@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useSubscription } from '../../libs/global-state-hook'
 import { IUserInfo } from '../../../types/user'
 import { userStore } from '../auth/user-store'
-import { ideas } from '../home-page'
+// import { ideas } from '../home-page'
 import EditProfileForm from './editProfile'
 import ListCourses from './listCourses'
 import UserInfomation from './userInformation'
@@ -19,7 +19,7 @@ const user: IUserInfo = {
   image:
     'https://phantom-marca.unidadeditorial.es/a7890e85874df91e3b557a5f9e6cd327/resize/1320/f/jpg/assets/multimedia/imagenes/2022/11/16/16685792092950.jpg',
   phone: '098765432',
-  courses: ideas,
+  courses: [],
   interests: ['game ', 'football'],
 }
 
@@ -41,7 +41,6 @@ const tabList = [
 function UserProfile() {
   const [activeTabKey, setActiveTabKey] = useState('edit')
   const { state } = useSubscription(userStore)
-
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
       <Col className="gutter-row" xs={24} sm={24} md={6} xxl={6}>
@@ -55,7 +54,7 @@ function UserProfile() {
         >
           <Space direction="vertical" size={16}>
             <Title level={3} style={{ margin: 0 }}>
-              {state.username}
+              {state.name}
             </Title>
             <Text>
               <b>DOB: </b>
