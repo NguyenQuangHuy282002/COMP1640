@@ -8,7 +8,9 @@ departmentRouter.get('/', async (req, res) => {
     const data = await Department.find({})
     res.status(200).json({ success: 1, data: data })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
@@ -18,7 +20,9 @@ departmentRouter.post('/', express.json(), async (req, res) => {
     await Department.findOneAndUpdate({ oldName }, { name }, { upsert: true })
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
@@ -28,6 +32,8 @@ departmentRouter.post('/delete', express.json(), async (req, res) => {
     await Department.findOneAndDelete({ name })
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })

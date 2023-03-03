@@ -8,33 +8,36 @@ specialEventRouter.get('/', async (req, res) => {
     const data = await SpecialEvent.find({})
     res.status(200).json({ success: 1, data })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
 specialEventRouter.post('/', express.json(), async (req, res) => {
   try {
-    await SpecialEvent.collection.insertOne(req.body)
+    const { id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
+    await SpecialEvent.findOneAndUpdate(
+      { id },
+      { title, description, startDate, firstCloseDate, finalCloseDate },
+      { upsert: true }
+    )
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
-specialEventRouter.put('/', express.json(), async (req, res) => {
+specialEventRouter.delete('/:id', express.json(), async (req, res) => {
   try {
-    await SpecialEvent.findByIdAndUpdate({ _id: req.body.id }, req.body)
+    const eventId = req.params.id
+    await SpecialEvent.findByIdAndDelete(eventId)
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
-  }
-})
-
-specialEventRouter.delete('/', express.json(), async (req, res) => {
-  try {
-    await SpecialEvent.collection.insertOne(req.body)
-    res.status(200).json({ success: 1 })
-  } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
