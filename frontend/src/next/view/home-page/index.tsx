@@ -1,86 +1,50 @@
 import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge } from 'antd'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import IdeaCard from '../ideas/idea-card'
 import { SmileFilled } from '@ant-design/icons'
 import MenuFilter from './menu-filter'
 import useWindowSize from '../../utils/useWindowSize'
+import { Http } from '../../api/http'
+import { useSnackbar } from 'notistack'
+import { handleFilter } from '../../utils/handleFilter'
+import { useSubscription } from '../../libs/global-state-hook'
+import { userStore } from '../auth/user-store'
+import IdeasList from '../ideas/ideas-list'
 
 const { Title } = Typography
-
-export const ideas = [
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-  {
-    id: '1',
-    name: 'Computing',
-    staff: 'Huy',
-  },
-]
 
 
 function HomePage() {
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
   const [filter, setFilter] = useState('new')
-  const fitPadding = windowWidth < 768 ? '10px 0' : '10px 40px'
+  const fitPadding = windowWidth < 768 ? '10px 0' : '10px 100px'
+  const [loading, setLoading] = useState(false);
+  const [ideas, setIdeas] = useState([]);
+  const { avatar } = useSubscription(userStore).state
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+  useEffect(() => {
+      setLoading(true)
+      const optionsQuery = handleFilter(filter)
+      const getAllIdeas = async () =>
+        await Http.get(`/api/v1/idea?${optionsQuery}`)
+          .then(res => setIdeas(res.data.data))
+          .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+          .finally(() => setLoading(false))
+        getAllIdeas()
+  }, [filter])
+
   return (
     <Layout.Content
       style={{
         display: 'block',
         padding: fitPadding,
+        height: '200vh'
       }}
     >
       <StyledRow
@@ -88,7 +52,7 @@ function HomePage() {
       >
         <Col flex="60px" >
           <Badge status="success" count={<SmileFilled  style={{color: '#52c41a'}}/>}>
-            <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src="https://joesch.moe/api/v1/random" />
+            <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src={avatar} />
           </Badge>
         </Col>
         <Col flex="auto">
@@ -106,9 +70,7 @@ function HomePage() {
       >
         <MenuFilter setFilter={setFilter} filter={filter}/>
       </StyledRow>
-      {ideas.map((_, index) => {
-        return <IdeaCard key={`${index}`} />
-      })}
+      <IdeasList ideas={ideas} isLoading={loading}/>
     </Layout.Content>
   )
 }
@@ -123,3 +85,4 @@ export const StyledRow = styled(Row)`
   background: #fff;
   margin-bottom: 15px;
 `
+            // src="https://joesch.moe/api/v1/random" />

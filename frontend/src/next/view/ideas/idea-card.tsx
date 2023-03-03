@@ -7,8 +7,11 @@ import {
   MessageTwoTone,
   FireTwoTone,
   EyeOutlined,
+  ClockCircleFilled,
+  LinkedinOutlined,
+  CompassOutlined,
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider } from 'antd'
+import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List } from 'antd'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
 import styled from 'styled-components'
@@ -17,40 +20,27 @@ const { Meta } = Card
 const { Text, Link } = Typography
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
-const IdeaCard: React.FC = idea => {
+function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
   const orientation = windowWidth < 768 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
-    setLoading(!checked)
+    setLoading(isLoading)
   }
   useEffect(() => {
     setTimeout(() => {
       onChange(loading)
-    }, 2000)
+    }, 1000)
   }, [])
-
-  const data = {
-    id: 1,
-    title: 'Rất Chi là ối á nhé',
-    author: 'I a co khac',
-    description: 'vai ca l',
-    body: 'Giau nghe la viec cua thay`',
-    tags: ['vai ca l', 'Sir huyp', 'giau nghe'],
-    points: 69,
-    views: 500,
-    commentCount: 333,
-    createdAt: Date.now(),
-    departmentName: 'Drugging4life',
-  }
+  const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
   return (
     <>
       <StyledCard
         style={{
           width: '100%',
           marginTop: 16,
-          padding: '0 10px',
         }}
+        bodyStyle={{ padding: '2px' }}
         actions={[
           <CloudDownloadOutlined key="download" />,
           <StarOutlined key="favourite" />,
@@ -58,64 +48,104 @@ const IdeaCard: React.FC = idea => {
         ]}
       >
         <Skeleton loading={loading} avatar active>
-          <Row>
-            <Col flex={0.5} style={{ borderRight: '1px solid #edeff1', marginRight: '5px' }}>
-              <Space direction={orientation} style={{ textAlign: 'right', padding: '5px -5px' }}>
-                <Text strong>
-                  <FireTwoTone style={{ padding: '5px' }} />
-                  {data.points} points
-                </Text>
-                <Text>
-                  <Tag color="cyan">
-                    <MessageTwoTone /> {data.commentCount} comments
-                  </Tag>
-                </Text>
-                <Text type="secondary">
-                  <EyeOutlined style={{ padding: '5px' }} />
-                  {data.views} views
-                </Text>
-              </Space>
-            </Col>
-            <Col flex={4.5}>
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Space wrap>
-                  <Avatar src="https://joesch.moe/api/v1/random" style={{ background: '#f6f7f8' }} />
-                  <Link href="#" style={{ marginRight: '10px', fontSize: '15px', fontWeight: '500' }}>
-                    {data.author}
+          <List.Item
+            actions={
+              windowWidth > 900
+                ? [
+                    <Text strong key="list-vertical-star-o">
+                      <FireTwoTone style={{ padding: '5px' }} />
+                      {idea.like - idea.dislike} points
+                    </Text>,
+                    <Text key="list-vertical-like-o">
+                      <Tag color="cyan" style={{ margin: 0 }}>
+                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0} comments
+                      </Tag>
+                    </Text>,
+                    <Text type="secondary" key="list-vertical-message">
+                      <EyeOutlined style={{ padding: '5px' }} />
+                      {idea.views} views
+                    </Text>,
+                  ]
+                : [
+                    <Text strong key="list-vertical-star-o">
+                      <FireTwoTone style={{ paddingRight: '2px' }} />
+                      {idea.like - idea.dislike}
+                    </Text>,
+                    <Text key="list-vertical-like-o">
+                      <Tag color="cyan">
+                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+                      </Tag>
+                    </Text>,
+                    <Text type="secondary" key="list-vertical-message">
+                      <EyeOutlined style={{ paddingRight: '2px' }} />
+                      {idea.views}
+                    </Text>,
+                  ]
+            }
+          >
+            <List.Item.Meta
+              key="00"
+              avatar={
+                <>
+                  <Avatar
+                    src={
+                      !idea.isAnonymous
+                        ? idea.publisherId?.avatar ?? 'Unknown'
+                        : 'https://www.pngarea.com/pngm/10/5215656_crying-emoji-png-transparent-background-smirk-emoji-transparent.png'
+                    }
+                    style={{ background: '#f6f7f8' }}
+                  />
+                </>
+              }
+              title={
+                <>
+                  <Link href="#" style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}>
+                    {!idea.isAnonymous ? idea.publisherId?.name ?? 'Unknown' : 'Anonymous'}
                   </Link>
-                  <Text type="secondary" style={{ marginTop: '10px' }}>
-                    . Posted {formatDayTime(data.createdAt)}
-                  </Text>
-                </Space>
-                <Link href="#" style={{ fontSize: '25px', fontWeight: '600', marginBottom: 0 }}>
-                  {data.title}
-                </Link>
-                <Space size={[0, 8]} wrap>
-                  <TagsTwoTone style={{ padding: '5px' }} />
-                  {data.tags.map(tag => (
-                    <Tag key={tag} color="geekblue">
-                      {tag}
+                  <Typography.Text type="secondary">
+                    <Tag icon={<LinkedinOutlined />} color="#007E80">
+                      {/* 373B44 004853 */}
+                      <strong>{idea.departmentName ? idea.departmentName : 'No department'}</strong>
                     </Tag>
-                  ))}
-                </Space>
-                <Divider orientation="left" style={{ marginBottom: '0' }}>
-                  <Text type="secondary">From</Text>
-                </Divider>
-                <Row>
-                  <Col flex={4}>
-                    <Tag>{data.departmentName}</Tag>
-                  </Col>
-                  {/* <Col flex={1}>
-                    <Avatar src="https://joesch.moe/api/v1/random" />
-                    <Link href="#" style={{ marginRight: '10px' }}>
-                      {data.author}
-                    </Link>
-                    <Text style={{ marginTop: '10px' }}>{formatDayTime(data.createdAt)}</Text>
-                  </Col> */}
-                </Row>
-              </Space>
-            </Col>
-          </Row>
+                    <Tag icon={<CompassOutlined />} color="#FA6900">
+                      <strong>{idea.specialEvent ? idea.specialEvent : 'No Event'}</strong>
+                    </Tag>
+                    <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
+                  </Typography.Text>
+                </>
+              }
+              style={{ margin: '0' }}
+            />
+
+            <List.Item.Meta
+              style={{ margin: '0',  }}
+              key="01"
+              title={
+                <Link href="" style={{ margin: 0 }}>
+                  <Typography.Title level={4} style={{ margin: 0 }}>
+                    {idea.title}
+                  </Typography.Title>
+                </Link>
+              }
+              description={
+                <>
+                  <Typography.Text type="secondary">{description}</Typography.Text>
+                  <Space size={[0, 8]} wrap>
+                    <TagsTwoTone style={{ padding: '5px' }} />
+                    {idea.categories.length !== 0 ? (
+                      idea.categories.map(tag => (
+                        <Tag key={tag.name} color="geekblue">
+                          {tag.name}
+                        </Tag>
+                      ))
+                    ) : (
+                      <Tag>No Tag</Tag>
+                    )}
+                  </Space>
+                </>
+              }
+            ></List.Item.Meta>
+          </List.Item>
         </Skeleton>
       </StyledCard>
     </>

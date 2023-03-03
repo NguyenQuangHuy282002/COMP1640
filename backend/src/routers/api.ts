@@ -4,7 +4,7 @@ import authRouter from './auth.router'
 import { serverErrorHandler } from '../middlewares/serverErrorHandler'
 import { Express } from 'express-serve-static-core'
 import { ideaRouter } from './idea.router'
-import { specialEventRouter } from './specialEvent'
+import { specialEventRouter } from './specialEvent.router'
 import { departmentRouter } from './department.router'
 
 const apiRouter = (app: Express) => {

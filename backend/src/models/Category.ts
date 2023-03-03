@@ -9,7 +9,7 @@ export interface ICategory extends Document{
 const categorySchema = new Schema<ICategory>(
   {
     name: String,
-    ideas: [{ type: Types.ObjectId, ref: 'Idea'}]
+    ideas: [{ type: Types.ObjectId, ref: 'Idea', default: []}]
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 )

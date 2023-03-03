@@ -29,7 +29,7 @@ const LayoutWrapper = ({ children }) => {
           display: 'flex',
           justifyContent: 'space-between',
           position: 'relative',
-          paddingRight: '16px',
+          // paddingRight: '16px',
         }}
       >
         <AppSidebar />
