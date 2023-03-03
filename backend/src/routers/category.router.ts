@@ -8,7 +8,9 @@ categoryRouter.get('/', async (req, res) => {
     const data = await Category.find({})
     res.status(200).json({ success: 1, data: data })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
@@ -18,7 +20,9 @@ categoryRouter.post('/', express.json(), async (req, res) => {
     await Category.findOneAndUpdate({ name }, { name }, { upsert: true })
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
@@ -28,6 +32,8 @@ categoryRouter.post('/delete', express.json(), async (req, res) => {
     await Category.findOneAndDelete({ name })
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })

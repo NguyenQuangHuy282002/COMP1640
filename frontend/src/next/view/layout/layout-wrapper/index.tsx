@@ -1,11 +1,8 @@
-import useWindowSize from '../../../utils/useWindowSize'
 import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import React from 'react'
-
-// import RightSideBar from './RightSideBar/RightSideBar.component';
-import AppSidebar from './sidebar'
+import useWindowSize from '../../../utils/useWindowSize'
 import RightSideBar from './right-sidebar'
+import AppSidebar from './sidebar'
 
 const LayoutWrapper = ({ children }) => {
   const windowWidth = useWindowSize()
@@ -29,7 +26,6 @@ const LayoutWrapper = ({ children }) => {
           display: 'flex',
           justifyContent: 'space-between',
           position: 'relative',
-          // paddingRight: '16px',
         }}
       >
         <AppSidebar />

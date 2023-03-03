@@ -1,17 +1,17 @@
 import {
+  CalendarOutlined,
   HomeFilled,
-  WeiboOutlined,
+  MenuFoldOutlined,
+  MenuOutlined,
+  MenuUnfoldOutlined,
   TagOutlined,
   TeamOutlined,
   UngroupOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  MenuOutlined,
+  WeiboOutlined,
 } from '@ant-design/icons'
-import { Button, Dropdown, Layout, Menu, MenuProps, Typography } from 'antd'
+import { Button, Dropdown, Layout, Menu, MenuProps } from 'antd'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -40,10 +40,11 @@ const items: MenuProps['items'] = [
     'grp',
     null,
     [
-      getItem('Ideas', 'idea', <WeiboOutlined />),
-      getItem('Tags', 'tag', <TagOutlined />),
-      getItem('Users', 'user', <TeamOutlined />),
-      getItem('Departments', 'department', <UngroupOutlined />),
+      getItem('Ideas', 'ideas', <WeiboOutlined />),
+      getItem('Tags', 'categories', <TagOutlined />),
+      getItem('Users', 'accounts-manager', <TeamOutlined />),
+      getItem('Departments', 'departments', <UngroupOutlined />),
+      getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
   ),
@@ -58,21 +59,10 @@ function AppSidebar() {
   }
 
   const handleClickMenu = async (val: any) => {
+    setTabKey([val.key])
     switch (val.key) {
       case 'home':
         navigate('/')
-        break
-      case 'idea':
-        navigate('/idea')
-        break
-      case 'tag':
-        navigate('/categories')
-        break
-      case 'user':
-        navigate('/accounts-manager')
-        break
-      case 'department':
-        navigate('/departments')
         break
       default:
         navigate(`/${val.key}`)
@@ -96,10 +86,10 @@ function AppSidebar() {
               height: '90vh',
               top: '50px',
               boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
-              paddingTop: '12px'
+              paddingTop: '12px',
             }}
           >
-            <Menu onClick={handleClickMenu} defaultSelectedKeys={['home']} mode="inline" items={items} />
+            <Menu onClick={handleClickMenu} defaultSelectedKeys={tabKey} mode="inline" items={items} />
             <Button
               type="primary"
               onClick={toggleCollapsed}
