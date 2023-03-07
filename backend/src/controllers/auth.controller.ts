@@ -105,6 +105,22 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
   }
 }
 
+export const verifyAccessToken = async (req: any, res: any, next: any) => {
+  try {
+    const { token } = req.body;
+    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET);
+    if (verify) {
+      return res.status(200).json({
+        success: true,
+      })
+    }
+  } catch (err) {
+    return res.status(200).json({
+      success: false,
+    })
+  }
+}
+
 // @route POST /api/v1/auth/refreshToken -- call for refresh the access token
 export const refreshToken = async (req: any, res: any, next: any) => {
   try {

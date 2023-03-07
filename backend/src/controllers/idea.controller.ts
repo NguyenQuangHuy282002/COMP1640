@@ -159,6 +159,29 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
   }
 }
 
+export const getDataSuggestion = async (req: any, res: any, next: any) => {
+  try {
+    const ideas = await Idea
+      .find()
+      .select('title')
+    // const users = await User
+    //   .find()
+    //   .select('name')
+    // const categories = await Category
+    //   .find()
+    //   .select('name')
+    res.status(200).json({
+      success: true,
+      data: ideas
+        // , users: users, categories: categories
+      }
+    )
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
+
 export const deleteIdea = async (req: any, res: any, next: any) => {
   try {
     const { ideaId } = req.params;
