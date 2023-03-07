@@ -10,8 +10,8 @@ import { Http } from '../../api/http'
 import { useSnackbar } from 'notistack'
 import { handleFilter } from '../../utils/handleFilter'
 import { useSubscription } from '../../libs/global-state-hook'
-import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
+import { userStore } from '../auth/user-store'
 
 const { Title } = Typography
 
@@ -21,7 +21,7 @@ function HomePage() {
   const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
   const [filter, setFilter] = useState('new')
-  const fitPadding = windowWidth < 768 ? '10px 0' : '10px 100px'
+  const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
   const [loading, setLoading] = useState(false);
   const [ideas, setIdeas] = useState([]);
   const { avatar } = useSubscription(userStore).state

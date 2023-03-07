@@ -22,7 +22,7 @@ const { Text, Link } = Typography
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
-  const orientation = windowWidth < 768 ? 'horizontal' : 'vertical'
+  const orientation = windowWidth < 1000 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
