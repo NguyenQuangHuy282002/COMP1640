@@ -2,6 +2,7 @@ import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { useEffect } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
+import AppFooter from '../footer'
 import RightSideBar from './right-sidebar'
 import AppSidebar from './sidebar'
 
@@ -33,6 +34,7 @@ const LayoutWrapper = ({ children }) => {
         <Content style={contentStyle}>{children}</Content>
         <RightSideBar />
       </Layout>
+      <AppFooter/>
     </>
   )
 }
