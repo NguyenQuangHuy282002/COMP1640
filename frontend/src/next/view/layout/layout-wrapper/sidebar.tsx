@@ -71,7 +71,7 @@ function AppSidebar() {
 
   return (
     <>
-      {windowWidth > 768 ? (
+      {windowWidth > 1000 ? (
         <Layout.Sider width={300} style={{ background: 'transparent' }}>
           <Layout.Sider
             // collapsible
@@ -106,7 +106,7 @@ function AppSidebar() {
             type="primary"
             style={{
               position: 'sticky',
-              zIndex: 2.5,
+              zIndex: 3,
               alignSelf: 'start',
               top: '10px',
               border: '1px solid #ccc',

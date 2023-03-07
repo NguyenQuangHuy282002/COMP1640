@@ -1,5 +1,6 @@
 import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
+import { useEffect } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import RightSideBar from './right-sidebar'
 import AppSidebar from './sidebar'
@@ -7,7 +8,7 @@ import AppSidebar from './sidebar'
 const LayoutWrapper = ({ children }) => {
   const windowWidth = useWindowSize()
   const contentStyle =
-    windowWidth > 768
+    windowWidth > 1000
       ? {
           width: '100%',
           background: 'none',
