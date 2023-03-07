@@ -211,8 +211,8 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
 
     await Comment.deleteMany({ ideaId: deletedIdea._id });
 
-    const newUserIdeas = user.ideas.filter(userI => userI._id.toString() !== deletedIdea.id);
-    const newUserComment = user.comments.filter(userC => userC._id.toString() !== deletedIdea.id);
+    const newUserIdeas = user.ideas.filter(userI => userI._id.toString() !== deletedIdea._id);
+    const newUserComment = user.comments.filter(userC => userC._id.toString() !== deletedIdea._id);
 
     user.ideas = newUserIdeas;
     user.comments = newUserComment;
@@ -256,5 +256,31 @@ export const editIdea = async (req: any, res: any, next: any) => {
   }
   catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const likeIdea = async (req: any, res: any, next: any) => {
+  try {
+      const { ideaId } = req.params;
+      let idea = await Idea.findById(ideaId);
+      idea.like = +idea.like + 1;
+      await idea.save();
+      res.status(200).json({ success: true, message: 'idea liked!', idea });
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
+
+  }
+}
+
+export const disLikeIdea = async (req: any, res: any, next: any) => {
+  try {
+      const { ideaId } = req.params;
+      let idea = await Idea.findById(ideaId);
+      idea.like = +idea.like - 1;
+      await idea.save();
+      res.status(200).json({ success: true, message: 'idea liked!', idea });
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
+
   }
 }
