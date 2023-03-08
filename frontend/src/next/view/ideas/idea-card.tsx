@@ -11,10 +11,11 @@ import {
   LinkedinOutlined,
   CompassOutlined,
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List } from 'antd'
+import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List, Button } from 'antd'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 const { Meta } = Card
 const { Text, Link } = Typography
@@ -22,6 +23,7 @@ const { Text, Link } = Typography
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
+  const navigate = useNavigate()
   const orientation = windowWidth < 1000 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
@@ -33,6 +35,10 @@ function IdeaCard({ idea, isLoading }) {
     }, 1000)
   }, [])
   const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
+
+  const handleViewDetail = id => {
+    navigate(`/idea?id=${id}`)
+  }
   return (
     <>
       <StyledCard
@@ -118,14 +124,14 @@ function IdeaCard({ idea, isLoading }) {
             />
 
             <List.Item.Meta
-              style={{ margin: '0',  }}
+              style={{ margin: '0' }}
               key="01"
               title={
-                <Link href="" style={{ margin: 0 }}>
+                <Button type="link" onClick={() => handleViewDetail(idea._id)}>
                   <Typography.Title level={4} style={{ margin: 0 }}>
                     {idea.title}
                   </Typography.Title>
-                </Link>
+                </Button>
               }
               description={
                 <>

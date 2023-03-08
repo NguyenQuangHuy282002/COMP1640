@@ -2,8 +2,8 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 interface IRichTextEditor {
-  editorState: string
-  setEditorState: (val: string) => void
+  editorState: any
+  setEditorState: (val: any) => void
   placeholder?: string
 }
 

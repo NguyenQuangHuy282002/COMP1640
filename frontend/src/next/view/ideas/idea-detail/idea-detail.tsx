@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { TagsTwoTone, DownSquareOutlined, UpSquareOutlined } from '@ant-design/icons'
-import {
-  Avatar,
-  Typography,
-  Space,
-  Tag,
-  Divider,
-  Layout,
-  Breadcrumb,
-  Button,
-} from 'antd'
+import { DownSquareOutlined, TagsTwoTone, UpSquareOutlined } from '@ant-design/icons'
+import { Avatar, Button, Divider, Layout, Space, Tag, Typography } from 'antd'
+import { Content } from 'antd/es/layout/layout'
+import RichTextEditor from 'next/components/text-editor'
+import { useQuery } from 'next/utils/use-query'
+import { useEffect, useState } from 'react'
 import { formatDayTime } from '../../../utils/helperFuncs'
 import useWindowSize from '../../../utils/useWindowSize'
-import styled from 'styled-components'
-import { Content } from 'antd/es/layout/layout'
-import RichTextArea from '../create-new-idea/rich-text-area'
-import MenuBar from './menu-bar'
 import CommentsList from '../../../view/comments/comments-list'
+import MenuBar from './menu-bar'
 
 const { Text, Link } = Typography
 
 function IdeaDetail() {
+  const query = useQuery()
+  const id = query.get('id')
+  console.log(id)
   // { isOpen, onCloseModal, setAccounts, accounts }
   const windowWidth = useWindowSize()
   const [showComment, setShowComment] = useState(false)
@@ -57,7 +51,15 @@ function IdeaDetail() {
   return (
     <>
       <Layout className="layout" style={{ padding: padding }}>
-        <Content style={{ background: 'white', border: '1px solid #ccc', borderRadius: '5px', height: '100%', paddingBottom: '50px' }}>
+        <Content
+          style={{
+            background: 'white',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            height: '100%',
+            paddingBottom: '50px',
+          }}
+        >
           <Space direction="horizontal" align="start">
             <Space direction="vertical" style={{ padding: paddingSider, alignItems: 'flex-start' }}>
               <Button type="text" icon={<UpSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />} href="#" />
@@ -95,23 +97,20 @@ function IdeaDetail() {
             </Space>
           </Space>
           <Divider></Divider>
-          <MenuBar commentCount={data.commentCount} handleShowComment={handleShowComment}/>
+          <MenuBar commentCount={data.commentCount} handleShowComment={handleShowComment} />
           <Space style={{ padding: '10px 44px' }} direction="vertical">
-            <Text strong>Comment as <Text mark>{data.author}</Text></Text>
-            <RichTextArea editorState={undefined} setEditorState={undefined}></RichTextArea>
+            <Text strong>
+              Comment as <Text mark>{data.author}</Text>
+            </Text>
+            <RichTextEditor editorState={undefined} setEditorState={undefined} />
           </Space>
           <Space style={{ justifyContent: 'end', display: 'flex', paddingRight: '44px' }}>
-            <Button type="primary" shape="round" disabled={false} style={{marginRight: '10px'}} onClick={() => {}}>
+            <Button type="primary" shape="round" disabled={false} style={{ marginRight: '10px' }} onClick={() => {}}>
               Comment
             </Button>
           </Space>
-          <Divider style={{ marginBottom: 0}}/>
-          <Space style={{ width: '100%'}}>
-            {
-              showComment ? <CommentsList></CommentsList> : <></> 
-            }
-
-          </Space>
+          <Divider style={{ marginBottom: 0 }} />
+          <Space style={{ width: '100%' }}>{showComment ? <CommentsList></CommentsList> : <></>}</Space>
         </Content>
       </Layout>
     </>

@@ -1,17 +1,15 @@
-import { useEffect, useState } from 'react'
-import { Form, Layout, Select, Input, Upload, Button, Switch, message } from 'antd'
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
-import RichTextArea from './rich-text-area'
-import { convertToRaw, EditorState } from 'draft-js'
-import { Http } from '../../../api/http'
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Select, Switch, Upload } from 'antd'
 import axios from 'axios'
-import styled from 'styled-components'
-import useWindowSize from '../../../utils/useWindowSize'
+import { convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
-// import Tags from '../../../components/tag'
-import Tags from './tag'
-import React from 'react'
+import { useState } from 'react'
+import styled from 'styled-components'
+import { Http } from '../../../api/http'
+import useWindowSize from '../../../utils/useWindowSize'
 import { useSnackbar } from 'notistack'
+import Tags from './tag'
+import RichTextEditor from 'next/components/text-editor'
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -78,7 +76,7 @@ export default function CreateIdea() {
       title: form.getFieldValue('title'),
       content: `${content}`,
       categories: categories,
-      isAnonymous: isAnonymous
+      isAnonymous: isAnonymous,
     }
     if (files) {
       let fileNameList = await fetchAllToS3(files)
@@ -94,7 +92,7 @@ export default function CreateIdea() {
         enqueueSnackbar('Upload Idea successfully!!')
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-      // .finally(() => setLoading(false))
+    // .finally(() => setLoading(false))
     console.log('idea info: ', postForm)
   }
   const windowWidth = useWindowSize()
@@ -144,7 +142,7 @@ export default function CreateIdea() {
             padding: '5px',
           }}
         >
-          <RichTextArea editorState={editorState} setEditorState={setEditorState} />
+          <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
         </StyledFormItem>
         <Form.Item
           name="upload"
@@ -176,7 +174,7 @@ export default function CreateIdea() {
           <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
-          <Tags setCategories={setCategories}/>
+          <Tags setCategories={setCategories} />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 15 }}>
           <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()}>
