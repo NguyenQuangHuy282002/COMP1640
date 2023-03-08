@@ -4,9 +4,8 @@ import { IComment } from './Comment'
 import { ISpecialEvent } from './SpecialEvent'
 import { IUser } from './User'
 
-
-export interface IIdea extends Document{
-  publisherId: IUser['_id'],
+export interface IIdea extends Document {
+  publisherId: IUser['_id']
   categories?: ICategory['_id'][]
   title: string
   content: string
@@ -22,7 +21,7 @@ export interface IIdea extends Document{
 
 const ideaSchema = new Schema<IIdea>(
   {
-    publisherId: { type: Types.ObjectId, ref: 'User'},
+    publisherId: { type: Types.ObjectId, ref: 'User' },
     categories: [{ type: Types.ObjectId, ref: 'Category' }],
     title: String,
     content: String,
@@ -30,10 +29,10 @@ const ideaSchema = new Schema<IIdea>(
     views: { type: Number, required: false, default: 0 },
     like: { type: Number, required: false, default: 0 },
     dislike: { type: Number, required: false, default: 0 },
-    comments: [ { type: Types.ObjectId, ref: 'Comment'}],
+    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
     createdAt: { type: Date, default: Date.now },
     specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
-    isAnonymous: { type: Boolean, default: false, required: false }
+    isAnonymous: { type: Boolean, default: false, required: false },
   },
   { timestamps: { updatedAt: true } }
 )
@@ -41,4 +40,3 @@ const ideaSchema = new Schema<IIdea>(
 const Idea: Model<IIdea> = model<IIdea>('Idea', ideaSchema)
 
 export default Idea
-

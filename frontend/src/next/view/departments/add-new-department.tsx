@@ -1,4 +1,3 @@
-import { createSubscription, useSubscription } from '../../libs/global-state-hook'
 import { Form, Input, message, Modal } from 'antd'
 import { useSnackbar } from 'notistack'
 import { Http } from '../../api/http'
@@ -8,7 +7,7 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
   const [form] = Form.useForm()
 
   const onFinish = async () => {
-    if (form.getFieldValue('name')) {
+    if (form.getFieldValue('name') || currentDepartment.name !== form.getFieldValue('name')) {
       const accountForm = {
         name: form.getFieldValue('name'),
         oldName: currentDepartment.name,
@@ -19,8 +18,10 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
           onCloseModal()
         })
         .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-    } else {
+    } else if (!form.getFieldValue('name')) {
       message.error('Name is empty!')
+    } else {
+      message.error('Please type a different name!')
     }
   }
 
@@ -33,7 +34,6 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
       }}
       title={currentDepartment.name ? `Edit ${currentDepartment.name}` : 'Add new department'}
       onOk={onFinish}
-      okButtonProps={{ disabled: !form.getFieldValue('name') || currentDepartment.name === form.getFieldValue('name') }}
       destroyOnClose
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>
