@@ -2,7 +2,7 @@ import { getPresignedUrl } from '../controllers/upload.controller'
 import express from 'express'
 import { authProtect } from '../middlewares/auth'
 import Idea from '../models/Idea'
-import { createIdea, deleteIdea, disLikeIdea, editIdea, getAllIdeasOfUser, getDataSuggestion, getIdeas, likeIdea } from '../controllers/idea.controller'
+import { createIdea, deleteIdea, disLikeIdea, editIdea, getAllIdeasOfUser, getDataSuggestion, getIdea, getIdeas, likeIdea } from '../controllers/idea.controller'
 
 export const ideaRouter = express.Router()
 
@@ -46,6 +46,7 @@ ideaRouter.get('/', authProtect, getIdeas)
 ideaRouter.get('/suggest', authProtect, getDataSuggestion)
 ideaRouter.get('/ideasOfUser', authProtect, getAllIdeasOfUser)
 ideaRouter.get('/preSignUrl', authProtect, getPresignedUrl)
+ideaRouter.get('/detail', authProtect, getIdea)
 ideaRouter.post('/create', authProtect, createIdea)
 ideaRouter.put('/dislike/:ideaId', authProtect, likeIdea)
 ideaRouter.put('/like/:ideaId', authProtect, disLikeIdea)

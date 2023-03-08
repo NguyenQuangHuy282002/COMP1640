@@ -43,9 +43,9 @@ const fetchAllToS3 = async (files: any) => {
 export default function CreateIdea() {
   const [form] = Form.useForm()
   const initialState = () => EditorState.createEmpty()
+  const [editorState, setEditorState] = useState(initialState)
   const { enqueueSnackbar } = useSnackbar()
   // const [loading, setLoading] = useState(false)
-  const [editorState, setEditorState] = useState(initialState)
   const [files, setFiles] = useState([])
   const [categories, setCategories] = useState([])
   const [isAnonymous, setAnonymous] = useState(false)
