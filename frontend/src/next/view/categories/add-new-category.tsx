@@ -1,4 +1,4 @@
-import { Col, Form, Input, message, Modal, Select } from 'antd'
+import { Form, Input, message, Modal } from 'antd'
 import { useSnackbar } from 'notistack'
 import { Http } from '../../api/http'
 
@@ -7,7 +7,7 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
   const [form] = Form.useForm()
 
   const onFinish = async () => {
-    if (form.getFieldValue('name')) {
+    if (form.getFieldValue('name') || currentCategory.name !== form.getFieldValue('name')) {
       const categoryForm = {
         name: form.getFieldValue('name'),
         oldName: currentCategory.name,
@@ -18,8 +18,10 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
           onCloseModal()
         })
         .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-    } else {
+    } else if (!form.getFieldValue('name')) {
       message.error('Name is empty!')
+    } else {
+      message.error('Please type a different name!')
     }
   }
 
@@ -32,7 +34,6 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
       }}
       title="Create new category"
       onOk={onFinish}
-      okButtonProps={{ disabled: !form.getFieldValue('name') || currentCategory.name === form.getFieldValue('name') }}
       destroyOnClose
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>

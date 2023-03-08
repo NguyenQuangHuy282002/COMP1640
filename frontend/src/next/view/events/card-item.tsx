@@ -1,12 +1,20 @@
 import { Card } from 'antd'
-import React from 'react'
 
-function EventCardItem({ event }) {
+interface IEvent {
+  _id: string
+  title: string
+  description: string
+  startDate: string
+  firstCloseDate: string
+  finalCloseDate: string
+}
+
+function EventCardItem({ event }: { event: IEvent }) {
   return (
     <Card title={event.title} bordered={false} style={{ width: '100%' }}>
-      <p>Card content</p>
-      <p>Card content</p>
-      <p>Card content</p>
+      <p>Start date: {event.startDate}</p>
+      <p>First closure date: {event.firstCloseDate}</p>
+      <p>Final closure date: {event.finalCloseDate}</p>
     </Card>
   )
 }

@@ -11,38 +11,25 @@ interface RecordType {
 }
 
 function Tags({ setCategories }) {
-  const [mockData, setMockData] = useState<RecordType[]>([])
   const [targetKeys, setTargetKeys] = useState<string[]>([])
   const [categoryList, setCategoryList] = useState([])
-  const [onOpen, SetOnOpen] = useState(true)
   const [disabled, setDisabled] = useState(false)
 
-  const getMock = () => {
-    const tempMockData = []
-    categoryList.forEach(category => {
-      const data = {
-        key: category?._id.toString(),
-        title: `${category?.name}`,
-        description: `${category?.name}`,
-      }
-      tempMockData.push(data)
-    })
-    setMockData(tempMockData)
-  }
   useEffect(() => {
-    if (onOpen) {
-      const getAllCate = async () => {
-        await Http.get('/api/v1/category/')
-          .then(res => {
-            setCategoryList(res.data.data)
-          })
-          .catch(err => message.error(`Failed to get categories`))
-      }
-      getAllCate();
-      console.log('cateList:', categoryList)
-      getMock()
+    const getAllCate = async () => {
+      await Http.get('/api/v1/category')
+        .then(res => {
+          const categoryData = res.data.data.map(category => ({
+            key: category?._id.toString(),
+            title: `${category?.name}`,
+            description: `${category?.name}`,
+          }))
+          setCategoryList(categoryData)
+        })
+        .catch(err => message.error(`Failed to get categories`))
     }
-  }, [!onOpen])
+    getAllCate()
+  }, [])
 
   const filterOption = (inputValue: string, option: RecordType) => option.description.indexOf(inputValue) > -1
 
@@ -55,10 +42,10 @@ function Tags({ setCategories }) {
   }
 
   const handleConfirm = (checked: boolean) => {
-    setDisabled(checked);
+    setDisabled(checked)
     setCategories(targetKeys)
     // console.log(targetKeys)
-  };
+  }
 
   return (
     <>
@@ -70,7 +57,7 @@ function Tags({ setCategories }) {
           notFoundContent: 'The list is empty',
           searchPlaceholder: 'Search Tags here',
         }}
-        dataSource={mockData}
+        dataSource={categoryList}
         showSearch
         disabled={disabled}
         filterOption={filterOption}
@@ -79,7 +66,7 @@ function Tags({ setCategories }) {
         onSearch={handleSearch}
         render={item => item.title}
       />
-      <br/>
+      <br />
       <Switch unCheckedChildren="Not Yet" checkedChildren="Confirm Tags" checked={disabled} onChange={handleConfirm} />
     </>
   )
