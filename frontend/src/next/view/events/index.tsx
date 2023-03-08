@@ -10,9 +10,7 @@ function EventsPage() {
       <Button onClick={() => setOpenModal(true)}>Add new event</Button>
       <Divider />
       <Space direction="vertical" size="small" style={{ display: 'flex' }}>
-        {data.map((event, index) => (
-          <EventCardItem event={event} key={index} />
-        ))}
+      <EventCardItem></EventCardItem>
       </Space>
       <CreateEventModal onClose={() => setOpenModal(false)} open={openModal} onFinish={() => setOpenModal(false)} />
     </div>
@@ -21,45 +19,9 @@ function EventsPage() {
 
 export default EventsPage
 
-const data = [
-  {
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-]
+
+
+
+// {data.map((event, index) => (
+//   <EventCardItem event={event} key={index} />
+// ))}

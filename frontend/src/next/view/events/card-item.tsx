@@ -1,14 +1,92 @@
-import { Card } from 'antd'
-import React from 'react'
+import React from 'react';
+import { Space, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 
-function EventCardItem({ event }) {
-  return (
-    <Card title={event.title} bordered={false} style={{ width: '100%' }}>
-      <p>Card content</p>
-      <p>Card content</p>
-      <p>Card content</p>
-    </Card>
-  )
+interface DataType {
+  title: any;
+  description: any;
+  department: any;
+  startDate: any;
+  firstClosedDate: any;
+  finalClosedDate: any;
 }
 
-export default EventCardItem
+const columns: ColumnsType<DataType> = [
+  {
+    title: 'Title',
+    dataIndex: 'title', 
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+    // key: 'description',
+  },
+  {
+    title: 'Department',
+    dataIndex: 'department',
+  },
+  {
+    title: 'StartDate',
+    dataIndex: 'startDate',
+  },
+  {
+    title: 'FirstClosedDate',
+    dataIndex: 'firstClosedDate',
+  },
+  {
+    title: 'FinalClosedDate',
+    dataIndex: 'finalClosedDate',
+  },
+];
+
+const data: DataType[] = [
+  {
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+  {
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+
+  },
+  {
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+
+  },
+  {
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+
+  },
+  {
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+
+  },
+];
+
+const EventCardItem: React.FC = () => <Table columns={columns} dataSource={data} />;
+
+export default EventCardItem;
