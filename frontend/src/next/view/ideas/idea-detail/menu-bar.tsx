@@ -9,7 +9,7 @@ export default function MenuBar({commentCount, handleShowComment}) {
     <>
       {windowWidth > 969 ? <Space style={{ justifyContent: 'start', display: 'flex', padding: '20px', marginLeft: '24px' }}>
       <Button icon={<CommentOutlined />} onClick={()=>handleShowComment()} style={{cursor: 'pointer'}}>
-        {commentCount}k Comments
+        {commentCount} Comments
       </Button>
       <Button icon={<SaveOutlined />} >
         Save

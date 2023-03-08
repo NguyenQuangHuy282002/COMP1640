@@ -30,19 +30,17 @@ function Tags({ setCategories }) {
     setMockData(tempMockData)
   }
   useEffect(() => {
-    if (onOpen) {
-      const getAllCate = async () => {
-        await Http.get('/api/v1/category/')
-          .then(res => {
-            setCategoryList(res.data.data)
-          })
-          .catch(err => message.error(`Failed to get categories`))
-      }
-      getAllCate();
-      console.log('cateList:', categoryList)
-      getMock()
+    const getAllCate = async () => {
+      await Http.get('/api/v1/category/')
+        .then(res => {
+          setCategoryList(res.data.data)
+        })
+        .catch(err => message.error(`Failed to get categories`))
     }
-  }, [!onOpen])
+    getAllCate()
+    console.log('cateList:', categoryList)
+    getMock()
+  }, [])
 
   const filterOption = (inputValue: string, option: RecordType) => option.description.indexOf(inputValue) > -1
 
@@ -55,10 +53,10 @@ function Tags({ setCategories }) {
   }
 
   const handleConfirm = (checked: boolean) => {
-    setDisabled(checked);
+    setDisabled(checked)
     setCategories(targetKeys)
     // console.log(targetKeys)
-  };
+  }
 
   return (
     <>
@@ -79,7 +77,7 @@ function Tags({ setCategories }) {
         onSearch={handleSearch}
         render={item => item.title}
       />
-      <br/>
+      <br />
       <Switch unCheckedChildren="Not Yet" checkedChildren="Confirm Tags" checked={disabled} onChange={handleConfirm} />
     </>
   )

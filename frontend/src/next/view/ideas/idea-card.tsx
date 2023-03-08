@@ -1,21 +1,12 @@
-import React, { useEffect, useState } from 'react'
 import {
-  StarOutlined,
-  ShareAltOutlined,
-  CloudDownloadOutlined,
-  TagsTwoTone,
-  MessageTwoTone,
-  FireTwoTone,
-  EyeOutlined,
-  ClockCircleFilled,
-  LinkedinOutlined,
-  CompassOutlined,
+  ClockCircleFilled, CloudDownloadOutlined, CompassOutlined, EyeOutlined, FireTwoTone, LinkedinOutlined, MessageTwoTone, ShareAltOutlined, StarOutlined, TagsTwoTone
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List, Button } from 'antd'
+import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
 
 const { Meta } = Card
 const { Text, Link } = Typography
@@ -127,8 +118,8 @@ function IdeaCard({ idea, isLoading }) {
               style={{ margin: '0' }}
               key="01"
               title={
-                <Button type="link" onClick={() => handleViewDetail(idea._id)}>
-                  <Typography.Title level={4} style={{ margin: 0 }}>
+                <Button type="link" onClick={() => handleViewDetail(idea._id)} style={{ wordWrap: 'break-word', whiteSpace: 'pre-line', height: 'auto'  }}>
+                  <Typography.Title level={4} style={{ margin: 0, }}>
                     {idea.title}
                   </Typography.Title>
                 </Button>

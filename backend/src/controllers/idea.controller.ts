@@ -159,6 +159,28 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
   }
 }
 
+export const getIdea = async (req: any, res: any, next: any) => {
+  try {
+    console.log(req.query.id)
+    const idea = await Idea
+      .findById(req.query.id)
+      .populate({
+        path: 'publisherId',
+        select: ["name", "avatar", "email", "role"]
+      })
+      .populate('categories')
+      .populate('specialEvent')
+
+    console.log(idea)
+    res.status(200).json({
+      success: true,
+      data: idea
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
 export const getDataSuggestion = async (req: any, res: any, next: any) => {
   try {
     const ideas = await Idea
