@@ -1,5 +1,14 @@
 import {
-  ClockCircleFilled, CloudDownloadOutlined, CompassOutlined, EyeOutlined, FireTwoTone, LinkedinOutlined, MessageTwoTone, ShareAltOutlined, StarOutlined, TagsTwoTone
+  ClockCircleFilled,
+  CloudDownloadOutlined,
+  CompassOutlined,
+  EyeOutlined,
+  FireTwoTone,
+  LinkedinOutlined,
+  MessageTwoTone,
+  ShareAltOutlined,
+  StarOutlined,
+  TagsTwoTone,
 } from '@ant-design/icons'
 import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { useEffect, useState } from 'react'
@@ -8,14 +17,12 @@ import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
 
-const { Meta } = Card
 const { Text, Link } = Typography
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
   const navigate = useNavigate()
-  const orientation = windowWidth < 1000 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
@@ -30,6 +37,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
+
   return (
     <>
       <StyledCard
@@ -118,11 +126,11 @@ function IdeaCard({ idea, isLoading }) {
               style={{ margin: '0' }}
               key="01"
               title={
-                <Button type="link" onClick={() => handleViewDetail(idea._id)} style={{ wordWrap: 'break-word', whiteSpace: 'pre-line', height: 'auto'  }}>
-                  <Typography.Title level={4} style={{ margin: 0, }}>
+                <Link>
+                  <StyleTitle level={4} style={{ margin: 0 }} onClick={() => handleViewDetail(idea._id)}>
                     {idea.title}
-                  </Typography.Title>
-                </Button>
+                  </StyleTitle>
+                </Link>
               }
               description={
                 <>
@@ -151,6 +159,12 @@ function IdeaCard({ idea, isLoading }) {
 
 const StyledCard = styled(Card)`
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
+const StyleTitle = styled(Typography.Title)`
+  margin: 0px;
+  &:hover {
+    color: #007E80
+  }
 `
 
 export default IdeaCard
