@@ -73,8 +73,15 @@ export default function CreateIdea() {
       categories: categories,
       isAnonymous: isAnonymous,
     }
+    
     if(!postForm.title || !postForm.content ){
       return message.error('Please fill the required fields')
+    }
+    if(postForm.title.length < 50){
+      return message.error('Your title is too sparsing')
+    }
+    if(!form.getFieldValue('agreement')) {
+      return message.error('You must agree to the terms and conditions')
     }
     if (files) {
       let fileNameList = await fetchAllToS3(files)
@@ -88,7 +95,6 @@ export default function CreateIdea() {
         message.success('Upload Idea successfully!!')
       })
       .catch(error => message.error(error.message + '. Please try again'))
-    console.log('idea info: ', postForm)
   }
 
   const windowWidth = useWindowSize()
@@ -129,7 +135,7 @@ export default function CreateIdea() {
           }}
           label="Title"
         >
-          <Input style={{ lineHeight: 2.15 }} placeholder="Title" maxLength={200} showCount autoComplete="off"></Input>
+          <Input style={{ lineHeight: 2.15 }} placeholder="Title (at least 50 characters to summary your idea)" maxLength={200} showCount autoComplete="off"></Input>
         </StyledFormItem>
         <StyledFormItem
           name="content"
