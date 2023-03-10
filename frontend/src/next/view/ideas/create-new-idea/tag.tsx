@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message, Switch, Transfer, Typography } from 'antd'
+import { Form, message, Switch, Transfer, Typography } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
 import { Http } from '../../../api/http'
 
@@ -34,6 +34,9 @@ function Tags({ setCategories }) {
   const filterOption = (inputValue: string, option: RecordType) => option.description.indexOf(inputValue) > -1
 
   const handleChange = (selectedKeys: string[]) => {
+    if (selectedKeys.length > 5) {
+      return message.info('Maximum: 5 Tags!!!')
+    }
     setTargetKeys(selectedKeys)
   }
 
@@ -44,7 +47,6 @@ function Tags({ setCategories }) {
   const handleConfirm = (checked: boolean) => {
     setDisabled(checked)
     setCategories(targetKeys)
-    // console.log(targetKeys)
   }
 
   return (
@@ -67,7 +69,14 @@ function Tags({ setCategories }) {
         render={item => item.title}
       />
       <br />
-      <Switch unCheckedChildren="Not Yet" checkedChildren="Confirm Tags" checked={disabled} onChange={handleConfirm} />
+      <Form.Item label="Comfirm Tags" required>
+        <Switch
+          unCheckedChildren="Not Yet"
+          checkedChildren="Confirm Tags"
+          checked={disabled}
+          onChange={handleConfirm}
+        />
+      </Form.Item>
     </>
   )
 }
