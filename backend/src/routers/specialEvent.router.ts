@@ -1,4 +1,5 @@
 import express from 'express'
+import { authorize, authProtect } from '../middlewares/auth'
 import SpecialEvent from '../models/SpecialEvent'
 
 export const specialEventRouter = express.Router()
@@ -14,7 +15,7 @@ specialEventRouter.get('/', async (req, res) => {
   }
 })
 
-specialEventRouter.post('/', express.json(), async (req, res) => {
+specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
     const { _id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
     if (_id) {
