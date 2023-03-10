@@ -21,6 +21,9 @@ function IdeasList ({ideas, isLoading}) {
       },
       pageSize: 5,
     }}
+    style ={{
+      marginBottom: '50px'
+    }}
     dataSource={ideas}
     renderItem={(idea) => (
       <IdeaCard key={`${idea}`} idea={idea} isLoading={isLoading}></IdeaCard>
