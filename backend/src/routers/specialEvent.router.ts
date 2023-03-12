@@ -6,7 +6,8 @@ export const specialEventRouter = express.Router()
 
 specialEventRouter.get('/', async (req, res) => {
   try {
-    const data = await SpecialEvent.find({})
+    const { id } = req.query
+    const data = await SpecialEvent.find(id ? { _id: id } : {})
     res.status(200).json({ success: 1, data })
   } catch (err) {
     res.status(500).json({
@@ -15,7 +16,8 @@ specialEventRouter.get('/', async (req, res) => {
   }
 })
 
-specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
+specialEventRouter.post('/', express.json(), async (req, res) => {
+  // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
     const { _id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
     if (_id) {
