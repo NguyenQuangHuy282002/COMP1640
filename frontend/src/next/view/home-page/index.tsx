@@ -37,7 +37,14 @@ function HomePage() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
-
+  const eventData: EventDetailProps = {
+    title: 'Sample Event Title',
+    description: 'Sample event description',
+    department: 'Sample Department',
+    startDate: '2022-01-01',
+    firstClosedDate: '2022-01-20',
+    finalClosedDate: '2022-02-01',
+  };
 
   useEffect(() => {
       setLoading(true)
@@ -85,6 +92,21 @@ function HomePage() {
         <MenuFilter setFilter={setFilter} filter={filter}/> 
         
       
+        {/* <MenuFilter setFilter={setFilter} filter={filter}/> */
+        }
+        <Card title={eventData.title}>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Typography.Paragraph>{eventData.description}</Typography.Paragraph>
+        <Typography.Text strong>Department:</Typography.Text>
+        <Typography.Text>{eventData.department}</Typography.Text>
+        <Typography.Text strong>Start Date:</Typography.Text>
+        <Typography.Text>{eventData.startDate}</Typography.Text>
+        <Typography.Text strong>First Closed Date:</Typography.Text>
+        <Typography.Text>{eventData.firstClosedDate}</Typography.Text>
+        <Typography.Text strong>Final Closed Date:</Typography.Text>
+        <Typography.Text>{eventData.finalClosedDate}</Typography.Text>
+      </Space>
+    </Card>
 
       </StyledRow>
       <IdeasList ideas={ideas} isLoading={loading}/>
