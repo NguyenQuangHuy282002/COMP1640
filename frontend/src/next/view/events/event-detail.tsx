@@ -1,10 +1,9 @@
-import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge, Card } from 'antd'
+import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge, Card, Descriptions } from 'antd'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import IdeaCard from '../ideas/idea-card'
 import { SmileFilled } from '@ant-design/icons'
-import MenuFilter from './menu-filter'
 import useWindowSize from '../../utils/useWindowSize'
 import { Http } from '../../api/http'
 import { useSnackbar } from 'notistack'
@@ -25,7 +24,7 @@ interface EventDetailProps {
   finalClosedDate: string;
 }
 
-function HomePage() {
+function EventDetail() {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
@@ -87,11 +86,11 @@ function HomePage() {
         </Col>
       </StyledRow>
       <StyledRow
-        style={{}}
+        style={{ width:"100%", fontFamily:'' }}
       >
         {/* <MenuFilter setFilter={setFilter} filter={filter}/> */
         }
-        <Card title={eventData.title}>
+        {/* <Card  title={eventData.title}>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Typography.Paragraph>{eventData.description}</Typography.Paragraph>
         <Typography.Text strong>Department:</Typography.Text>
@@ -102,16 +101,34 @@ function HomePage() {
         <Typography.Text>{eventData.firstClosedDate}</Typography.Text>
         <Typography.Text strong>Final Closed Date:</Typography.Text>
         <Typography.Text>{eventData.finalClosedDate}</Typography.Text>
-      </Space>
-    </Card>
+      </Space> */}
+    {/* </Card> */}
+      <div style={{ width:'100%', backgroundColor:"rgb(234, 175, 237,0.5)" }}>
+        <Typography style={{ fontSize: '30px', color: 'blue', textAlign: 'center' }}  >Event Detail</Typography>
+    <Descriptions title="" bordered labelStyle={{ fontSize:"16px", fontFamily:"Arial, Helvetica, sans-serif", color:"red" ,fontWeight:"bold"}}
+    column={{ xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}>
+    <Descriptions.Item label="Event Title" span={3}>{eventData.title}</Descriptions.Item>
+    <Descriptions.Item label="Event Description" span={3} >{eventData.description}</Descriptions.Item >
+    
+    <Descriptions.Item label="Start Date " span={3}>{eventData.startDate}</Descriptions.Item>
+    <Descriptions.Item label="First Closed Date " span={1.5}>{eventData.firstClosedDate}</Descriptions.Item>
+    <Descriptions.Item label="Final Closed Date " span={1.5}>{eventData.finalClosedDate}</Descriptions.Item>
+    <Descriptions.Item label="Status" span={3}>
+      <Badge status="processing" text="Running" />
+    </Descriptions.Item>
+    <Descriptions.Item label="Department">{eventData.department}</Descriptions.Item>
 
+  </Descriptions>
+);
+    </div>
+        
       </StyledRow>
       <IdeasList ideas={ideas} isLoading={loading}/>
     </Layout.Content>
   )
 }
 
-export default HomePage
+export default EventDetail
 
 export const StyledRow = styled(Row)`
   padding: 10px;
