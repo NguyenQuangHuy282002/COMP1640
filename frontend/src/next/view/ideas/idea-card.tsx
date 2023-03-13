@@ -11,6 +11,7 @@ import {
   TagsTwoTone,
 } from '@ant-design/icons'
 import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { imgDir } from 'next/constants/img-dir'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -63,7 +64,7 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0} comments
+                        <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -78,7 +79,7 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan">
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+                        <MessageTwoTone /> {idea.comments.length}
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -96,7 +97,7 @@ function IdeaCard({ idea, isLoading }) {
                     src={
                       !idea.isAnonymous
                         ? idea.publisherId?.avatar ?? 'Unknown'
-                        : 'https://www.pngarea.com/pngm/10/5215656_crying-emoji-png-transparent-background-smirk-emoji-transparent.png'
+                        : imgDir + 'anonymous.jpg'
                     }
                     style={{ background: '#f6f7f8' }}
                   />

@@ -1,43 +1,70 @@
-import { formatDayTime } from '../../utils/helperFuncs';
-import { DislikeOutlined, EditOutlined, EllipsisOutlined, ExclamationCircleOutlined, LikeOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card, Skeleton, Switch } from 'antd';
-import React, { useState } from 'react';
+import { formatDayTime } from '../../utils/helperFuncs'
+import { DislikeOutlined, ExclamationCircleOutlined, LikeOutlined } from '@ant-design/icons'
+import { Avatar, Card, List, Skeleton, Space, Switch, Typography } from 'antd'
+import React, { useState } from 'react'
+import { imgDir } from 'next/constants/img-dir'
 
-const { Meta } = Card;
-
-function Comment () {
-  const [loading, setLoading] = useState(true);
-
-  const onChange = (checked: boolean) => {
-    setLoading(!checked);
-  };
-
-  const data = {
-    name: 'Yes Văn Sir',
-    createdAt: Date.now(),
-    content: '<p>I was wrong. Most hiring managers I speak to pay lip service to how they’re looking for strong CS fundamentals, passion, and great projects over pedigree, but in practice, the system breaks down.</p>'
-  }
-
+const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+)
+function Comment({ item, loading }) {
+  // console.log('item', item)
   return (
     <>
-      <Card style={{ width: '100%', border: '1px solid #ccc' }} 
-      // loading={loading}
-      actions={[
-        <LikeOutlined style={{color: 'black'}} key="like" />,
-        <DislikeOutlined style={{color: 'black'}} key="dislike" />,
-        <ExclamationCircleOutlined style={{color: 'black'}} key="report" />,
-      ]}
-      >
-        <Meta
-          avatar={<Avatar src="https://joesch.moe/api/v1/random?key=1" style={{ background: '#ccc' }}/>}
-          title={data.name}
-          description={<>Commented {formatDayTime(data.createdAt)}</>}
-        />
-        <div style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: data.content }}></div>
-        
-      </Card>
-    </>
-  );
-};
+      {item?.date && (
+        <List.Item
+          actions={[
+            <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+            <IconText icon={DislikeOutlined} text="156" key="list-vertical-star-o" />,
+            <IconText icon={ExclamationCircleOutlined} text="2" key="list-vertical-message" />,
+          ]}
+          style={{ margin: 0}}
+        >
+          <Skeleton avatar title={false} loading={loading} active>
+            <List.Item.Meta
+              style={{ margin: 0 }}
+              avatar={<Avatar size={45} src={!item.isAnonymous ? item.userId?.avatar : imgDir + 'anonymous.jpg'} style={{ background: '#ccc' }} />}
+              title={
+                <>
+                  <Typography.Link>{!item.isAnonymous ? item.userId?.name : 'Anonymous'}</Typography.Link>{' '}
+                  <Typography.Paragraph
+                    type="secondary"
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 0,
+                      margin: 0,
+                      fontFamily:
+                        'Roboto,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+                    }}
+                  >
+                    {formatDayTime(item.date)}
+                  </Typography.Paragraph>
+                </>
+              }
+              // description={
 
-export default Comment;
+              // }
+            />
+            <article
+              style={{
+                margin: 0,
+                padding: 0,
+                fontSize: '16px',
+                fontWeight: '400',
+                color: 'black',
+                fontFamily:
+                  'Open Sans,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+              }}
+              dangerouslySetInnerHTML={{ __html: item.content }}
+            ></article>
+          </Skeleton>
+        </List.Item>
+      )}
+    </>
+  )
+}
+
+export default Comment

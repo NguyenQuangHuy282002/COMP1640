@@ -1,34 +1,40 @@
-import { DownSquareOutlined, TagsTwoTone, UpSquareOutlined } from '@ant-design/icons'
-import { Avatar, Button, Divider, Layout, Space, Tag, Typography } from 'antd'
+import { DownSquareOutlined, UpSquareOutlined } from '@ant-design/icons'
+import { Button, Layout, message, Space, Switch, Typography } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { EditorState } from 'draft-js'
+import { convertToRaw, EditorState } from 'draft-js'
+import draftToHtml from 'draftjs-to-html'
 import { Http } from 'next/api/http'
 import RichTextEditor from 'next/components/text-editor'
 import { useSubscription } from 'next/libs/global-state-hook'
 import { useQuery } from 'next/utils/use-query'
 import { userStore } from 'next/view/auth/user-store'
-import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { formatDayTime } from '../../../utils/helperFuncs'
+import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
 import CommentsList from '../../../view/comments/comments-list'
+import FileDisplay from './file-display'
+import IdeaDetailInfo from './idea-detail-info'
 import MenuBar from './menu-bar'
 
 const { Text, Link } = Typography
 
 function IdeaDetail() {
+  const initialState = () => EditorState.createEmpty()
+  const [data, setData] = useState([])
+  const [editorState, setEditorState] = useState(initialState)
+  const [showComment, setShowComment] = useState(false)
+  const [updateIdea, setUpdateIdea] = useState(0)
+  const [isAnonymousMode, setIsAnonymousMode] = useState(false)
+
   const query = useQuery()
   const id = query.get('id')
-  // { isOpen, onCloseModal, setAccounts, accounts }
   const { name } = useSubscription(userStore).state
-  const initialState = () => EditorState.createEmpty()
-  const [editorState, setEditorState] = useState(initialState)
   const windowWidth = useWindowSize()
-  const { enqueueSnackbar } = useSnackbar()
-  const [showComment, setShowComment] = useState(false)
   const padding = windowWidth < 969 ? '10px 0' : '15px 40px 50px 40px'
   const paddingSider = windowWidth < 969 ? '10px 0 0 2px' : '15px 0px 15px 15px'
-  const [data, setData] = useState([])
+
+  const vote = data[0]?.like - data[0]?.dislike
+
   const handleShowComment = () => {
     setShowComment(!showComment)
   }
@@ -36,75 +42,94 @@ function IdeaDetail() {
     const getIdea = async () =>
       await Http.get(`/api/v1/idea/detail?id=${id}`)
         .then(res => console.log('res', setData([res.data.data])))
-        .catch(error => enqueueSnackbar('Failed to fetch idea !', { variant: 'error' }))
+        .catch(error => message.error('Failed to fetch idea !'))
     getIdea()
-  }, [])
+  }, [updateIdea])
+
+  const handleSubmitComment = async () => {
+    const payload = {
+      content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      ideaId: data[0]?._id,
+      publisherEmail: data[0]?.publisherId.email,
+      isAnonynous: isAnonymousMode,
+    }
+    console.log(payload)
+    await Http.post('/api/v1/comment/create', payload)
+      .then(res => {
+        setUpdateIdea(updateIdea + 1)
+        setEditorState(initialState)
+        return message.success('Your comment are hanlded')
+      })
+      .catch(error => message.error('error: ', error.message))
+  }
 
   return (
     <>
-      {data ? <Layout className="layout" style={{ padding: padding }}>
-        <Content
-          style={{
-            background: 'white',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            height: '100%',
-            paddingBottom: '50px',
-          }}
-        >
-          <Space direction="horizontal" align="start">
-            <Space direction="vertical" style={{ padding: paddingSider, alignItems: 'flex-start' }}>
-              <Button type="text" icon={<UpSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />} href="#" />
-              <Text strong style={{ marginLeft: '0', width: '100%', fontSize: '13.5px', color: '#948C75' }}>
-                {data[0]?.views > 0 ? <>+{data[0]?.views}</> : <>-{data[0]?.views}</>}
+      {data ? (
+        <Layout className="layout" style={{ padding: padding }}>
+          <StyledContent>
+            <Space direction="horizontal" align="start">
+              <Space direction="vertical" style={{ padding: paddingSider, alignItems: 'flex-start' }}>
+                <Button
+                  type="text"
+                  icon={<UpSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />}
+                  href="#"
+                />
+                <Text strong style={{ marginLeft: '0', width: '100%', fontSize: '13.5px', color: '#948C75' }}>
+                  {vote >= 0 ? <>+{vote}</> : <>-{vote}</>}
+                </Text>
+                <Button
+                  type="text"
+                  icon={<DownSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />}
+                  href="#"
+                />
+              </Space>
+              <Space style={{ padding: '10px 15px 10px 5px' }} direction="vertical">
+                <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
+                <ReadMore>{data[0]?.content}</ReadMore>
+                <br></br>
+              </Space>
+            </Space>
+            {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
+            <MenuBar commentCount={data[0]?.comments.length} handleShowComment={handleShowComment} />
+          </StyledContent>
+
+          <StyledContent>
+            <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
+              <Text strong>
+                Comment as <Text mark>{name}</Text>
               </Text>
-              <Button
-                type="text"
-                icon={<DownSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />}
-                href="#"
+              <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
+            </Space>
+            <Space style={{ justifyContent: 'end', display: 'flex', paddingRight: '44px' }} direction="horizontal">
+              Anonymous Mode:{' '}
+              <Switch
+                onChange={() => setIsAnonymousMode(!isAnonymousMode)}
+                checkedChildren="On"
+                unCheckedChildren="Off"
               />
+              <Button
+                type="primary"
+                shape="round"
+                disabled={false}
+                style={{ marginLeft: 20 }}
+                onClick={() => {
+                  handleSubmitComment()
+                }}
+              >
+                Comment
+              </Button>
             </Space>
-            <Space style={{ padding: '10px 15px 10px 5px' }} direction="vertical">
-              <Space direction="horizontal">
-                <Avatar style={{ background: 'red', margin: '0px' }}>cc</Avatar>
-                <Text strong> {!data[0]?.isAnonymous ? data[0]?.publisherId.name ?? 'unknown' : 'Anonymous'}</Text>
-                <Text type="secondary">Posted {formatDayTime(data[0]?.createdAt ? data[0]?.createdAt : Date.now())}</Text>
-              </Space>
-              <Typography.Title level={3} style={{ margin: 0 }}>
-                {data[0]?.title}
-              </Typography.Title>
-              <Space size={[0, 8]} wrap>
-                <TagsTwoTone style={{ padding: '5px' }} />
-                {data[0]?.categories.length !== 0 ? (
-                  data[0]?.categories.map(tag => (
-                    <Tag key={tag.name} color="geekblue">
-                      {tag.name}
-                    </Tag>
-                  ))
-                ) : (
-                  <Tag>No Tag</Tag>
-                )}
-              </Space>
-              <ReadMore>{data[0]?.content}</ReadMore>
-            </Space>
-          </Space>
-          <Divider></Divider>
-          <MenuBar commentCount={data[0]?.comments.length} handleShowComment={handleShowComment} />
-          <Space style={{ padding: '10px 44px' }} direction="vertical">
-            <Text strong>
-              Comment as <Text mark>{name}</Text>
-            </Text>
-            <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
-          </Space>
-          <Space style={{ justifyContent: 'end', display: 'flex', paddingRight: '44px' }}>
-            <Button type="primary" shape="round" disabled={false} style={{ marginRight: '10px' }} onClick={() => {}}>
-              Comment
-            </Button>
-          </Space>
-          <Divider style={{ marginBottom: 0 }} />
-          <Space style={{ width: '100%' }}>{showComment ? <CommentsList></CommentsList> : <></>}</Space>
-        </Content>
-      </Layout> : <></>}
+          </StyledContent>
+          <StyledContent>
+            <div style={{ width: '100%' }}>
+              {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}
+            </div>
+          </StyledContent>
+        </Layout>
+      ) : (
+        <></>
+      )}
     </>
   )
 }
@@ -132,3 +157,12 @@ export function RenderHtml(prop: any) {
   const { text } = prop
   return <div style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: text }}></div>
 }
+
+const StyledContent = styled(Content)`
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 100%;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+`

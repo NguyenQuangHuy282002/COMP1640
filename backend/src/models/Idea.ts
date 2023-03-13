@@ -29,7 +29,7 @@ const ideaSchema = new Schema<IIdea>(
     views: { type: Number, required: false, default: 0 },
     like: { type: Number, required: false, default: 0 },
     dislike: { type: Number, required: false, default: 0 },
-    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment', default: [] }],
     createdAt: { type: Date, default: Date.now },
     specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
     isAnonymous: { type: Boolean, default: false, required: false },

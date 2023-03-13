@@ -7,7 +7,7 @@ export default function MenuBar({commentCount, handleShowComment}) {
 
   return (
     <>
-      {windowWidth > 969 ? <Space style={{ justifyContent: 'start', display: 'flex', padding: '20px', marginLeft: '24px' }}>
+      {windowWidth > 969 ? <Space style={{ justifyContent: 'start', display: 'flex', padding: '20px', marginLeft: '24px', marginBottom: 0 }}>
       <Button icon={<CommentOutlined />} onClick={()=>handleShowComment()} style={{cursor: 'pointer'}}>
         {commentCount} Comments
       </Button>
@@ -22,7 +22,7 @@ export default function MenuBar({commentCount, handleShowComment}) {
       </Button>
     </Space> : <Space style={{ justifyContent: 'space-evenly', display: 'flex', marginLeft: '5px' }}>
       <Button icon={<CommentOutlined />} onTouchEnd={()=>handleShowComment()} style={{cursor: 'pointer'}}>
-        {commentCount}k
+        {commentCount}
       </Button>
       <Button icon={<SaveOutlined />} />
       <Button icon={<DownloadOutlined />} />

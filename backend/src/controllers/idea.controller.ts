@@ -56,7 +56,7 @@ export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query;
     const page = parseInt(reqQuery.page) || 1;
-    const limit = parseInt(reqQuery.limit) || 15;
+    const limit = parseInt(reqQuery.limit) || 20;
     const offset = (page - 1) * limit;
     const trending = reqQuery.tab || null;
     const endIndex = page * limit;
@@ -120,6 +120,7 @@ export const getIdeas = async (req: any, res: any, next: any) => {
       .skip(offset)
       .exec();
 
+
     res.status(200).json({
       success: true,
       count: results['results'].length,
@@ -170,7 +171,8 @@ export const getIdea = async (req: any, res: any, next: any) => {
       })
       .populate('categories')
       .populate('specialEvent')
-
+    idea.views = idea.views + 1;
+    await idea.save();
     console.log(idea)
     res.status(200).json({
       success: true,
