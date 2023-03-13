@@ -21,7 +21,7 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     console.log('file: ', fileExtension + '/' + type)
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file, {
+    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj , {
       headers: {
         'Content-Type': type,
       },
