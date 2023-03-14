@@ -1,4 +1,3 @@
-import { DownSquareOutlined, UpSquareOutlined } from '@ant-design/icons'
 import { Button, Layout, message, Space, Switch, Typography } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -30,10 +29,7 @@ function IdeaDetail() {
   const id = query.get('id')
   const { name } = useSubscription(userStore).state
   const windowWidth = useWindowSize()
-  const padding = windowWidth < 969 ? '10px 0' : '15px 40px 50px 40px'
-  const paddingSider = windowWidth < 969 ? '10px 0 0 2px' : '15px 0px 15px 15px'
-
-  const vote = data[0]?.like - data[0]?.dislike
+  const padding = windowWidth < 969 ? '10px 0' : '15px 60px 50px'
 
   const handleShowComment = () => {
     setShowComment(!showComment)
@@ -41,7 +37,7 @@ function IdeaDetail() {
   useEffect(() => {
     const getIdea = async () =>
       await Http.get(`/api/v1/idea/detail?id=${id}`)
-        .then(res => console.log('res', setData([res.data.data])))
+        .then(res => setData([res.data.data]))
         .catch(error => message.error('Failed to fetch idea !'))
     getIdea()
   }, [updateIdea])
@@ -53,7 +49,6 @@ function IdeaDetail() {
       publisherEmail: data[0]?.publisherId.email,
       isAnonynous: isAnonymousMode,
     }
-    console.log(payload)
     await Http.post('/api/v1/comment/create', payload)
       .then(res => {
         setUpdateIdea(updateIdea + 1)
@@ -62,36 +57,21 @@ function IdeaDetail() {
       })
       .catch(error => message.error('error: ', error.message))
   }
-
   return (
     <>
       {data ? (
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">
-              <Space direction="vertical" style={{ padding: paddingSider, alignItems: 'flex-start' }}>
-                <Button
-                  type="text"
-                  icon={<UpSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />}
-                  href="#"
-                />
-                <Text strong style={{ marginLeft: '0', width: '100%', fontSize: '13.5px', color: '#948C75' }}>
-                  {vote >= 0 ? <>+{vote}</> : <>-{vote}</>}
-                </Text>
-                <Button
-                  type="text"
-                  icon={<DownSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />}
-                  href="#"
-                />
-              </Space>
-              <Space style={{ padding: '10px 15px 10px 5px' }} direction="vertical">
+              
+              <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
                 <br></br>
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={data[0]?.comments.length} handleShowComment={handleShowComment} />
+            <MenuBar commentCount={data[0]?.comments.length } ideaId={id} likes={data[0]?.likes} dislikes={data[0]?.dislikes} handleShowComment={handleShowComment} />
           </StyledContent>
 
           <StyledContent>

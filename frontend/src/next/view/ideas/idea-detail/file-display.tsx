@@ -1,24 +1,20 @@
 import {
   FileExcelOutlined,
-  FileFilled,
-  FileImageFilled,
-  FileImageOutlined,
+  FileFilled, FileImageOutlined,
   FilePdfOutlined,
   FilePptOutlined,
-  FileProtectOutlined,
-  FileTextOutlined,
   FileWordOutlined,
   FileZipOutlined,
   PaperClipOutlined,
+  PlayCircleOutlined
 } from '@ant-design/icons'
-import { Card, Carousel, List } from 'antd'
+import { Button, List, Typography } from 'antd'
 
 const handleFile = file => {
-  console.log('file', file)
   const ext = file.toString().substring(file.toString().lastIndexOf('.') + 1)
   switch (ext) {
     case 'pdf':
-      return <FileCard title="PDF file" item={file} chilren={<FilePdfOutlined />}></FileCard>
+      return <FileCard title="PDF file" item={file} chilren={<FilePdfOutlined style={{color:'#FF4E50'}} />}></FileCard>
     case 'jpeg':
     case 'png':
     case 'jpg':
@@ -27,78 +23,59 @@ const handleFile = file => {
     case 'svg':
     case 'webp':
     case 'webg':
-      return <FileCard title="Image file" item={file} chilren={<FileImageFilled />}></FileCard>
+      return <FileCard title="Image file" item={file} chilren={<FileImageOutlined style={{color: '#9B57B0'}} />}></FileCard>
     case 'doc':
     case 'docx':
     case 'txt':
-      return <FileCard title="Text/word file" item={file} chilren={<FileWordOutlined />}></FileCard>
+      return <FileCard title="Text/word file" item={file} chilren={<FileWordOutlined style={{color: '#49708A'}} />}></FileCard>
     case 'zip':
     case 'rar':
-      return <FileCard title="Zip file" item={file} chilren={<FileZipOutlined />}></FileCard>
+      return <FileCard title="Zip file" item={file} chilren={<FileZipOutlined style={{color: '#EB6841'}} />}></FileCard>
     case 'xls':
     case 'xlsx':
     case 'csv':
-      return <FileCard title="Excel file" item={file} chilren={<FileExcelOutlined />}></FileCard>
+      return <FileCard title="Excel file" item={file} chilren={<FileExcelOutlined style={{color: '#519548'}} />}></FileCard>
     case 'ppt':
     case 'pptx':
-      return <FileCard title="Powerpoint file" item={file} chilren={<FilePptOutlined />}></FileCard>
+      return <FileCard title="Powerpoint file" item={file} chilren={<FilePptOutlined style={{color: '#CC333F'}} />}></FileCard>
     default:
-      return <FileCard title="Other file" item={file} chilren={<FileFilled />}></FileCard>
+      return <FileCard title="Other file" item={file} chilren={<FileFilled style={{color: '#ccc'}} />}></FileCard>
   }
 }
 
 const FileCard = ({ title, item, chilren }) => (
-  <Card
-    title={title}
-    style={{
+  <List.Item
+    style={{ 
+      padding: '0 16px',
       border: '1px solid #ccc',
-      textAlign: 'center',
-      // justifyContent: 'center',
-      // display: 'flex',
-      // alignItems: 'center',
-      // flexDirection: 'column',
-      marginTop: '10px',
+      borderRadius: '5px',
     }}
-    
-    bodyStyle={{
-      padding: '8px'
-    }}
-    headStyle={{
-      padding: 0,
-      margin: 0
-    }}
+    actions={[
+      <Button key="list-loadmore-edit" icon={<PlayCircleOutlined />} type='text' href={item} target="_blank" rel="noreferrer">
+        Preview
+      </Button>,
+    ]}
   >
-    <a style={{ fontSize: '48px', margin: 0 }} href={item}>
-      {chilren}
-    </a>
-  </Card>
+    <span style={{ fontSize: '35px', margin: '0' }}>{chilren}</span>
+    <div>
+      <Typography>{title}</Typography>
+    </div>
+  </List.Item>
 )
 
 export default function FileDisplay(files: any) {
-  console.log(files)
   return (
     <List
-      bordered
+      style={{ margin: '0 24px' }}
       header={
         <>
-          <PaperClipOutlined /> Attachment
+          <PaperClipOutlined /> <Typography.Text strong>Attachments</Typography.Text>
         </>
       }
-      style={{
-        borderRadius: '5px',
-        margin: '10px 20px',
-      }}
-      grid={{
-        gutter: 16, column: 4,
-        xs: 1,
-        sm: 2,
-        md: 4,
-        lg: 4,
-        xl: 6,
-        xxl: 3,
-      }}
+      bordered
+      itemLayout="horizontal"
       dataSource={files.files}
-      renderItem={(item: any) => <List.Item>{handleFile(item)}</List.Item>}
+      renderItem={item => handleFile(item)}
     />
   )
 }
