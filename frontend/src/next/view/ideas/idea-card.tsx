@@ -127,7 +127,7 @@ function IdeaCard({ idea, isLoading }) {
               style={{ margin: '0' }}
               key="01"
               title={
-                <Button type="link" onClick={() => handleViewDetail(idea._id)}>
+                <Button type="link" onClick={() => handleViewDetail(idea._id)} style={{wordWrap:'break-word'}}>
                   <Typography.Title level={4} style={{ margin: 0 }}>
                     {idea.title}
                   </Typography.Title>

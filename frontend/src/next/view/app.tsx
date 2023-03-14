@@ -17,6 +17,7 @@ import { Http, LOCALSTORAGE } from '../api/http'
 import { userCredential, userStore } from './auth/user-store'
 import { useAuth } from '../hooks/auth-hook'
 import IdeaDetail from './ideas/idea-detail/idea-detail'
+import DashboardAdmin from './dashboard'
 
 const App = () => {
   const navigate = useNavigate()
@@ -97,6 +98,7 @@ const App = () => {
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />
         </Route>
+        <Route path="/dashboardadmin" element={<DashboardAdmin/>}></Route>
       </Routes>
     )
   } else {

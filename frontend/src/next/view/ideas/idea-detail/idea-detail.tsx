@@ -59,7 +59,7 @@ function IdeaDetail() {
             height: '100%',
             paddingBottom: '50px',
           }}
-        >
+      >
           <Space direction="horizontal" align="start">
             <Space direction="vertical" style={{ padding: paddingSider, alignItems: 'flex-start' }}>
               <Button type="text" icon={<UpSquareOutlined style={{ fontSize: '22px', color: '#999999' }} />} href="#" />
@@ -78,7 +78,7 @@ function IdeaDetail() {
                 <Text strong>{data.author}</Text>
                 <Text type="secondary">Posted {formatDayTime(data.createdAt)}</Text>
               </Space>
-              <Typography.Title level={3} style={{ margin: 0 }}>
+              <Typography.Title level={3} style={{ margin: 0}}>
                 {data.title}
               </Typography.Title>
               <Space size={[0, 8]} wrap>
