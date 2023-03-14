@@ -11,6 +11,10 @@ import { handleFilter } from '../../utils/handleFilter'
 import { useSubscription } from '../../libs/global-state-hook'
 import IdeasList from '../ideas/ideas-list'
 import { userStore } from '../auth/user-store'
+import Banner from './banner-event';
+import BannerFirstClosedDate from './banner-event'
+import BannerFinalClosedDate from './banner-FinalClosedDate'
+import CustomBanner from './custom-banner'
 
 const { Title } = Typography
 
@@ -36,6 +40,11 @@ function EventDetail() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+
+  const firstClosedDate = new Date('2023-03-10');
+  const finalClosedDate = new Date('2023-03-10');
+
+
   const eventData: EventDetailProps = {
     title: 'Sample Event Title',
     description: 'Sample event description',
@@ -85,24 +94,25 @@ function EventDetail() {
           ></Input>
         </Col>
       </StyledRow>
+
+
+      <StyledRow >
+        <BannerFirstClosedDate firstclosedeDat={firstClosedDate} />
+      </StyledRow>
+
+      <StyledRow >
+        <BannerFinalClosedDate finalClosedDate={finalClosedDate} />
+      </StyledRow>
+
+      <StyledRow >
+        <CustomBanner finalClosedDate={finalClosedDate} />
+      </StyledRow>
+
+
       <StyledRow
         style={{ width:"100%", fontFamily:'' }}
       >
-        {/* <MenuFilter setFilter={setFilter} filter={filter}/> */
-        }
-        {/* <Card  title={eventData.title}>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Typography.Paragraph>{eventData.description}</Typography.Paragraph>
-        <Typography.Text strong>Department:</Typography.Text>
-        <Typography.Text>{eventData.department}</Typography.Text>
-        <Typography.Text strong>Start Date:</Typography.Text>
-        <Typography.Text>{eventData.startDate}</Typography.Text>
-        <Typography.Text strong>First Closed Date:</Typography.Text>
-        <Typography.Text>{eventData.firstClosedDate}</Typography.Text>
-        <Typography.Text strong>Final Closed Date:</Typography.Text>
-        <Typography.Text>{eventData.finalClosedDate}</Typography.Text>
-      </Space> */}
-    {/* </Card> */}
+
       <div style={{ width:'100%', backgroundColor:"rgb(234, 175, 237,0.5)" }}>
         <Typography style={{ fontSize: '30px', color: 'blue', textAlign: 'center' }}  >Event Detail</Typography>
     <Descriptions title="" bordered labelStyle={{ fontSize:"16px", fontFamily:"Arial, Helvetica, sans-serif", color:"red" ,fontWeight:"bold"}}
