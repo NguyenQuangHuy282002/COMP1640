@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import { disLikeHandler, likeHandler } from './idea-detail-service'
 
-export default function MenuBar({ commentCount, handleShowComment, likes, dislikes, ideaId }) {
+export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   const windowWidth = useWindowSize()
   const [likers, setLikers] = useState([])
   const [dislikers, setDisLikers] = useState([])
@@ -103,11 +103,11 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
         >
           {isLiked ? (
             <Button icon={<CaretUpFilled />} onClick={() => handleLikePost()} type="primary">
-              {likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}
+              <a>{likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}</a>
             </Button>
           ) : (
             <Button icon={<CaretUpFilled />} onClick={() => handleLikePost()}>
-              {likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}
+              <a>{likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}</a>
             </Button>
           )}
           {isDisLiked ? (

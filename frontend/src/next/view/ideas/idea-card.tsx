@@ -38,7 +38,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-
+  console.log(idea)
   return (
     <>
       <StyledCard
@@ -60,7 +60,7 @@ function IdeaCard({ idea, isLoading }) {
                 ? [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ padding: '5px' }} />
-                      {idea.like - idea.dislike} points
+                      {idea?.likes?.length - idea?.dislikes?.length} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
@@ -75,7 +75,7 @@ function IdeaCard({ idea, isLoading }) {
                 : [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ paddingRight: '2px' }} />
-                      {idea.like - idea.dislike}
+                      {idea?.likes?.length - idea?.dislikes?.length}
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan">

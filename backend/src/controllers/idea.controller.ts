@@ -93,7 +93,7 @@ export const getIdeas = async (req: any, res: any, next: any) => {
 
     let ideas = Idea
       .find(options)
-      .select('title views like dislike createdAt comments isAnonymous specialEvent content')
+      .select('title views likes dislikes createdAt comments isAnonymous specialEvent content')
       .populate({
         path: 'publisherId',
         select: ["name", "avatar", "email", "role"]
@@ -144,7 +144,7 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
     }
     const ideas = await Idea
       .find({ publisherId: { "$in": user._id } })
-      .select('title views like dislike createdAt comments isAnonymous specialEvent content')
+      .select('title views likes dislikes createdAt comments isAnonymous specialEvent content')
       .populate({
         path: 'publisherId',
         select: ["name", "avatar", "email", "role"]
@@ -196,8 +196,8 @@ export const getDataSuggestion = async (req: any, res: any, next: any) => {
     //   .select('name')
     res.status(200).json({
       success: true,
-      data: ideas
-      // , users: users, categories: categories
+      data: ideas,
+      count: ideas.length,
     }
     )
   } catch (err) {
@@ -252,13 +252,10 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
 
 export const editIdea = async (req: any, res: any, next: any) => {
   try {
-    //init req body obj
     const reqBody = req.body;
 
-    //get idea id from req params prop
     const { ideaId } = req.params;
 
-    //update idea with req body obj 
     const updatedIdea = await Idea.findByIdAndUpdate(ideaId, reqBody, { new: true, useFindAndModify: false })
       .populate('publisherId')
       .populate({
@@ -301,7 +298,6 @@ export const likeIdea = async (req: any, res: any, next: any) => {
     res.status(200).json({ success: true, message: 'idea liked!', idea });
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
-
   }
 }
 
@@ -324,7 +320,28 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
     res.status(200).json({ success: true, message: 'idea liked!', idea });
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
 
+export const omitVoteIdea = async (req: any, res: any, next: any) => {
+  try {
+    const { ideaId } = req.body;
+    const userId = req.payload.user.id
+    let idea = await Idea.findById(ideaId);
+    if (idea.dislikes.indexOf(userId) === -1 || idea.likes.indexOf(userId) === -1) {
+      return
+    }
+    if (idea.likes.indexOf(userId) >= 0) {
+      idea.likes = idea.likes.filter(like => like.toString() !== userId);
+    }
+    if (idea.dislikes.indexOf(userId) >= 0) {
+      idea.dislikes = idea.dislikes.filter(like => like.toString() !== userId);
+    }
+
+    await idea.save();
+    res.status(200).json({ success: true, message: 'omit oke!', idea });
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
   }
 }
 
