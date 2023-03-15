@@ -13,6 +13,9 @@ import { userStore } from 'next/view/auth/user-store'
 import { useEffect, useState } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import { disLikeHandler, likeHandler } from './idea-detail-service'
+import { debounce } from 'lodash'
+
+let reactionTimeOut = null
 
 export default function MenuBar({ commentCount, handleShowComment, likes, dislikes, ideaId }) {
   const windowWidth = useWindowSize()
@@ -32,7 +35,7 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
         console.log('ress', res)
         setIsLiked(res.data.likes.findIndex((like: any) => like._id === state._id) >= 0)
         setIsDisLiked(res.data.dislikes.findIndex((like: any) => like._id === state._id) >= 0)
-        setLikes(res.data.likes.length-res.data.dislikes.length)
+        setLikes(res.data.likes.length - res.data.dislikes.length)
         setLikers(res.data.likes)
         setDisLikers(res.data.dislikes)
       })
@@ -44,18 +47,6 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
   useEffect(() => {
     fetchLikes(ideaId)
   }, [ideaId])
-
-  useEffect(() => {
-    return () => {
-      if (isLiked) {
-        console.log('like')
-        likeHandler(ideaId)
-      } else if (isDisLiked) {
-        console.log('dislike')
-        disLikeHandler(ideaId)
-      }
-    }
-  }, [isLiked, isDisLiked])
 
   const handleLikePost = async () => {
     if (isLiked) {
@@ -74,6 +65,8 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
       dislikers = dislikers.filter(l => l._id !== state._id)
       return dislikers
     })
+    reactionTimeOut && clearTimeout(reactionTimeOut)
+    reactionTimeOut = setTimeout(() => likeHandler(ideaId), 500)
   }
 
   const handleDislikePost = async () => {
@@ -93,6 +86,8 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
       return likers
     })
     setDisLikers(dislikers => [...dislikers, { _id: state._id, name: state.name, avatar: state.avatar }])
+    reactionTimeOut && clearTimeout(reactionTimeOut)
+    reactionTimeOut = setTimeout(() => disLikeHandler(ideaId), 500)
   }
 
   return (

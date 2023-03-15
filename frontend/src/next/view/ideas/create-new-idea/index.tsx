@@ -6,6 +6,7 @@ import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
 import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -20,7 +21,7 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     console.log('file: ', fileExtension + '/' + type)
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj , {
+    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
       headers: {
         'Content-Type': type,
       },
@@ -43,6 +44,7 @@ const fetchAllToS3 = async (files: any) => {
 
 export default function CreateIdea() {
   const [form] = Form.useForm()
+  const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const initialState = () => EditorState.createEmpty()
   const [editorState, setEditorState] = useState(initialState)
@@ -55,6 +57,17 @@ export default function CreateIdea() {
     setFiles(value)
   }
 
+  useEffect(() => {
+    const getEventList = async () => {
+      await Http.get('/api/v1/event/available')
+        .then(res => {
+          console.log(res.data.data)
+          setSpecialEvent(res.data.data)
+        })
+        .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+    }
+    getEventList()
+  }, [])
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
     console.log('Upload event:', e)
