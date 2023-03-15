@@ -1,5 +1,5 @@
 import React from 'react'
-import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled } from '@ant-design/icons'
+import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled , GroupOutlined, EllipsisOutlined, PicRightOutlined} from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
@@ -44,11 +44,106 @@ function MenuFilter({ setFilter, filter }) {
       key: 'month',
       label: (
         <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('month')}>
-          Mongth
+          Month
         </Text>
       ),
     },
   ]
+
+  const departmentItems: MenuProps['items'] = [
+    {
+      key: 'computing',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('computing')}>
+          Computing
+        </Text>
+      ),
+    },
+    {
+      key: 'desgin',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('desgin')}>
+          Desgin
+        </Text>
+      ),
+    },
+    {
+      key: 'bussiness',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('bussiness')}>
+          Bussiess
+        </Text>
+      ),
+    },
+    {
+      key: 'ABC',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('ABC')}>
+          ABC
+        </Text>
+      ),
+    },
+  ]
+
+  const eventItems: MenuProps['items'] = [
+    {
+      key: 'event1',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event1')}>
+          event1
+        </Text>
+      ),
+    },
+    {
+      key: 'event12',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event12')}>
+          event12
+        </Text>
+      ),
+    },
+    {
+      key: 'event123',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event123')}>
+          event123
+        </Text>
+      ),
+    },
+    
+  ]
+
+  
+  const categoryItems: MenuProps['items'] = [
+    {
+      key: 'teaching',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('teaching')}>
+          Teaching
+        </Text>
+      ),
+    },
+    {
+      key: 'study',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('study')}>
+          Study
+        </Text>
+      ),
+    },
+    {
+      key: 'deadline',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('deadline')}>
+          Deadline
+        </Text>
+      ),
+    },
+    
+  ]
+
+
+
   const moreItems: MenuProps['items'] = [
     {
       key: 'your-department',
@@ -84,7 +179,22 @@ function MenuFilter({ setFilter, filter }) {
             <RocketFilled /> Best
           </StyledRadioButton>
         </Radio.Group>
-        <Space wrap>
+        <Space wrap style={{ marginLeft: '8px' }}>
+        <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+            <Button>
+              <GroupOutlined /> Department
+            </Button>
+          </Dropdown>
+          <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
+            <Button>
+            <PicRightOutlined />Category
+            </Button>
+          </Dropdown>
+          <Dropdown menu={{ items: eventItems }} placement="bottom" arrow trigger={['click']}>
+            <Button>
+            <EllipsisOutlined /> Event
+            </Button>
+          </Dropdown>
           <Dropdown menu={{ items: topItems }} placement="bottom" arrow trigger={['click']}>
             <Button>
               <CrownFilled /> Top
@@ -96,6 +206,7 @@ function MenuFilter({ setFilter, filter }) {
             </Button>
           </Dropdown>
         </Space>
+        
       </Col>
     </>
   )

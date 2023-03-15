@@ -94,7 +94,7 @@ function HomePage() {
       
         {/* <MenuFilter setFilter={setFilter} filter={filter}/> */
         }
-        <Card title={eventData.title}>
+        {/* <Card title={eventData.title}>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Typography.Paragraph>{eventData.description}</Typography.Paragraph>
         <Typography.Text strong>Department:</Typography.Text>
@@ -106,7 +106,7 @@ function HomePage() {
         <Typography.Text strong>Final Closed Date:</Typography.Text>
         <Typography.Text>{eventData.finalClosedDate}</Typography.Text>
       </Space>
-    </Card>
+    </Card> */}
 
       </StyledRow>
       <IdeasList ideas={ideas} isLoading={loading}/>
