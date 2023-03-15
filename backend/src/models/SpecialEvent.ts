@@ -19,7 +19,7 @@ const eventSchema = new Schema<ISpecialEvent>(
     startDate: Date,
     firstCloseDate: Date,
     finalCloseDate: Date,
-    ideas: [{ type: Types.ObjectId, ref: 'Idea' }],
+    ideas: [{ type: Types.ObjectId, ref: 'Idea', default: [] }],
     departments: Array<String>,
     categories: Array<String>,
   },

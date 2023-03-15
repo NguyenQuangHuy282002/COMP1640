@@ -60,7 +60,7 @@ function IdeaCard({ idea, isLoading }) {
                 ? [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ padding: '5px' }} />
-                      {idea.like - idea.dislike} points
+                      {idea?.likes?.length - idea?.dislikes?.length || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
@@ -94,11 +94,7 @@ function IdeaCard({ idea, isLoading }) {
               avatar={
                 <>
                   <Avatar
-                    src={
-                      !idea.isAnonymous
-                        ? idea.publisherId?.avatar ?? 'Unknown'
-                        : imgDir + 'anonymous.jpg'
-                    }
+                    src={!idea.isAnonymous ? idea.publisherId?.avatar ?? 'Unknown' : imgDir + 'anonymous.jpg'}
                     style={{ background: '#f6f7f8' }}
                   />
                 </>
@@ -164,7 +160,7 @@ const StyledCard = styled(Card)`
 const StyleTitle = styled(Typography.Title)`
   margin: 0px;
   &:hover {
-    color: #007E80
+    color: #007e80;
   }
 `
 

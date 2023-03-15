@@ -1,5 +1,4 @@
 import express from 'express'
-import { authorize, authProtect } from '../middlewares/auth'
 import SpecialEvent from '../models/SpecialEvent'
 
 export const specialEventRouter = express.Router()
@@ -18,7 +17,6 @@ specialEventRouter.get('/', async (req, res) => {
 
 specialEventRouter.get('/available', async (req, res) => {
   try {
-    const { firstCloseDate } = req.query
     const now = new Date()
     const data = await SpecialEvent.find({ firstCloseDate: { $lt: now } })
     res.status(200).json({ success: 1, data })
