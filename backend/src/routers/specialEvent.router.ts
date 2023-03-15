@@ -16,6 +16,19 @@ specialEventRouter.get('/', async (req, res) => {
   }
 })
 
+specialEventRouter.get('/available', async (req, res) => {
+  try {
+    const { firstCloseDate } = req.query
+    const now = new Date()
+    const data = await SpecialEvent.find({ firstCloseDate: { $lt: now } })
+    res.status(200).json({ success: 1, data })
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    })
+  }
+})
+
 specialEventRouter.post('/', express.json(), async (req, res) => {
   // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {

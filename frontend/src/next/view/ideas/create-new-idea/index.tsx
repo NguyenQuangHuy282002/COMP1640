@@ -1,18 +1,17 @@
-import { InboxOutlined, QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input, message, Select, Switch, Upload } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input, message, Select, Switch } from 'antd'
 import axios from 'axios'
 import { convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
-import { useState } from 'react'
+import RichTextEditor from 'next/components/text-editor'
+import TermCondition from 'next/components/upload/term-conditions'
+import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
-import { useSnackbar } from 'notistack'
 import Tags from './tag'
-import RichTextEditor from 'next/components/text-editor'
-import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
-import TermCondition from 'next/components/upload/term-conditions'
-
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -44,12 +43,14 @@ const fetchAllToS3 = async (files: any) => {
 
 export default function CreateIdea() {
   const [form] = Form.useForm()
+  const navigate = useNavigate()
   const initialState = () => EditorState.createEmpty()
   const [editorState, setEditorState] = useState(initialState)
   const [openModal, setOpenModal] = useState(false)
   const [files, setFiles] = useState([])
   const [categories, setCategories] = useState([])
   const [isAnonymous, setAnonymous] = useState(false)
+  const [specialEvent, setSpecialEvent] = useState([])
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
@@ -73,14 +74,14 @@ export default function CreateIdea() {
       categories: categories,
       isAnonymous: isAnonymous,
     }
-    
-    if(!postForm.title || !postForm.content ){
+
+    if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
     }
-    if(postForm.title.length < 50){
+    if (postForm.title.length < 50) {
       return message.error('Your title is too sparsing')
     }
-    if(!form.getFieldValue('agreement')) {
+    if (!form.getFieldValue('agreement')) {
       return message.error('You must agree to the terms and conditions')
     }
     if (files) {
@@ -93,12 +94,15 @@ export default function CreateIdea() {
       .then(res => {
         console.log('response', res)
         message.success('Upload Idea successfully!!')
+        navigate('/')
       })
       .catch(error => message.error(error.message + '. Please try again'))
   }
 
   const windowWidth = useWindowSize()
   const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
+
+  useEffect(() => {}, [])
 
   return (
     <Form
@@ -135,7 +139,13 @@ export default function CreateIdea() {
           }}
           label="Title"
         >
-          <Input style={{ lineHeight: 2.15 }} placeholder="Title (at least 50 characters to summary your idea)" maxLength={200} showCount autoComplete="off"></Input>
+          <Input
+            style={{ lineHeight: 2.15 }}
+            placeholder="Title (at least 50 characters to summary your idea)"
+            maxLength={200}
+            showCount
+            autoComplete="off"
+          ></Input>
         </StyledFormItem>
         <StyledFormItem
           name="content"
@@ -167,16 +177,20 @@ export default function CreateIdea() {
           ]}
         >
           <Checkbox>
-            I have read and agreed to <Button type="link" style={{padding:0, margin: 0}} icon={<QuestionCircleOutlined style={{margin: 0, padding: 0}}/>} onClick={() => setOpenModal(true)}>Terms and Conditions </Button>
+            I have read and agreed to{' '}
+            <Button
+              type="link"
+              style={{ padding: 0, margin: 0 }}
+              icon={<QuestionCircleOutlined style={{ margin: 0, padding: 0 }} />}
+              onClick={() => setOpenModal(true)}
+            >
+              Terms and Conditions{' '}
+            </Button>
           </Checkbox>
-          
         </Form.Item>
-        <TermCondition
-            isOpen={openModal}
-            onCloseModal={() => setOpenModal(false)}
-          />
-        <Form.Item wrapperCol={{ span: 15 }} >
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{marginTop: 20}}>
+        <TermCondition isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
+        <Form.Item wrapperCol={{ span: 15 }}>
+          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 20 }}>
             Post
           </Button>
         </Form.Item>
