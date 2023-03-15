@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Button, Card, DatePicker, Form, Input, Space, Tooltip, Typography } from 'antd'
 import dayjs from 'dayjs'
-import { convertToRaw, EditorState, convertFromHTML, ContentState } from 'draft-js'
+import { ContentState, convertFromHTML, convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { Http } from 'next/api/http'
 import RichTextEditor from 'next/components/text-editor'
@@ -24,7 +24,8 @@ export default function CreateEventField(props: IEventModalProps) {
   const windowWidth = useWindowSize()
   const initialState = () => EditorState.createEmpty()
 
-  const blockHTML = convertFromHTML(event?.description)
+  const [startDate, setStartDate] = useState(null)
+  const blockHTML = convertFromHTML(event?.description || '')
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(ContentState.createFromBlockArray(blockHTML.contentBlocks, blockHTML.entityMap)) ||
       initialState
@@ -41,7 +42,9 @@ export default function CreateEventField(props: IEventModalProps) {
       description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
       startDate: form.getFieldValue('startDate').$d,
       firstCloseDate: form.getFieldValue('firstCloseDate').$d,
-      finalCloseDate: form.getFieldValue('finalCloseDate').$d,
+      finalCloseDate: form.getFieldValue('finalCloseDate')
+        ? form.getFieldValue('finalCloseDate').$d
+        : form.getFieldValue('firstCloseDate').add(7, 'day').$d,
     }
 
     await Http.post('/api/v1/event', eventForm)
@@ -69,7 +72,7 @@ export default function CreateEventField(props: IEventModalProps) {
         form={form}
       >
         <Form.Item name="title" label="Title" labelAlign="left" required>
-          <Input placeholder="Enter event title" />
+          <Input placeholder="Enter event title" maxLength={100} />
         </Form.Item>
         <Form.Item label="Description" labelAlign="left">
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
@@ -79,14 +82,20 @@ export default function CreateEventField(props: IEventModalProps) {
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={dayjs(event?.startDate || '', DATE_FORMAT)}
+            defaultValue={event?.startDate ? dayjs(event?.startDate, DATE_FORMAT) : null}
+            disabledDate={current => current && current < dayjs().endOf('day')}
+            onChange={setStartDate}
           />
         </Form.Item>
         <Form.Item name="firstCloseDate" label="First closure date" labelAlign="left" required>
           <DatePicker
+            disabled={!startDate}
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={dayjs(event?.firstCloseDate || '', DATE_FORMAT)}
+            defaultValue={event?.firstCloseDate ? dayjs(event?.firstCloseDate, DATE_FORMAT) : null}
+            disabledDate={current => {
+              return current && current < form.getFieldValue('startDate')
+            }}
           />
         </Form.Item>
 
@@ -108,7 +117,10 @@ export default function CreateEventField(props: IEventModalProps) {
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={dayjs(event?.finalCloseDate || '', DATE_FORMAT)}
+            defaultValue={event?.finalCloseDate ? dayjs(event?.finalCloseDate, DATE_FORMAT) : null}
+            disabledDate={current => {
+              return current && current < form.getFieldValue('firstCloseDate').add(7, 'day')
+            }}
           />
         </Form.Item>
       </Form>

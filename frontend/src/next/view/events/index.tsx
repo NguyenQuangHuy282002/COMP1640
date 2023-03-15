@@ -41,10 +41,17 @@ function EventsPage() {
           }}
         />
       ) : (
-        <div style={{ padding: '10px', margin: 0 }}>
-          <Button onClick={() => setOpenModal(true)}>Add new event</Button>
+        <div style={{ padding: '10px 20px 10px 10px', margin: 0 }}>
+          <Button
+            onClick={() => {
+              setOpenModal(true)
+              setEditEvent(null)
+            }}
+          >
+            Add new event
+          </Button>
           <Divider />
-          <Space direction="vertical" size="small" style={{ display: 'flex' }}>
+          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {allEventList.map((event, index) => (
               <EventCardItem
                 event={event}
