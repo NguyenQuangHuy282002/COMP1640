@@ -22,7 +22,7 @@ export const handleFilter = (sortType: any, key?: any) => {
     // case 'Newest':
     //   return (a, b) => new Date(b.created_at) - new Date(a.created_at);
     case 'New':
-      return '';
+      return 'tab=new';
     // case 'New Users':
     //   return (a, b) => new Date(b.created_at) - new Date(a.created_at);
     case 'hot':

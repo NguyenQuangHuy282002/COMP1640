@@ -12,7 +12,10 @@ import { useSubscription } from 'next/libs/global-state-hook'
 import { userStore } from 'next/view/auth/user-store'
 import { useEffect, useState } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
-import { disLikeHandler, likeHandler } from './idea-detail-service'
+import { disLikeHandler, likeHandler, omitHandler } from './idea-detail-service'
+import { debounce } from 'lodash'
+
+let reactionTimeOut = null
 
 export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   const windowWidth = useWindowSize()
@@ -20,8 +23,6 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   const [dislikers, setDisLikers] = useState([])
   const { state } = useSubscription(userStore)
   const [likesCount, setLikes] = useState(0)
-  // let initIdeaLiked = false
-  // let initIdeaDisLiked = false
   const [isLiked, setIsLiked] = useState(false)
   const [isDisLiked, setIsDisLiked] = useState(false)
 
@@ -32,7 +33,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
         console.log('ress', res)
         setIsLiked(res.data.likes.findIndex((like: any) => like._id === state._id) >= 0)
         setIsDisLiked(res.data.dislikes.findIndex((like: any) => like._id === state._id) >= 0)
-        setLikes(res.data.likes.length-res.data.dislikes.length)
+        setLikes(res.data.likes.length - res.data.dislikes.length)
         setLikers(res.data.likes)
         setDisLikers(res.data.dislikes)
       })
@@ -40,11 +41,6 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
         return message.error(error.message)
       })
   }
-
-  useEffect(() => {
-    fetchLikes(ideaId)
-  }, [ideaId])
-
   useEffect(() => {
     return () => {
       if (isLiked) {
@@ -53,9 +49,17 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
       } else if (isDisLiked) {
         console.log('dislike')
         disLikeHandler(ideaId)
+      } else {
+        console.log('dont like')
+        omitHandler(ideaId)
       }
     }
   }, [isLiked, isDisLiked])
+
+
+  useEffect(() => {
+    fetchLikes(ideaId)
+  }, [ideaId])
 
   const handleLikePost = async () => {
     if (isLiked) {
@@ -74,6 +78,8 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
       dislikers = dislikers.filter(l => l._id !== state._id)
       return dislikers
     })
+    reactionTimeOut && clearTimeout(reactionTimeOut)
+    reactionTimeOut = setTimeout(() => likeHandler(ideaId), 500)
   }
 
   const handleDislikePost = async () => {
@@ -93,6 +99,8 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
       return likers
     })
     setDisLikers(dislikers => [...dislikers, { _id: state._id, name: state.name, avatar: state.avatar }])
+    reactionTimeOut && clearTimeout(reactionTimeOut)
+    reactionTimeOut = setTimeout(() => disLikeHandler(ideaId), 500)
   }
 
   return (

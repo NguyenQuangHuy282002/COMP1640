@@ -8,9 +8,9 @@ import {
   MessageTwoTone,
   ShareAltOutlined,
   StarOutlined,
-  TagsTwoTone,
+  TagsTwoTone
 } from '@ant-design/icons'
-import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +38,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-  console.log(idea)
+  // console.log(idea)
   return (
     <>
       <StyledCard
@@ -60,7 +60,7 @@ function IdeaCard({ idea, isLoading }) {
                 ? [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ padding: '5px' }} />
-                      {idea?.likes?.length - idea?.dislikes?.length} points
+                      {idea?.likes?.length - idea?.dislikes?.length || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
@@ -94,11 +94,7 @@ function IdeaCard({ idea, isLoading }) {
               avatar={
                 <>
                   <Avatar
-                    src={
-                      !idea.isAnonymous
-                        ? idea.publisherId?.avatar ?? 'Unknown'
-                        : imgDir + 'anonymous.jpg'
-                    }
+                    src={!idea.isAnonymous ? idea.publisherId?.avatar ?? 'Unknown' : imgDir + 'anonymous.jpg'}
                     style={{ background: '#f6f7f8' }}
                   />
                 </>
@@ -164,7 +160,7 @@ const StyledCard = styled(Card)`
 const StyleTitle = styled(Typography.Title)`
   margin: 0px;
   &:hover {
-    color: #007E80
+    color: #007e80;
   }
 `
 

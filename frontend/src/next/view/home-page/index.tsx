@@ -1,57 +1,70 @@
-import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge } from 'antd'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
-import IdeaCard from '../ideas/idea-card'
 import { SmileFilled } from '@ant-design/icons'
-import MenuFilter from './menu-filter'
-import useWindowSize from '../../utils/useWindowSize'
-import { Http } from '../../api/http'
-import { useSnackbar } from 'notistack'
-import { handleFilter } from '../../utils/handleFilter'
+import { Avatar, Badge, Col, Input, Layout, message, Row, Typography } from 'antd'
+import { Http } from 'next/api/http'
+import { handleFilter } from 'next/utils/handleFilter'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { useSubscription } from '../../libs/global-state-hook'
-import IdeasList from '../ideas/ideas-list'
+import useWindowSize from '../../utils/useWindowSize'
 import { userStore } from '../auth/user-store'
+import IdeasList from '../ideas/ideas-list'
+import MenuFilter from './menu-filter'
+
 
 const { Title } = Typography
 
-
 function HomePage() {
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
+  const [ideas, setIdeas] = useState([])
+  const [isEnd, setEnd] = useState(false)
   const [filter, setFilter] = useState('new')
+  const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
   const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
-  const [loading, setLoading] = useState(false);
-  const [ideas, setIdeas] = useState([]);
   const { avatar } = useSubscription(userStore).state
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+  const optionsQuery: any = handleFilter(filter)
   useEffect(() => {
-      setLoading(true)
-      const optionsQuery = handleFilter(filter)
-      const getAllIdeas = async () =>
-        await Http.get(`/api/v1/idea?${optionsQuery}`)
-          .then(res => setIdeas(res.data.data))
-          .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
-          .finally(() => setLoading(false))
-        getAllIdeas()
+    setEnd(false)
+    loadMoreData(true)
   }, [filter])
 
+  const loadMoreData = (reset: boolean = false) => {
+    setLoading(true)
+    const getAllIdeas = async () =>
+      await Http.get(`/api/v1/idea?page=${currentPage}&${filter}`)
+        .then(res => {
+          console.log('res', res)
+          if (res.data?.next?.page) {
+            setCurrentPage(res.data.next.page)
+          } else {
+            setEnd(true)
+            setCurrentPage(1)
+          }
+          if(reset === true) {
+            return setIdeas([...res.data.data])
+          }
+          setIdeas([...ideas, ...res.data.data])
+        })
+        .catch(error => message.error('Failed to get all accounts !'))
+        .finally(() => setLoading(false))
+    getAllIdeas()
+  }
   return (
     <Layout.Content
       style={{
         display: 'block',
         padding: fitPadding,
-        height: '200vh'
+        height: 'auto',
       }}
     >
-      <StyledRow
-        style={{}}
-      >
-        <Col flex="60px" >
-          <Badge status="success" count={<SmileFilled  style={{color: '#52c41a'}}/>}>
+      <StyledRow style={{}}>
+        <Col flex="60px">
+          <Badge status="success" count={<SmileFilled style={{ color: '#52c41a' }} />}>
             <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src={avatar} />
           </Badge>
         </Col>
@@ -65,12 +78,12 @@ function HomePage() {
           ></Input>
         </Col>
       </StyledRow>
-      <StyledRow
-        style={{}}
-      >
-        <MenuFilter setFilter={setFilter} filter={filter}/>
+      <StyledRow style={{}}>
+        <MenuFilter setFilter={setFilter} filter={filter} />
       </StyledRow>
-      <IdeasList ideas={ideas} isLoading={loading}/>
+      <IdeasList
+        ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd}
+      />
     </Layout.Content>
   )
 }
@@ -85,4 +98,4 @@ export const StyledRow = styled(Row)`
   background: #fff;
   margin-bottom: 15px;
 `
-            // src="https://joesch.moe/api/v1/random" />
+// src="https://joesch.moe/api/v1/random" />

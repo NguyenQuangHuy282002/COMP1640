@@ -79,7 +79,6 @@ const App = () => {
           path="/"
           element={
             <Layout>
-              <AppHeader />
               <LayoutWrapper>
                 <Outlet />
               </LayoutWrapper>
