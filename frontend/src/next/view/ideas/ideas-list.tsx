@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { ideaCount } from '../layout/layout-wrapper'
 import IdeaCard from './idea-card'
 
-function IdeasList({ isEnd, loading, ideas, loadMoreData }) {
+function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
   const { number } = useSubscription(ideaCount).state
   const loadMore =
     !isEnd && !loading && ideas?.length <= number ? (

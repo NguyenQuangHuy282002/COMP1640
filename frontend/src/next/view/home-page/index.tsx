@@ -1,3 +1,4 @@
+
 import { SmileFilled } from '@ant-design/icons'
 import { Avatar, Badge, Col, Input, Layout, message, Row, Typography } from 'antd'
 import { Http } from 'next/api/http'
@@ -14,6 +15,7 @@ import MenuFilter from './menu-filter'
 
 const { Title } = Typography
 
+
 function HomePage() {
   const navigate = useNavigate()
   const windowWidth = useWindowSize()
@@ -27,13 +29,15 @@ function HomePage() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
-  const optionsQuery: any = handleFilter(filter)
+
   useEffect(() => {
     setEnd(false)
-    loadMoreData(true)
+    const optionsQuery: any = handleFilter(filter)
+    console.log(optionsQuery)
+    loadMoreData(true, optionsQuery)
   }, [filter])
 
-  const loadMoreData = (reset: boolean = false) => {
+  const loadMoreData = (reset: boolean = false, filter) => {
     setLoading(true)
     const getAllIdeas = async () =>
       await Http.get(`/api/v1/idea?page=${currentPage}&${filter}`)
@@ -55,6 +59,9 @@ function HomePage() {
     getAllIdeas()
   }
   return (
+
+    
+
     <Layout.Content
       style={{
         display: 'block',
@@ -80,6 +87,7 @@ function HomePage() {
       </StyledRow>
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} />
+
       </StyledRow>
       <IdeasList
         ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd}

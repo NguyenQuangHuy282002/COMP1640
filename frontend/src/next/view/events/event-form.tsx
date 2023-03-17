@@ -36,23 +36,24 @@ export default function CreateEventField(props: IEventModalProps) {
     title: event?.title || '',
   }
   const handleOnFinish = async () => {
-    console.log(form.getFieldValue('firstCloseDate'))
-    // const eventForm = {
-    //   _id: event?._id || null,
-    //   title: form.getFieldValue('title'),
-    //   description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-    //   startDate: form.getFieldValue('startDate').$d,
-    //   firstCloseDate: form.getFieldValue('firstCloseDate').$d,
-    //   finalCloseDate: form.getFieldValue('finalCloseDate')
-    //     ? form.getFieldValue('finalCloseDate').$d
-    //     : form.getFieldValue('firstCloseDate').add(7, 'day').$d,
-    // }
+    const eventForm = {
+      _id: event?._id || null,
+      title: form.getFieldValue('title'),
+      description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      startDate: new Date(form.getFieldValue('startDate').$d),
+      firstCloseDate: new Date(form.getFieldValue('firstCloseDate').$d),
+      finalCloseDate: new Date(
+        form.getFieldValue('finalCloseDate')
+          ? form.getFieldValue('finalCloseDate').$d
+          : form.getFieldValue('firstCloseDate').add(7, 'day').$d
+      ),
+    }
 
-    // await Http.post('/api/v1/event', eventForm)
-    //   .then(() => {
-    //     onFinish(eventForm)
-    //   })
-    //   .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+    await Http.post('/api/v1/event', eventForm)
+      .then(() => {
+        onFinish(eventForm)
+      })
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
   }
   return (
     <Card

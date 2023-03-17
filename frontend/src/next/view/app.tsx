@@ -17,7 +17,9 @@ import IdeaDetail from './ideas/idea-detail/idea-detail'
 import AppHeader from './layout/header'
 import LayoutWrapper from './layout/layout-wrapper'
 import UserProfile from './user-profile'
+
 import EventDetails from './events/event-details'
+
 
 const App = () => {
   const navigate = useNavigate()
@@ -96,7 +98,9 @@ const App = () => {
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />
+          
         </Route>
+        <Route path="/eventdetail" element={<EventDetails/>} />
       </Routes>
     )
   } else {
