@@ -1,3 +1,11 @@
+//<<<<<<< yesvansirevent
+//import { Col, Divider, Row, Space, Typography, Input, Layout, Avatar, Button, Badge, Card } from 'antd'
+//import styled from 'styled-components'
+//import { useNavigate } from 'react-router-dom'
+//import React, { useEffect, useState } from 'react'
+//import IdeaCard from '../ideas/idea-card'
+//=======
+//>>>>>>> main
 import { SmileFilled } from '@ant-design/icons'
 import { Avatar, Badge, Col, Input, Layout, Row, Typography } from 'antd'
 import { useSnackbar } from 'notistack'
@@ -14,6 +22,19 @@ import MenuFilter from './menu-filter'
 
 const { Title } = Typography
 
+//<<<<<<< yesvansirevent
+
+//interface EventDetailProps {
+//  title: string;
+//  description: string;
+//  department: string;
+//  startDate: string;
+//  firstClosedDate: string;
+//  finalClosedDate: string;
+//}
+//
+//=======
+
 function HomePage() {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
@@ -28,6 +49,15 @@ function HomePage() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
+  const eventData: EventDetailProps = {
+    title: 'Sample Event Title',
+    description: 'Sample event description',
+    department: 'Sample Department',
+    startDate: '2022-01-01',
+    firstClosedDate: '2022-01-20',
+    finalClosedDate: '2022-02-01',
+  };
+
   useEffect(() => {
     setLoading(true)
     const optionsQuery = handleFilter(filter)
@@ -40,6 +70,9 @@ function HomePage() {
   }, [filter])
 
   return (
+
+    
+
     <Layout.Content
       style={{
         display: 'block',
@@ -65,6 +98,7 @@ function HomePage() {
       </StyledRow>
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} />
+
       </StyledRow>
       <IdeasList ideas={ideas} isLoading={loading} />
     </Layout.Content>

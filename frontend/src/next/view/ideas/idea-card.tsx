@@ -5,10 +5,15 @@ import {
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
+//<<<<<<< yesvansirevent
+  CompassOutlined,
+  LockTwoTone,
+//=======
   MessageTwoTone,
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
+//>>>>>>> main
 } from '@ant-design/icons'
 import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
@@ -67,6 +72,11 @@ function IdeaCard({ idea, isLoading }) {
                         <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
+                    <Text>
+                      <Tag color="volcano" style={{ margin: 0 }}>
+                        <LockTwoTone/> cannot comments
+                      </Tag>
+                    </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
                       {idea.views} views
@@ -78,8 +88,16 @@ function IdeaCard({ idea, isLoading }) {
                       {idea.like - idea.dislike}
                     </Text>,
                     <Text key="list-vertical-like-o">
+//<<<<<<< yesvansirevent
+//                      {/* <Tag color="cyan">
+//                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+//                      </Tag> */}
+//                      <Tag color="volcano" style={{ margin: 0 }}>
+//                        <MessageTwoTone /> cannot comments
+//=======
                       <Tag color="cyan">
                         <MessageTwoTone /> {idea.comments.length}
+//>>>>>>> main
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -147,8 +165,11 @@ function IdeaCard({ idea, isLoading }) {
                 </>
               }
             ></List.Item.Meta>
+            
           </List.Item>
+         
         </Skeleton>
+        <Typography.Text type="danger" style={{ marginLeft:"30px", fontSize:"18px", fontFamily:"Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text>
       </StyledCard>
     </>
   )
