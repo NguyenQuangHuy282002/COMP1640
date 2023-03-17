@@ -90,7 +90,7 @@ function EventCardItem({
   return (
     <Badge.Ribbon
       text={event?.ideas?.length}
-      color={event?.ideas?.length > 5 ? 'green' : event?.ideas.length === 0 ? 'red' : 'volcano'}
+      color={event?.ideas?.length > 5 ? 'green' : event?.ideas?.length === 0 ? 'red' : 'volcano'}
     >
       <Card
         title={

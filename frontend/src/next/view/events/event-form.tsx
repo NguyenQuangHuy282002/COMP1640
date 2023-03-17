@@ -23,14 +23,14 @@ export default function CreateEventField(props: IEventModalProps) {
   const { enqueueSnackbar } = useSnackbar()
   const windowWidth = useWindowSize()
   const initialState = () => EditorState.createEmpty()
-
-  const [startDate, setStartDate] = useState(null)
   const blockHTML = convertFromHTML(event?.description || '')
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(ContentState.createFromBlockArray(blockHTML.contentBlocks, blockHTML.entityMap)) ||
       initialState
   )
   const [form] = Form.useForm()
+
+  const [startDate, setStartDate] = useState(event?.startDate)
 
   const initFormValues = {
     title: event?.title || '',
@@ -40,13 +40,11 @@ export default function CreateEventField(props: IEventModalProps) {
       _id: event?._id || null,
       title: form.getFieldValue('title'),
       description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-      startDate: new Date(form.getFieldValue('startDate').$d),
-      firstCloseDate: new Date(form.getFieldValue('firstCloseDate').$d),
-      finalCloseDate: new Date(
-        form.getFieldValue('finalCloseDate')
-          ? form.getFieldValue('finalCloseDate').$d
-          : form.getFieldValue('firstCloseDate').add(7, 'day').$d
-      ),
+      startDate: form.getFieldValue('startDate').$d,
+      firstCloseDate: form.getFieldValue('firstCloseDate').$d,
+      finalCloseDate: form.getFieldValue('finalCloseDate')
+        ? form.getFieldValue('finalCloseDate').$d
+        : form.getFieldValue('firstCloseDate').add(7, 'day').$d,
     }
 
     await Http.post('/api/v1/event', eventForm)
@@ -80,21 +78,31 @@ export default function CreateEventField(props: IEventModalProps) {
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
         </Form.Item>
 
-        <Form.Item name="startDate" label="Start date" labelAlign="left" required>
+        <Form.Item
+          name="startDate"
+          label="Start date"
+          labelAlign="left"
+          required
+          initialValue={event?.startDate ? dayjs(event?.startDate, DATE_FORMAT) : null}
+        >
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={event?.startDate ? dayjs(event?.startDate, DATE_FORMAT) : null}
             disabledDate={current => current && current < dayjs().endOf('day')}
             onChange={setStartDate}
           />
         </Form.Item>
-        <Form.Item name="firstCloseDate" label="First closure date" labelAlign="left" required>
+        <Form.Item
+          name="firstCloseDate"
+          label="First closure date"
+          labelAlign="left"
+          required
+          initialValue={event?.firstCloseDate ? dayjs(event?.firstCloseDate, DATE_FORMAT) : null}
+        >
           <DatePicker
             disabled={!startDate}
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={event?.firstCloseDate ? dayjs(event?.firstCloseDate, DATE_FORMAT) : null}
             disabledDate={current => {
               return current && current < form.getFieldValue('startDate')
             }}
@@ -115,13 +123,13 @@ export default function CreateEventField(props: IEventModalProps) {
             </Space>
           }
           labelAlign="left"
+          initialValue={event?.finalCloseDate ? dayjs(event?.finalCloseDate, DATE_FORMAT) : null}
         >
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format={DATE_FORMAT}
-            defaultValue={event?.finalCloseDate ? dayjs(event?.finalCloseDate, DATE_FORMAT) : null}
             disabledDate={current => {
-              return current && current < form.getFieldValue('firstCloseDate').add(7, 'day')
+              return current && current < form.getFieldValue('firstCloseDate')?.add(7, 'day')
             }}
           />
         </Form.Item>
