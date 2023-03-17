@@ -1,9 +1,12 @@
-import { Button, Divider, Space } from 'antd'
+import { PlusCircleFilled, PlusCircleTwoTone } from '@ant-design/icons'
+import { Button, Divider, Row, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import EventCardItem from './card-item'
 import CreateEventField from './event-form'
+
+const { Title } = Typography
 
 function EventsPage() {
   const { enqueueSnackbar } = useSnackbar()
@@ -41,15 +44,27 @@ function EventsPage() {
           }}
         />
       ) : (
-        <div style={{ padding: '10px 20px 10px 10px', margin: 0 }}>
-          <Button
-            onClick={() => {
-              setOpenModal(true)
-              setEditEvent(null)
-            }}
-          >
-            Add new event
-          </Button>
+        <div style={{ padding: 20, margin: 0 }}>
+          <Row justify="space-between">
+            <Title level={3} style={{ margin: 0 }}>
+              Events list
+            </Title>
+            <Button
+              style={{
+                color: '#FFFFFF',
+                textShadow: 'rgba(0, 0, 0, 0.25) 0 3px 8px',
+                backgroundImage: 'linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%)',
+              }}
+              icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
+              onClick={() => {
+                setOpenModal(true)
+                setEditEvent(null)
+              }}
+              size="large"
+            >
+              Add new event
+            </Button>
+          </Row>
           <Divider />
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {allEventList.map((event, index) => (
