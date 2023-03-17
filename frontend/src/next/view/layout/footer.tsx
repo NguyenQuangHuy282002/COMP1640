@@ -18,6 +18,7 @@ function AppFooter() {
             level={3}
             style={{
               margin: 0,
+              color: '#e2f9f6'
             }}
           >
             Created By Team Member:
@@ -26,7 +27,7 @@ function AppFooter() {
             {windowWidth < 969 ? (
               <></>
             ) : (
-              <ul>
+              <ul style={{color: "#ccc"}}>
                 <li>Nguyen Quang Huy</li>
                 <li>Nguyen Huy Hoang</li>
                 <li>Tran Quang Khai</li>
@@ -41,7 +42,8 @@ function AppFooter() {
           <Title
             level={3}
             style={{
-              margin: 0,
+              marginTop: 5,
+              color: '#e2f9f6'
             }}
           >
             Github resource
