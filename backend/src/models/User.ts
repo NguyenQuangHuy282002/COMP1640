@@ -66,7 +66,7 @@ export const userSchema = new Schema<IUser>(
     description: { type: String, required: false, default: 'No description' },
     department: { type: Types.ObjectId, required: false },
     ideas: [{ type: Types.ObjectId, ref: 'Idea' }],
-    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment', default: [] }],
   },
 
   { timestamps: { createdAt: true, updatedAt: true } }

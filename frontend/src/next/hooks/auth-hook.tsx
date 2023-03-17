@@ -15,7 +15,7 @@ export const useAuth = () => {
     setTokenVerified(tokenVerified)
     const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(expirationDateToken);
-    console.log('vai ca l', expirationDateToken)
+    // console.log('vai ca l', expirationDateToken)
     localStorage.setItem(
       LOCALSTORAGE.CREDENTIALS,
       JSON.stringify({
@@ -53,8 +53,8 @@ export const useAuth = () => {
       new Date(storedData.expiration) > new Date()
     ) {
       fetchVerify(storedData?.token)
-      console.log('tokenv', tokenVerified)
-      console.log(storedData.tokenVerified)
+      // console.log('tokenv', tokenVerified)
+      // console.log(storedData.tokenVerified)
       if(storedData.tokenVerified){
         login(storedData.userId, storedData.token, true, new Date(storedData.expiration));
       }

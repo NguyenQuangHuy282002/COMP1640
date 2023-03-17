@@ -1,8 +1,9 @@
-import { Card } from 'antd';
+import { Card, Space, Tag, Typography } from 'antd';
+import Title from 'antd/es/typography/Title';
 import React from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid } from 'recharts';
 
-const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
+const colors = ['#69b1ff', '#00C49F', '#FFBB28', '#FF8042'];
 
 const data = [
   {
@@ -28,14 +29,7 @@ const data = [
     uv: 2780,
     pv: 3908,
     amt: 2000,
-  },
-  {
-    name: 'Page E',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-
+  }
 ];
 
 const getPath = (x, y, width, height) => {
@@ -53,13 +47,16 @@ const TriangleBar = (props) => {
 
 export default function App() {
   return (
-    <Card title="Card title" bordered={false}>
+    <Card bordered={false} style={{height:'100%'}}>
+      <Title level={3} style={{margin:'5px'}}>
+        Your event chart
+        </Title>
  <BarChart
       width={500}
       height={300}
       data={data}
       margin={{
-        top: 20,
+        top: 30,
         right: 30,
         left: 20,
         bottom: 5,
@@ -74,6 +71,24 @@ export default function App() {
         ))}
       </Bar>
     </BarChart>
+    <Space size={[0, 8]} style={{display:'flex',justifyContent:'space-around'}} wrap>
+          <Space>
+          <Tag color="#69b1ff" style={{height:'20px',width:'20px'}}/>
+          <Typography.Text>Lol 1</Typography.Text>
+          </Space>
+          <Space>
+          <Tag color="#00C49F" style={{height:'20px',width:'20px'}}/>
+          <Typography.Text>Lol2</Typography.Text>
+          </Space>
+          <Space>
+          <Tag color="#FFBB28" style={{height:'20px',width:'20px'}}/>
+          <Typography.Text>Lol3</Typography.Text>
+          </Space>
+          <Space>
+          <Tag color="#FF8042" style={{height:'20px',width:'20px'}}/>
+          <Typography.Text>Lol4</Typography.Text>
+          </Space> 
+          </Space>
     </Card>
    );
 }

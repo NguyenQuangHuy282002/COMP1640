@@ -1,4 +1,5 @@
 import { Col, Row, Space, Typography } from 'antd'
+import Title from 'antd/es/typography/Title'
 import { useNavigate } from 'react-router-dom'
 import EventChart from './charts/eventChart'
 import EventPieChart from './charts/eventPieChart'
@@ -10,8 +11,7 @@ const navigate = useNavigate()
   return ( 
     <>
     <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{
-            background: 'white',
-            margin:'10px',}} >
+            margin:'10px'}} >
       {/* <Col span={8} style={{border: '1px solid #ccc',
             borderRadius: '5px', width:'33.3%',}} >
       <Typography.Title level={4}>
@@ -35,13 +35,12 @@ const navigate = useNavigate()
       </Col>
     </Row>
     <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{
-            background: 'white',
-            margin:'20px',}}>
-        <Col className="gutter-row"  xs={24} sm={24} md={12} xxl={6} style={{border: '1px solid #ccc',
+            margin:'10px',}}>
+        <Col className="gutter-row"  xs={24} sm={24} md={12} xxl={6} style={{
             borderRadius: '5px'}}>
           <EventPieChart />
         </Col>
-        <Col className="gutter-row"  xs={24} sm={24} md={12} xxl={6} style={{border: '1px solid #ccc',
+        <Col className="gutter-row"  xs={24} sm={24} md={12} xxl={6} style={{
             borderRadius: '5px',}}>
           <EventChart />
         </Col>
@@ -50,12 +49,14 @@ const navigate = useNavigate()
             background: 'white',
             border: '1px solid #ccc',
             borderRadius: '5px',
-            height: '100%',
+            width:'auto',
             margin:'20px'}}>
-    <Typography.Title level={4} style={{alignSelf:'ce'}}>
-            Post History
-          </Typography.Title>
-      <Col span={24}>
+      <Col span={24} style={{display:'flex', justifyContent:'center',borderBottom:'inset'}}>
+        <Title level={3}>
+        Post History
+        </Title>
+      </Col>
+      <Col span={24} >
         <LoadList/>
       </Col>
     </Row>

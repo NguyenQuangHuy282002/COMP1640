@@ -1,5 +1,5 @@
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Select, Switch, Upload } from 'antd'
+import { InboxOutlined, QuestionCircleOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input, message, Select, Switch, Upload } from 'antd'
 import axios from 'axios'
 import { convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
@@ -10,16 +10,18 @@ import useWindowSize from '../../../utils/useWindowSize'
 import { useSnackbar } from 'notistack'
 import Tags from './tag'
 import RichTextEditor from 'next/components/text-editor'
+import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import TermCondition from 'next/components/upload/term-conditions'
+
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
-    console.log(`Fetching presigned`, url)
     const fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1)
     const type = file.type
     console.log('file: ', fileExtension + '/' + type)
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file, {
+    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj , {
       headers: {
         'Content-Type': type,
       },
@@ -43,9 +45,8 @@ const fetchAllToS3 = async (files: any) => {
 export default function CreateIdea() {
   const [form] = Form.useForm()
   const initialState = () => EditorState.createEmpty()
-  const { enqueueSnackbar } = useSnackbar()
-  // const [loading, setLoading] = useState(false)
   const [editorState, setEditorState] = useState(initialState)
+  const [openModal, setOpenModal] = useState(false)
   const [files, setFiles] = useState([])
   const [categories, setCategories] = useState([])
   const [isAnonymous, setAnonymous] = useState(false)
@@ -56,18 +57,12 @@ export default function CreateIdea() {
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
     console.log('Upload event:', e)
-    const fileList = e?.fileList
+    const fileList = e
+    console.log(Array.isArray(e))
+    setFileState(fileList)
     console.log('File list:', files)
-    if (Array.isArray(e)) {
-      setFileState(
-        fileList.map((file: any) => {
-          return { ...(file.originFileObj + file.thumbUrl) }
-        })
-      )
-      return e
-    }
-    setFileState(fileList.map((file: any) => file.originFileObj))
-    return e?.fileList
+
+    return e
   }
 
   const onSubmitPost = async () => {
@@ -78,23 +73,30 @@ export default function CreateIdea() {
       categories: categories,
       isAnonymous: isAnonymous,
     }
+    
+    if(!postForm.title || !postForm.content ){
+      return message.error('Please fill the required fields')
+    }
+    if(postForm.title.length < 50){
+      return message.error('Your title is too sparsing')
+    }
+    if(!form.getFieldValue('agreement')) {
+      return message.error('You must agree to the terms and conditions')
+    }
     if (files) {
       let fileNameList = await fetchAllToS3(files)
-      console.log('fileNameList: ', fileNameList)
       postForm['files'] = fileNameList
     }
 
     console.log('postForm: ', postForm)
-    // setLoading(true)
     await Http.post('/api/v1/idea/create', postForm)
       .then(res => {
         console.log('response', res)
-        enqueueSnackbar('Upload Idea successfully!!')
+        message.success('Upload Idea successfully!!')
       })
-      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-    // .finally(() => setLoading(false))
-    console.log('idea info: ', postForm)
+      .catch(error => message.error(error.message + '. Please try again'))
   }
+
   const windowWidth = useWindowSize()
   const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
@@ -133,7 +135,7 @@ export default function CreateIdea() {
           }}
           label="Title"
         >
-          <Input style={{ lineHeight: 2.15 }} placeholder="Title" maxLength={200} showCount autoComplete="off"></Input>
+          <Input style={{ lineHeight: 2.15 }} placeholder="Title (at least 50 characters to summary your idea)" maxLength={200} showCount autoComplete="off"></Input>
         </StyledFormItem>
         <StyledFormItem
           name="content"
@@ -144,44 +146,38 @@ export default function CreateIdea() {
         >
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
         </StyledFormItem>
-        <Form.Item
-          name="upload"
-          label="Upload"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          style={{
-            marginBottom: '20px',
-          }}
-          // extra="long"
-        >
-          <Upload name="logo" listType="picture">
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-        </Form.Item>
+        <DefaultUpload normFile={normFile} files={files}></DefaultUpload>
+        <DraggerUpload normFile={normFile} files={files}></DraggerUpload>
 
-        <Form.Item label="Dragger">
-          <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-            <Upload.Dragger name="files">
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-            </Upload.Dragger>
-          </Form.Item>
-        </Form.Item>
         <Form.Item label="Anonymous Mode">
           <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
           <Tags setCategories={setCategories} />
         </Form.Item>
-        <Form.Item wrapperCol={{ span: 15 }}>
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()}>
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          required
+          rules={[
+            {
+              validator: (_, value) =>
+                value ? Promise.resolve() : Promise.reject(new Error('Must accept terms and conditions')),
+            },
+          ]}
+        >
+          <Checkbox>
+            I have read and agreed to <Button type="link" style={{padding:0, margin: 0}} icon={<QuestionCircleOutlined style={{margin: 0, padding: 0}}/>} onClick={() => setOpenModal(true)}>Terms and Conditions </Button>
+          </Checkbox>
+          
+        </Form.Item>
+        <TermCondition
+            isOpen={openModal}
+            onCloseModal={() => setOpenModal(false)}
+          />
+        <Form.Item wrapperCol={{ span: 15 }} >
+          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{marginTop: 20}}>
             Post
-          </Button>
-          <Button type="ghost" htmlType="button">
-            Cancel
           </Button>
         </Form.Item>
       </div>

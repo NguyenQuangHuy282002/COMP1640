@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from 'react'
 import {
-  StarOutlined,
-  ShareAltOutlined,
-  CloudDownloadOutlined,
-  TagsTwoTone,
-  MessageTwoTone,
-  FireTwoTone,
-  EyeOutlined,
   ClockCircleFilled,
-  LinkedinOutlined,
+  CloudDownloadOutlined,
   CompassOutlined,
+  EyeOutlined,
+  FireTwoTone,
+  LinkedinOutlined,
+  MessageTwoTone,
+  ShareAltOutlined,
+  StarOutlined,
+  TagsTwoTone,
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List, Button } from 'antd'
+import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { imgDir } from 'next/constants/img-dir'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
 
-const { Meta } = Card
 const { Text, Link } = Typography
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
   const navigate = useNavigate()
-  const orientation = windowWidth < 1000 ? 'horizontal' : 'vertical'
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
@@ -39,6 +38,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
+
   return (
     <>
       <StyledCard
@@ -64,7 +64,7 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0} comments
+                        <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -79,7 +79,7 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan">
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+                        <MessageTwoTone /> {idea.comments.length}
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -97,7 +97,7 @@ function IdeaCard({ idea, isLoading }) {
                     src={
                       !idea.isAnonymous
                         ? idea.publisherId?.avatar ?? 'Unknown'
-                        : 'https://www.pngarea.com/pngm/10/5215656_crying-emoji-png-transparent-background-smirk-emoji-transparent.png'
+                        : imgDir + 'anonymous.jpg'
                     }
                     style={{ background: '#f6f7f8' }}
                   />
@@ -127,11 +127,11 @@ function IdeaCard({ idea, isLoading }) {
               style={{ margin: '0' }}
               key="01"
               title={
-                <Button type="link" onClick={() => handleViewDetail(idea._id)} style={{wordWrap:'break-word'}}>
-                  <Typography.Title level={4} style={{ margin: 0 }}>
+                <Link>
+                  <StyleTitle level={4} style={{ margin: 0 }} onClick={() => handleViewDetail(idea._id)}>
                     {idea.title}
-                  </Typography.Title>
-                </Button>
+                  </StyleTitle>
+                </Link>
               }
               description={
                 <>
@@ -160,6 +160,12 @@ function IdeaCard({ idea, isLoading }) {
 
 const StyledCard = styled(Card)`
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
+const StyleTitle = styled(Typography.Title)`
+  margin: 0px;
+  &:hover {
+    color: #007E80
+  }
 `
 
 export default IdeaCard

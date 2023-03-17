@@ -1,14 +1,13 @@
 import { Editor } from 'react-draft-wysiwyg'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
 interface IRichTextEditor {
   editorState: any
   setEditorState: (val: any) => void
   placeholder?: string
+  style?: Object
 }
 
 function RichTextEditor(props: IRichTextEditor) {
-  const { editorState, setEditorState, placeholder } = props
+  const { editorState, setEditorState, placeholder, style } = props
 
   const onChange = async (value: any) => {
     setEditorState(value)
@@ -27,7 +26,7 @@ function RichTextEditor(props: IRichTextEditor) {
   }
 
   return (
-    <div>
+    <div style={style}>
       <Editor
         editorState={editorState}
         toolbarClassName="toolbarClassName"
