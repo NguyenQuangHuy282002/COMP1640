@@ -101,11 +101,14 @@ export default function CreateIdea() {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
+      
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
     }
-
+    if(form.getFieldValue('specialevent')) {
+      postForm['specialevent'] = form.getFieldValue('specialevent')
+    }
     if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
     }

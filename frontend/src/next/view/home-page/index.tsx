@@ -1,4 +1,3 @@
-
 import { SmileFilled } from '@ant-design/icons'
 import { Avatar, Badge, Col, Input, Layout, message, Row, Typography } from 'antd'
 import { Http } from 'next/api/http'
@@ -12,9 +11,7 @@ import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
 import MenuFilter from './menu-filter'
 
-
 const { Title } = Typography
-
 
 function HomePage() {
   const navigate = useNavigate()
@@ -22,6 +19,7 @@ function HomePage() {
   const [ideas, setIdeas] = useState([])
   const [isEnd, setEnd] = useState(false)
   const [filter, setFilter] = useState('new')
+  const [optionsQuery, setOptionsQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
@@ -32,25 +30,31 @@ function HomePage() {
 
   useEffect(() => {
     setEnd(false)
-    const optionsQuery: any = handleFilter(filter)
-    console.log(optionsQuery)
-    loadMoreData(true, optionsQuery)
+    const query = handleFilter(filter)
+    setOptionsQuery(query)
+    loadMoreData(true, query, 1)
   }, [filter])
 
-  const loadMoreData = (reset: boolean = false, filter) => {
+  const loadMoreData = (reset: boolean = false, filter?, page?) => {
     setLoading(true)
+    const tabQuery = filter ? filter : optionsQuery
+    const curPage = page ? page : currentPage
     const getAllIdeas = async () =>
-      await Http.get(`/api/v1/idea?page=${currentPage}&${filter}`)
+      await Http.get(`/api/v1/idea?page=${curPage}&${tabQuery}`)
         .then(res => {
           console.log('res', res)
+          if (reset === true) {
+            setIdeas([...res.data.data])
+            if (res.data?.next?.page) {
+              setCurrentPage(res.data.next.page)
+            }
+            return
+          }
           if (res.data?.next?.page) {
             setCurrentPage(res.data.next.page)
           } else {
             setEnd(true)
             setCurrentPage(1)
-          }
-          if(reset === true) {
-            return setIdeas([...res.data.data])
           }
           setIdeas([...ideas, ...res.data.data])
         })
@@ -59,9 +63,6 @@ function HomePage() {
     getAllIdeas()
   }
   return (
-
-    
-
     <Layout.Content
       style={{
         display: 'block',
@@ -87,11 +88,8 @@ function HomePage() {
       </StyledRow>
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} />
-
       </StyledRow>
-      <IdeasList
-        ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd}
-      />
+      <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
     </Layout.Content>
   )
 }
