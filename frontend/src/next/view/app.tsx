@@ -20,7 +20,6 @@ import UserProfile from './user-profile'
 
 import EventDetails from './events/event-details'
 
-
 const App = () => {
   const navigate = useNavigate()
   const { login, logout, token, tokenVerified, userId } = useAuth()
@@ -94,13 +93,12 @@ const App = () => {
           <Route path="/departments" element={<DepartmentManager />} />
           <Route path="/categories" element={<CategoryManager />} />
           <Route path="/accounts-manager" element={<AccountManager />} />
-          <Route path="/ideas" element={<UserProfile />} />
+          <Route path="/ideas" element={<HomePage />} />
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />
-          
         </Route>
-        <Route path="/eventdetail" element={<EventDetails/>} />
+        <Route path="/eventdetail" element={<EventDetails />} />
       </Routes>
     )
   } else {

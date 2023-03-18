@@ -109,7 +109,7 @@ export default function CreateIdea() {
     if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
     }
-    if (postForm.title.length < 40) {
+    if (postForm.title.length < 30) {
       return message.error('Your title is too sparsing')
     }
     if (!form.getFieldValue('agreement')) {

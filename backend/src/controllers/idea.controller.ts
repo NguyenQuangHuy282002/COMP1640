@@ -53,6 +53,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
+    console.log(reqQuery)
     const page = parseInt(reqQuery.page) || 1
     const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
@@ -87,18 +88,22 @@ export const getIdeas = async (req: any, res: any, next: any) => {
     }
 
     let ideas = Idea.find(options)
-      .select('title views likes dislikes createdAt comments isAnonymous specialEvent content')
+      .select('title meta likes dislikes createdAt comments isAnonymous specialEvent content')
+      .populate('specialEvent')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
+        populate: 'department',
       })
       .populate('categories')
 
     if (trending == 'hot') {
-      ideas.sort({ views: -1 })
+      ideas.sort({ "meta.views": -1 })
     } else if (trending == 'best') {
-      ideas.sort({ likes: -1 })
-    } else {
+      ideas.sort({ 'meta.likesCount': -1 })
+    } else if(trending == 'worst') {
+      ideas.sort({ 'meta.dislikesCount': -1 })
+    }else {
       ideas.sort({ createdAt: -1 })
     }
 
@@ -127,7 +132,7 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
     }
     const ideas = await Idea
       .find({ publisherId: { "$in": user._id } })
-      .select('title views likes dislikes createdAt comments isAnonymous specialEvent content')
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
@@ -153,7 +158,7 @@ export const getIdea = async (req: any, res: any, next: any) => {
       })
       .populate('categories')
       .populate('specialEvent')
-    idea.views = idea.views + 1
+    idea.meta.views = idea.meta.views + 1
     await idea.save()
     console.log(idea)
     res.status(200).json({

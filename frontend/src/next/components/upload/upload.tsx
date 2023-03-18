@@ -23,7 +23,8 @@ const validFileType = [
   '.csv', 
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
   '.xlsx', 
-  '.xls'
+  '.xls',
+  'application/vnd.ms-excel'
 ]
 
 const checkFileFunc = (file: any) => {
