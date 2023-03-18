@@ -54,6 +54,7 @@ import {
   RocketTwoTone,
 } from '@ant-design/icons'
 import { Badge, Button, Card, Space } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import Link from 'antd/es/typography/Link'
 import Title from 'antd/es/typography/Title'
 import { useNavigate } from 'react-router-dom'
@@ -136,11 +137,13 @@ function EventCardItem({
   )
 }
 
-const columns: ColumnsType<DataType> = [
+const columns = [
   {
     title: 'Title',
     dataIndex: 'title', 
-    render: (text, record) => <Link to={`/eventdetail/${record.key}`}>{text}</Link>, // use Link to wrap title
+    render: (text, record) => <Link 
+    // to={`/eventdetail/${record.key}`}
+    >{text}</Link>, // use Link to wrap title
   },
   {
     title: 'Description',
@@ -166,7 +169,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 
-const data: DataType[] = [
+const data = [
   {
     key: '1',
     title: 'adshkjfgk asdgfhjgjhds',

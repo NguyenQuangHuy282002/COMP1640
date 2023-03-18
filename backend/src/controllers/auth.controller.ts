@@ -37,7 +37,10 @@ export const createAccount = async (req: any, res: any, next: any) => {
 export const login = async (req: any, res: any, next: any) => {
   try {
     const { username, password } = req.body
-    const user = await User.findOne({ username: username.toString() }).select('+password')
+    const user = await User.findOne({ username: username.toString() }).populate({
+      path: 'department',
+      select: ['name']
+    }).select('+password')
     if (!user) {
       return next(new ApiErrorResponse('Invalid username or password', 401))
     }
@@ -85,12 +88,13 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
         name: userData.name,
         isActivate: userData.isActivate,
         birthday: userData.birthday || '',
-        email: userData.email || 'None',
+        email: userData.email,
         avatar: userData.avatar || '',
         phone: userData.phone || '',
         description: userData.description || '',
         interests: userData.interests || [],
         isBanned: userData.isBanned || false,
+        department: userData.department.name || ''
       },
       message,
       accessToken: accessToken,
