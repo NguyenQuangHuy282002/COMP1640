@@ -11,30 +11,51 @@ const LayoutWrapper = ({ children }) => {
   const contentStyle =
     windowWidth > 1000
       ? {
-          width: '100%',
-          background: 'none',
-        }
+        width: '100%',
+        background: 'none',
+      }
       : {
-          maxWidth: 'none',
-          width: '100%',
-        }
+        maxWidth: 'none',
+        width: '100%',
+      }
 
   return (
     <>
-      <Layout
-        style={{
-          width: '100%',
-          background: 'none',
-          display: 'flex',
-          justifyContent: 'space-between',
-          position: 'relative',
-        }}
-      >
-        <AppSidebar />
-        <Content style={contentStyle}>{children}</Content>
-        <RightSideBar />
-      </Layout>
-      <AppFooter/>
+      {
+        windowWidth > 1000 ? (
+          <Layout
+            style={{
+              width: '100%',
+              background: 'none',
+              display: 'flex',
+              justifyContent: 'space-between',
+              position: 'relative',
+            }}
+          >
+            <AppSidebar />
+            <Content style={contentStyle}>{children}</Content>
+            <RightSideBar />
+          </Layout>
+        ) : (
+          <><Layout
+            style={{
+              width: '100%',
+              background: 'none',
+              // display: 'flex',
+              // justifyContent: 'space-between',
+              position: 'relative',
+            }}
+          >
+            <AppSidebar />
+            <RightSideBar />
+            <Content style={contentStyle}>{children}</Content>
+
+
+          </Layout>
+          </>
+        )
+      }
+      <AppFooter />
     </>
   )
 }
