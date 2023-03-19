@@ -5,7 +5,20 @@ export const specialEventRouter = express.Router()
 
 specialEventRouter.get('/', async (req, res) => {
   try {
-    const data = await SpecialEvent.find({})
+    const { id } = req.query
+    const data = await SpecialEvent.find(id ? { _id: id } : {})
+    res.status(200).json({ success: 1, data })
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    })
+  }
+})
+
+specialEventRouter.get('/available', async (req, res) => {
+  try {
+    const now = new Date()
+    const data = await SpecialEvent.find({ firstCloseDate: { $lt: now } })
     res.status(200).json({ success: 1, data })
   } catch (err) {
     res.status(500).json({
@@ -15,13 +28,18 @@ specialEventRouter.get('/', async (req, res) => {
 })
 
 specialEventRouter.post('/', express.json(), async (req, res) => {
+  // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
-    const { id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
-    await SpecialEvent.findOneAndUpdate(
-      { id },
-      { title, description, startDate, firstCloseDate, finalCloseDate },
-      { upsert: true }
-    )
+    const { _id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
+    if (_id) {
+      await SpecialEvent.findOneAndUpdate(
+        { _id },
+        { title, description, startDate, firstCloseDate, finalCloseDate },
+        { upsert: true }
+      )
+    } else {
+      await SpecialEvent.collection.insertOne({ title, description, startDate, firstCloseDate, finalCloseDate })
+    }
     res.status(200).json({ success: 1 })
   } catch (err) {
     res.status(500).json({
