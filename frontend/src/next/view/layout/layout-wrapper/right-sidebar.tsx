@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import EventCard from '../sidebar-card/events-card'
 import { Button, Dropdown, Menu, MenuProps } from 'antd'
 import DepartmentCard from '../sidebar-card/department-card'
-import { MenuOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { FilterOutlined, ScheduleOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -27,12 +27,12 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Department', 'department', <AppstoreOutlined />, [
+  getItem('Department', 'department', <UsergroupAddOutlined />, [
     getItem('Department 1', '1'),
     getItem('Department 2', '2'),
     getItem('Department 3', '3'),
   ]),
-  getItem('Special Event', 'event', <AppstoreOutlined />, [
+  getItem('Special Event', 'event', <ScheduleOutlined />, [
     getItem('Event 1', '1'),
     getItem('Event 2', '2'),
     getItem('Event 3', '3'),
@@ -50,7 +50,7 @@ const RightSideBar: React.FC = () => {
       {windowSize < 1000 ? (
         <Dropdown menu={{ items: items }} trigger={['click']} overlayStyle={{ width: 150 }} placement="bottomRight">
           <Button
-            icon={<MenuOutlined style={{}} />}
+            icon={<FilterOutlined style={{}} />}
             type="primary"
             style={{
               position: 'sticky',
@@ -65,7 +65,16 @@ const RightSideBar: React.FC = () => {
           />
         </Dropdown>
       ) : (
-        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px' }}>
+        <Layout.Sider width={250} style={{
+          backgroundColor: 'white',
+          position: 'sticky',
+          zIndex: 1,
+          alignSelf: 'start',
+          height: '97vh',
+          top: '50px',
+          boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
+          paddingTop: '12px',
+        }}>
           <EventCard />
           <DepartmentCard />
         </Layout.Sider>

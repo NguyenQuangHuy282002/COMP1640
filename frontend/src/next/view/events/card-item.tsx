@@ -136,86 +136,86 @@ function EventCardItem({
   )
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Title',
-    dataIndex: 'title', 
-    render: (text, record) => <Link to={`/eventdetail/${record.key}`}>{text}</Link>, // use Link to wrap title
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    // key: 'description',
-  },
-  {
-    title: 'Department',
-    dataIndex: 'department',
-  },
-  {
-    title: 'StartDate',
-    dataIndex: 'startDate',
-  },
-  {
-    title: 'FirstClosedDate',
-    dataIndex: 'firstClosedDate',
-  },
-  {
-    title: 'FinalClosedDate',
-    dataIndex: 'finalClosedDate',
-  },
-];
+// const columns: ColumnsType<DataType> = [
+//   {
+//     title: 'Title',
+//     dataIndex: 'title', 
+//     render: (text, record) => <Link to={`/eventdetail/${record.key}`}>{text}</Link>, // use Link to wrap title
+//   },
+//   {
+//     title: 'Description',
+//     dataIndex: 'description',
+//     // key: 'description',
+//   },
+//   {
+//     title: 'Department',
+//     dataIndex: 'department',
+//   },
+//   {
+//     title: 'StartDate',
+//     dataIndex: 'startDate',
+//   },
+//   {
+//     title: 'FirstClosedDate',
+//     dataIndex: 'firstClosedDate',
+//   },
+//   {
+//     title: 'FinalClosedDate',
+//     dataIndex: 'finalClosedDate',
+//   },
+// ];
 
 
-const data: DataType[] = [
-  {
-    key: '1',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    key: '2',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
+// const data: DataType[] = [
+//   {
+//     key: '1',
+//     title: 'adshkjfgk asdgfhjgjhds',
+//     description: 'gdsahkgfkjhasgdf',
+//     department: 'Computing',
+//     startDate: '2/8/2002',
+//     firstClosedDate: '2/8/2002',
+//     finalClosedDate: '2/8/2002',
+//   },
+//   {
+//     key: '2',
+//     title: 'adshkjfgk asdgfhjgjhds',
+//     description: 'gdsahkgfkjhasgdf',
+//     department: 'Computing',
+//     startDate: '2/8/2002',
+//     firstClosedDate: '2/8/2002',
+//     finalClosedDate: '2/8/2002',
 
-  },
-  {
-    key: '3',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
+//   },
+//   {
+//     key: '3',
+//     title: 'adshkjfgk asdgfhjgjhds',
+//     description: 'gdsahkgfkjhasgdf',
+//     department: 'Computing',
+//     startDate: '2/8/2002',
+//     firstClosedDate: '2/8/2002',
+//     finalClosedDate: '2/8/2002',
 
-  },
-  {
-    key: '4',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
+//   },
+//   {
+//     key: '4',
+//     title: 'adshkjfgk asdgfhjgjhds',
+//     description: 'gdsahkgfkjhasgdf',
+//     department: 'Computing',
+//     startDate: '2/8/2002',
+//     firstClosedDate: '2/8/2002',
+//     finalClosedDate: '2/8/2002',
 
-  },
-  {
-    key: '5',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-];
+//   },
+//   {
+//     key: '5',
+//     title: 'adshkjfgk asdgfhjgjhds',
+//     description: 'gdsahkgfkjhasgdf',
+//     department: 'Computing',
+//     startDate: '2/8/2002',
+//     firstClosedDate: '2/8/2002',
+//     finalClosedDate: '2/8/2002',
+//   },
+// ];
 
 
 

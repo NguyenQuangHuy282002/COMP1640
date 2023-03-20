@@ -49,14 +49,14 @@ function HomePage() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
-  const eventData: EventDetailProps = {
-    title: 'Sample Event Title',
-    description: 'Sample event description',
-    department: 'Sample Department',
-    startDate: '2022-01-01',
-    firstClosedDate: '2022-01-20',
-    finalClosedDate: '2022-02-01',
-  };
+  // const eventData: EventDetailProps = {
+  //   title: 'Sample Event Title',
+  //   description: 'Sample event description',
+  //   department: 'Sample Department',
+  //   startDate: '2022-01-01',
+  //   firstClosedDate: '2022-01-20',
+  //   finalClosedDate: '2022-02-01',
+  // };
 
   useEffect(() => {
     setLoading(true)
@@ -71,7 +71,7 @@ function HomePage() {
 
   return (
 
-    
+
 
     <Layout.Content
       style={{

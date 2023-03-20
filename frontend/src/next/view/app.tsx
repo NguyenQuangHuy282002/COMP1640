@@ -99,9 +99,9 @@ const App = () => {
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />
-          
+
         </Route>
-        <Route path="/eventdetail" element={<EventDetail/>} />
+        {/* <Route path="/eventdetail" element={<EventDetail/>} /> */}
       </Routes>
     )
   } else {

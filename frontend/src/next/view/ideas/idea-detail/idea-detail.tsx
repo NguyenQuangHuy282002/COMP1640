@@ -63,7 +63,7 @@ function IdeaDetail() {
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">
-              
+
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
@@ -71,7 +71,7 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={data[0]?.comments.length } ideaId={id} likes={data[0]?.likes} dislikes={data[0]?.dislikes} handleShowComment={handleShowComment} />
+            <MenuBar commentCount={data[0]?.comments.length} ideaId={id} likes={data[0]?.likes} dislikes={data[0]?.dislikes} handleShowComment={handleShowComment} />
           </StyledContent>
 
           <StyledContent>

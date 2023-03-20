@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { ScheduleOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 
@@ -23,7 +23,7 @@ function getItem(
 
 const items: MenuProps['items'] = [
 
-  getItem('Special Event', 'menu', <AppstoreOutlined />, [
+  getItem('Special Event', 'menu', <ScheduleOutlined />, [
     getItem('Event 1', '1'),
     getItem('Event 2', '2'),
     getItem('Event 3', '3'),
