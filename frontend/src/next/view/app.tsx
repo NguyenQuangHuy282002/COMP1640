@@ -19,6 +19,8 @@ import LayoutWrapper from './layout/layout-wrapper'
 import UserProfile from './user-profile'
 
 import EventDetails from './events/event-details'
+import LayoutAdmin from './admin/layout-admin'
+import DashboardAdmin from './dashboard'
 
 const App = () => {
   const navigate = useNavigate()
@@ -99,6 +101,18 @@ const App = () => {
           <Route path="/idea" element={<IdeaDetail />} />
         </Route>
         <Route path="/eventdetail" element={<EventDetails />} />
+        <Route
+          path="/admin"
+          element={
+            <Layout>
+              <LayoutAdmin>
+                <Outlet />
+              </LayoutAdmin>
+            </Layout>
+          }
+        >
+        <Route path="/admin/dashboard" element={<DashboardAdmin/>}></Route>
+        </Route>
       </Routes>
     )
   } else {
