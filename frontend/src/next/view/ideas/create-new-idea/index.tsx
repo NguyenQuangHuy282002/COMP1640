@@ -1,11 +1,12 @@
-import { QuestionCircleOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input, message, Select, Switch } from 'antd'
+import { ArrowLeftOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Switch, Typography } from 'antd'
 import axios from 'axios'
 import { convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
 import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import { useQuery } from 'next/utils/use-query'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +14,8 @@ import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
 import Tags from './tag'
+
+const { Title } = Typography
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -46,6 +49,9 @@ export default function CreateIdea() {
   const [form] = Form.useForm()
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const query = useQuery()
+  const defaultEventId = query.get('event')
+
   const initialState = () => EditorState.createEmpty()
   const [editorState, setEditorState] = useState(initialState)
   const [openModal, setOpenModal] = useState(false)
@@ -58,15 +64,27 @@ export default function CreateIdea() {
   }
 
   useEffect(() => {
-    const getEventList = async () => {
-      await Http.get('/api/v1/event/available')
-        .then(res => {
-          console.log(res.data.data)
-          setSpecialEvent(res.data.data)
-        })
-        .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+    if (defaultEventId) {
+      const getEventList = async () => {
+        await Http.get(`/api/v1/event?id=${defaultEventId}`)
+          .then(res => {
+            console.log(res.data.data)
+            setSpecialEvent(res.data.data)
+          })
+          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      }
+      getEventList()
+    } else {
+      const getEventList = async () => {
+        await Http.get('/api/v1/event/available')
+          .then(res => {
+            console.log(res.data.data)
+            setSpecialEvent(res.data.data)
+          })
+          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      }
+      getEventList()
     }
-    getEventList()
   }, [])
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
@@ -83,15 +101,19 @@ export default function CreateIdea() {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
+      
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
+      specialEvent: defaultEventId || form.getFieldValue('specialevent'),
     }
-
+    if(form.getFieldValue('specialevent')) {
+      postForm['specialevent'] = form.getFieldValue('specialevent')
+    }
     if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
     }
-    if (postForm.title.length < 50) {
+    if (postForm.title.length < 30) {
       return message.error('Your title is too sparsing')
     }
     if (!form.getFieldValue('agreement')) {
@@ -115,43 +137,50 @@ export default function CreateIdea() {
   const windowWidth = useWindowSize()
   const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
-  useEffect(() => {}, [])
-
   return (
-    <Form
-      form={form}
-      name="idea"
-      style={{
-        padding: paddingForm,
-      }}
+    <Card
+      title={
+        <Space align="center" size="middle">
+          <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/')} />
+          <Title style={{ fontSize: 18, margin: 0 }}> Create idea form</Title>
+        </Space>
+      }
+      style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0, marginRight: 10 }}
     >
-      <Form.Item name="specialevent" style={{ marginBottom: '15px' }}>
-        <Select
-          style={{
-            float: 'left',
-            width: '40%',
-          }}
-          placeholder="Choose Special Event"
-        >
-          <Select.Option value="ok">Oke</Select.Option>
-        </Select>
-      </Form.Item>
-      <div
-        style={{
-          border: '0.1px solid #f6f7f8',
-          borderRadius: '5px',
-          padding: '10px 15px',
-          backgroundColor: 'white',
-        }}
+      <Form
+        form={form}
+        name="idea"
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        layout="horizontal"
+        labelAlign="left"
       >
-        <StyledFormItem
-          name="title"
-          required
-          style={{
-            padding: '5px',
-          }}
-          label="Title"
-        >
+        {defaultEventId ? (
+          <>
+            <Title level={3} style={{ marginTop: 0 }}>
+              Create idea for {specialEvent[0]?.title}
+            </Title>
+            <Divider />
+          </>
+        ) : (
+          <Form.Item name="specialevent" label="Special event" style={{ marginBottom: '15px' }}>
+            <Select
+              style={{
+                float: 'left',
+                width: '40%',
+              }}
+              placeholder="Choose Special Event"
+            >
+              {specialEvent.map((event, index) => (
+                <Select.Option value={event?._id} key={index}>
+                  {event?.title}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        <Form.Item name="title" required label="Title">
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 50 characters to summary your idea)"
@@ -159,16 +188,12 @@ export default function CreateIdea() {
             showCount
             autoComplete="off"
           ></Input>
-        </StyledFormItem>
-        <StyledFormItem
-          name="content"
-          required
-          style={{
-            padding: '5px',
-          }}
-        >
+        </Form.Item>
+
+        <Form.Item name="content" required label="Description">
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
-        </StyledFormItem>
+        </Form.Item>
+
         <DefaultUpload normFile={normFile} files={files}></DefaultUpload>
         <DraggerUpload normFile={normFile} files={files}></DraggerUpload>
 
@@ -203,12 +228,12 @@ export default function CreateIdea() {
         </Form.Item>
         <TermCondition isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
         <Form.Item wrapperCol={{ span: 15 }}>
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 20 }}>
+          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
             Post
           </Button>
         </Form.Item>
-      </div>
-    </Form>
+      </Form>
+    </Card>
   )
 }
 

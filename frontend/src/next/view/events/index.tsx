@@ -1,9 +1,13 @@
-import { Button, Divider, Space } from 'antd'
+import { PlusCircleTwoTone } from '@ant-design/icons'
+import { Button, Divider, Row, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
+import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import EventCardItem from './card-item'
 import CreateEventField from './event-form'
+
+const { Title } = Typography
 
 function EventsPage() {
   const { enqueueSnackbar } = useSnackbar()
@@ -51,15 +55,22 @@ function EventsPage() {
           }}
         />
       ) : (
-        <div style={{ padding: '10px 20px 10px 10px', margin: 0 }}>
-          <Button
-            onClick={() => {
-              setOpenModal(true)
-              setEditEvent(null)
-            }}
-          >
-            Add new event
-          </Button>
+        <div style={{ padding: 20, margin: 0 }}>
+          <Row justify="space-between">
+            <Title level={3} style={{ margin: 0 }}>
+              Events list
+            </Title>
+            <BlueColorButton
+              icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
+              onClick={() => {
+                setOpenModal(true)
+                setEditEvent(null)
+              }}
+              size="large"
+            >
+              Add new event
+            </BlueColorButton>
+          </Row>
           <Divider />
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
             {allEventList.map((event, index) => (

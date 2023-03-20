@@ -21,8 +21,8 @@ export const handleFilter = (sortType: any, key?: any) => {
   switch (temp) {
     // case 'Newest':
     //   return (a, b) => new Date(b.created_at) - new Date(a.created_at);
-    case 'New':
-      return '';
+    case 'new':
+      return 'tab=new';
     // case 'New Users':
     //   return (a, b) => new Date(b.created_at) - new Date(a.created_at);
     case 'hot':
@@ -41,22 +41,22 @@ export const handleFilter = (sortType: any, key?: any) => {
     //   return (a, b) => b.views - a.views;
     case 'keyword':
         return `keyword=${key.replace(' ', '-')}`;
-    case 'Week':
-      return (a, b) => {
-        const aDate = todayDate - getTime(a.created_at)
-        const bDate = todayDate - getTime(b.created_at)
-        if (aDate < milliSecWeek && bDate < milliSecWeek) {
-          return b.answer_count + b.comment_count - (a.answer_count + a.comment_count);
-        }
-      }
-    case 'Month':
-      return (a, b) => {
-        const aDate = todayDate - getTime(a.created_at)
-        const bDate = todayDate - getTime(b.created_at)
-        if (aDate < milliSecMonth && bDate < milliSecMonth) {
-          return b.answer_count + b.comment_count - (a.answer_count + a.comment_count);
-        }
-      }
+    // case 'Week':
+    //   return (a, b): string => {
+    //     const aDate = todayDate - getTime(a.created_at)
+    //     const bDate = todayDate - getTime(b.created_at)
+    //     if (aDate < milliSecWeek && bDate < milliSecWeek) {
+    //       return `time=${b.answer_count + b.comment_count - (a.answer_count + a.comment_count)}`;
+    //     }
+    //   }
+    // case 'Month':
+    //   return (a, b): string => {
+    //     const aDate = todayDate - getTime(a.created_at)
+    //     const bDate = todayDate - getTime(b.created_at)
+    //     if (aDate < milliSecMonth && bDate < milliSecMonth) {
+    //       return `time=${b.answer_count + b.comment_count - (a.answer_count + a.comment_count)}`;
+    //     }
+    //   }
     default:
       break;
   }

@@ -133,7 +133,7 @@ function EventDetail() {
     </div>
         
       </StyledRow>
-      <IdeasList ideas={ideas} isLoading={loading}/>
+      <IdeasList ideas={ideas} loading={loading} isEnd={undefined} loadMoreData={undefined}/>
     </Layout.Content>
   )
 }

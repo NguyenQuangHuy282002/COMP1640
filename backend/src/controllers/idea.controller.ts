@@ -4,6 +4,7 @@ import User from '../models/User'
 import Comment from '../models/Comment'
 import Category from '../models/Category'
 import SpecialEvent from '../models/SpecialEvent'
+import Department from '../models/Department'
 
 export const createIdea = async (req: any, res: any, next: any) => {
   try {
@@ -53,8 +54,9 @@ export const createIdea = async (req: any, res: any, next: any) => {
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
+    console.log(reqQuery)
     const page = parseInt(reqQuery.page) || 1
-    const limit = parseInt(reqQuery.limit) || 20
+    const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
     const trending = reqQuery.tab || null
     const endIndex = page * limit
@@ -87,18 +89,22 @@ export const getIdeas = async (req: any, res: any, next: any) => {
     }
 
     let ideas = Idea.find(options)
-      .select('title views likes dislikes createdAt comments isAnonymous specialEvent content')
+      .select('title meta likes dislikes createdAt comments isAnonymous specialEvent content')
+      .populate('specialEvent')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
+        populate: 'department',
       })
       .populate('categories')
 
     if (trending == 'hot') {
-      ideas.sort({ views: -1 })
+      ideas.sort({ "meta.views": -1 })
     } else if (trending == 'best') {
-      ideas.sort({ like: -1 })
-    } else {
+      ideas.sort({ 'meta.likesCount': -1 })
+    } else if(trending == 'worst') {
+      ideas.sort({ 'meta.dislikesCount': -1 })
+    }else {
       ideas.sort({ createdAt: -1 })
     }
 
@@ -125,8 +131,9 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
     if (!user) {
       return next(new ApiErrorResponse(`Not found user id ${userId}`, 500))
     }
-    const ideas = await Idea.find({ publisherId: { $in: user._id } })
-      .select('title views like dislike createdAt comments isAnonymous specialEvent content')
+    const ideas = await Idea
+      .find({ publisherId: { "$in": user._id } })
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
@@ -136,6 +143,65 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
       success: true,
       count: ideas.length,
       data: ideas,
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
+export const getAllIdeasByCategory = async (req: any, res: any, next: any) => {
+  try {
+    const categoryId = req.query.uid
+
+    const category = await Category.findById(categoryId)
+    if (!category) {
+      return next(new ApiErrorResponse(`Not found category id ${categoryId}`, 500))
+    }
+    const ideas = await Idea
+      .find({ categories: { "$in": [category._id] } }) //$all
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+      .populate({
+        path: 'publisherId',
+        select: ['name', 'avatar', 'email', 'role'],
+      })
+      .populate('categories')
+    res.status(200).json({
+      success: true,
+      count: ideas.length,
+      data: ideas,
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
+export const getAllIdeasByDepartment = async (req: any, res: any, next: any) => {
+  try {
+    const departmentId = req.query.uid
+
+    const department = await Department.findById(departmentId).populate({
+      path: 'users',
+      select: ['name', 'avatar', 'email', 'role'],
+      populate: {
+        path: 'ideas',
+        select: ['title', 'likes', 'dislikes', 'meta', 'createdAt', 'comments', 'isAnonymous', 'specialEvent', 'content']
+      }
+    })
+    if (!department) {
+      return next(new ApiErrorResponse(`Not found department id ${departmentId}`, 500))
+    }
+    // const ideas = await Idea
+    //   .find({ department: { "$in": [department._id] } }) //$all
+    //   .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+    //   .populate({
+    //     path: 'publisherId',
+    //     select: ['name', 'avatar', 'email', 'role'],
+    //   })
+    //   .populate('categories')
+    res.status(200).json({
+      success: true,
+      // count: department..length,
+      data: department,
     })
   } catch (err) {
     return next(new ApiErrorResponse(`${err.message}`, 500))
@@ -152,7 +218,7 @@ export const getIdea = async (req: any, res: any, next: any) => {
       })
       .populate('categories')
       .populate('specialEvent')
-    idea.views = idea.views + 1
+    idea.meta.views = idea.meta.views + 1
     await idea.save()
     console.log(idea)
     res.status(200).json({
@@ -176,8 +242,9 @@ export const getDataSuggestion = async (req: any, res: any, next: any) => {
     res.status(200).json({
       success: true,
       data: ideas,
-      // , users: users, categories: categories
-    })
+      count: ideas.length,
+    }
+    )
   } catch (err) {
     return next(new ApiErrorResponse(`${err.message}`, 500))
   }
@@ -296,6 +363,28 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
 
     await idea.save()
     res.status(200).json({ success: true, message: 'idea liked!', idea })
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const omitVoteIdea = async (req: any, res: any, next: any) => {
+  try {
+    const { ideaId } = req.body;
+    const userId = req.payload.user.id
+    let idea = await Idea.findById(ideaId);
+    if (idea.dislikes.indexOf(userId) === -1 || idea.likes.indexOf(userId) === -1) {
+      return
+    }
+    if (idea.likes.indexOf(userId) >= 0) {
+      idea.likes = idea.likes.filter(like => like.toString() !== userId);
+    }
+    if (idea.dislikes.indexOf(userId) >= 0) {
+      idea.dislikes = idea.dislikes.filter(like => like.toString() !== userId);
+    }
+
+    await idea.save();
+    res.status(200).json({ success: true, message: 'omit oke!', idea });
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
   }

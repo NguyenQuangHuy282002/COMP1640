@@ -16,9 +16,15 @@ const validFileType = [
   'image/png',
   'image/svg+xml',
   'image/tiff',
+  'image/avif',
   'image/webp',
   'image/x-icon',
   '.docx',
+  '.csv', 
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+  '.xlsx', 
+  '.xls',
+  'application/vnd.ms-excel'
 ]
 
 const checkFileFunc = (file: any) => {
@@ -99,7 +105,8 @@ export function DefaultUpload({ normFile, files }) {
         listType="picture"
         onPreview={previewFile}
         accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-text/plain, application/pdf, image/*"
+text/plain, application/pdf, image/*, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, 
+application/vnd.ms-excel, .xlsx, .xls"
         beforeUpload={file => onChangeUpload(file)}
         maxCount={3}
       >
@@ -125,7 +132,8 @@ export function DraggerUpload({ normFile, files }) {
         <Upload.Dragger
           name="files"
           accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-text/plain, application/pdf, image/*"
+text/plain, application/pdf, image/*, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,
+.xlsx, .xls"
           beforeUpload={file => onChangeUpload(file)}
           maxCount={3}
         >

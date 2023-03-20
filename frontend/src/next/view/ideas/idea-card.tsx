@@ -1,7 +1,6 @@
 import {
   ClockCircleFilled,
   CloudDownloadOutlined,
-  CompassOutlined,
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
@@ -15,7 +14,7 @@ import {
   TagsTwoTone,
 //>>>>>>> main
 } from '@ant-design/icons'
-import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -43,7 +42,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-
+  // console.log(idea)
   return (
     <>
       <StyledCard
@@ -65,44 +64,39 @@ function IdeaCard({ idea, isLoading }) {
                 ? [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ padding: '5px' }} />
-                      {idea?.likes?.length - idea?.dislikes?.length || 0} points
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
                         <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
-                    <Text>
+                    <Text key="list-vertical-lock">
                       <Tag color="volcano" style={{ margin: 0 }}>
                         <LockTwoTone/> cannot comments
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
-                      {idea.views} views
+                      {idea.meta.views} views
                     </Text>,
                   ]
                 : [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ paddingRight: '2px' }} />
-                      {idea.like - idea.dislike}
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0}
                     </Text>,
                     <Text key="list-vertical-like-o">
-//<<<<<<< yesvansirevent
-//                      {/* <Tag color="cyan">
-//                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
-//                      </Tag> */}
-//                      <Tag color="volcano" style={{ margin: 0 }}>
-//                        <MessageTwoTone /> cannot comments
-//=======
+                      <Tag color="volcano" style={{ margin: 0 }}>
+                        <MessageTwoTone /> cannot comments
+                      </Tag>
                       <Tag color="cyan">
                         <MessageTwoTone /> {idea.comments.length}
-//>>>>>>> main
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ paddingRight: '2px' }} />
-                      {idea.views}
+                      {idea.meta.views}
                     </Text>,
                   ]
             }
@@ -125,10 +119,10 @@ function IdeaCard({ idea, isLoading }) {
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">
                       {/* 373B44 004853 */}
-                      <strong>{idea.departmentName ? idea.departmentName : 'No department'}</strong>
+                      <strong>{idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}</strong>
                     </Tag>
                     <Tag icon={<CompassOutlined />} color="#FA6900">
-                      <strong>{idea.specialEvent ? idea.specialEvent : 'No Event'}</strong>
+                      <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
                     </Tag>
                     <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
                   </Typography.Text>
@@ -169,7 +163,7 @@ function IdeaCard({ idea, isLoading }) {
           </List.Item>
          
         </Skeleton>
-        <Typography.Text type="danger" style={{ marginLeft:"30px", fontSize:"18px", fontFamily:"Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text>
+        {/* <Typography.Text type="danger" style={{ marginLeft:"30px", fontSize:"18px", fontFamily:"Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
       </StyledCard>
     </>
   )

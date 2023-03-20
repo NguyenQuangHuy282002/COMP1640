@@ -1,39 +1,30 @@
-import { Http, LOCALSTORAGE } from '../../api/http'
 import {
   CarryOutOutlined,
   DashboardOutlined,
   LogoutOutlined,
   MenuOutlined,
   TeamOutlined,
-  UserOutlined,
+  UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, Col, Dropdown, Layout, Menu, MenuProps, Row, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, Row, Typography } from 'antd'
+import { useSnackbar } from 'notistack'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { imgDir } from '../../constants/img-dir'
-import useWindowSize from '../../utils/useWindowSize'
-import { useSnackbar } from 'notistack'
-import { useSubscription } from '../../libs/global-state-hook'
 import AutoSearch from '../../components/search-field/autocomplete-search'
-import { userStore, userCredential } from '../auth/user-store'
+import { imgDir } from '../../constants/img-dir'
+import { useSubscription } from '../../libs/global-state-hook'
+import useWindowSize from '../../utils/useWindowSize'
+import { userCredential, userStore } from '../auth/user-store'
 
 const { Text } = Typography
 
-function AppHeader() {
+function AppHeader({suggest}) {
   const navigate = useNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
-  const [suggest, setSuggest] = useState({})
   const { avatar } = useSubscription(userStore).state
-  useEffect(() => {
-    const getSuggestions = async () =>
-      await Http.get('/api/v1/idea/suggest')
-        .then((res) => {setSuggest(res.data.data)})
-        .catch(error => enqueueSnackbar('Failed to get suggestions!', { variant: 'error' }))
-    getSuggestions()
-  }, [])
 
   const menuItems: MenuProps['items'] = [
     

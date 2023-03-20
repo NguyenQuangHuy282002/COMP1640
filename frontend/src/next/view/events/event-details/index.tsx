@@ -4,6 +4,7 @@ import { Http } from 'next/api/http'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import IdeaCard from './idea-card'
 
 const { Title } = Typography
 
@@ -85,7 +86,7 @@ export default function EventDetails() {
             marginBottom: '50px',
           }}
           dataSource={event?.ideas}
-          renderItem={idea => <p key={`${idea}`}>{idea.toString()}</p>}
+          renderItem={(ideaId, index) => <IdeaCard index={index} key={index} ideaId={ideaId} />}
         />
       ) : (
         <Empty
