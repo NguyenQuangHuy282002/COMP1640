@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from 'react'
 import {
-  StarOutlined,
-  ShareAltOutlined,
-  CloudDownloadOutlined,
-  TagsTwoTone,
-  MessageTwoTone,
-  FireTwoTone,
-  EyeOutlined,
   ClockCircleFilled,
+  CloudDownloadOutlined,
+  EyeOutlined,
+  FireTwoTone,
   LinkedinOutlined,
+//<<<<<<< yesvansirevent
   CompassOutlined,
+  LockTwoTone,
+//=======
+  MessageTwoTone,
+  ShareAltOutlined,
+  StarOutlined,
+  TagsTwoTone,
+//>>>>>>> main
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List } from 'antd'
+import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { imgDir } from 'next/constants/img-dir'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
-import styled from 'styled-components'
 
-const { Meta } = Card
 const { Text, Link } = Typography
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
-  const orientation = windowWidth < 768 ? 'horizontal' : 'vertical'
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
@@ -33,6 +38,11 @@ function IdeaCard({ idea, isLoading }) {
     }, 1000)
   }, [])
   const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
+
+  const handleViewDetail = id => {
+    navigate(`/idea?id=${id}`)
+  }
+  // console.log(idea)
   return (
     <>
       <StyledCard
@@ -54,31 +64,39 @@ function IdeaCard({ idea, isLoading }) {
                 ? [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ padding: '5px' }} />
-                      {idea.like - idea.dislike} points
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0} comments
+                        <MessageTwoTone /> {idea.comments.length} comments
+                      </Tag>
+                    </Text>,
+                    <Text key="list-vertical-lock">
+                      <Tag color="volcano" style={{ margin: 0 }}>
+                        <LockTwoTone/> cannot comments
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
-                      {idea.views} views
+                      {idea.meta.views} views
                     </Text>,
                   ]
                 : [
                     <Text strong key="list-vertical-star-o">
                       <FireTwoTone style={{ paddingRight: '2px' }} />
-                      {idea.like - idea.dislike}
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0}
                     </Text>,
                     <Text key="list-vertical-like-o">
+                      <Tag color="volcano" style={{ margin: 0 }}>
+                        <MessageTwoTone /> cannot comments
+                      </Tag>
                       <Tag color="cyan">
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+                        <MessageTwoTone /> {idea.comments.length}
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ paddingRight: '2px' }} />
-                      {idea.views}
+                      {idea.meta.views}
                     </Text>,
                   ]
             }
@@ -88,11 +106,7 @@ function IdeaCard({ idea, isLoading }) {
               avatar={
                 <>
                   <Avatar
-                    src={
-                      !idea.isAnonymous
-                        ? idea.publisherId?.avatar ?? 'Unknown'
-                        : 'https://www.pngarea.com/pngm/10/5215656_crying-emoji-png-transparent-background-smirk-emoji-transparent.png'
-                    }
+                    src={!idea.isAnonymous ? idea.publisherId?.avatar ?? 'Unknown' : imgDir + 'anonymous.jpg'}
                     style={{ background: '#f6f7f8' }}
                   />
                 </>
@@ -105,10 +119,10 @@ function IdeaCard({ idea, isLoading }) {
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">
                       {/* 373B44 004853 */}
-                      <strong>{idea.departmentName ? idea.departmentName : 'No department'}</strong>
+                      <strong>{idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}</strong>
                     </Tag>
                     <Tag icon={<CompassOutlined />} color="#FA6900">
-                      <strong>{idea.specialEvent ? idea.specialEvent : 'No Event'}</strong>
+                      <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
                     </Tag>
                     <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
                   </Typography.Text>
@@ -118,13 +132,13 @@ function IdeaCard({ idea, isLoading }) {
             />
 
             <List.Item.Meta
-              style={{ margin: '0',  }}
+              style={{ margin: '0' }}
               key="01"
               title={
-                <Link href="" style={{ margin: 0 }}>
-                  <Typography.Title level={4} style={{ margin: 0 }}>
+                <Link>
+                  <StyleTitle level={4} style={{ margin: 0 }} onClick={() => handleViewDetail(idea._id)}>
                     {idea.title}
-                  </Typography.Title>
+                  </StyleTitle>
                 </Link>
               }
               description={
@@ -145,8 +159,11 @@ function IdeaCard({ idea, isLoading }) {
                 </>
               }
             ></List.Item.Meta>
+            
           </List.Item>
+         
         </Skeleton>
+        {/* <Typography.Text type="danger" style={{ marginLeft:"30px", fontSize:"18px", fontFamily:"Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
       </StyledCard>
     </>
   )
@@ -154,6 +171,12 @@ function IdeaCard({ idea, isLoading }) {
 
 const StyledCard = styled(Card)`
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
+const StyleTitle = styled(Typography.Title)`
+  margin: 0px;
+  &:hover {
+    color: #007e80;
+  }
 `
 
 export default IdeaCard

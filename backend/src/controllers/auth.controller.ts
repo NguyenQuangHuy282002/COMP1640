@@ -37,12 +37,17 @@ export const createAccount = async (req: any, res: any, next: any) => {
 export const login = async (req: any, res: any, next: any) => {
   try {
     const { username, password } = req.body
-    const user = await User.findOne({ username: username.toString() }).select('+password')
+    let user = await User.findOne({ username: username.toString() }).select('+password')
     if (!user) {
       return next(new ApiErrorResponse('Invalid username or password', 401))
     }
+    if (user.department) {
+      user = await user.populate({
+        path: 'department',
+        select: ['name']
+      })
+    }
     const checkPassword = await bcryptCompare(password, user!.password)
-    // const checkPassword = password === user.password
     if (!checkPassword) {
       return next(new ApiErrorResponse('Invalid username or password', 400))
     } else if (!user.isActivate) {
@@ -85,12 +90,13 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
         name: userData.name,
         isActivate: userData.isActivate,
         birthday: userData.birthday || '',
-        email: userData.email || 'None',
+        email: userData.email,
         avatar: userData.avatar || '',
         phone: userData.phone || '',
         description: userData.description || '',
         interests: userData.interests || [],
         isBanned: userData.isBanned || false,
+        department: userData.department?.name || 'None'
       },
       message,
       accessToken: accessToken,
@@ -102,6 +108,22 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
     await new User(userData).save()
   } catch (err) {
     next(new ApiErrorResponse(err))
+  }
+}
+
+export const verifyAccessToken = async (req: any, res: any, next: any) => {
+  try {
+    const { token } = req.body;
+    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET);
+    if (verify) {
+      return res.status(200).json({
+        success: true,
+      })
+    }
+  } catch (err) {
+    return res.status(200).json({
+      success: false,
+    })
   }
 }
 

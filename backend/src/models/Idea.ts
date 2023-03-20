@@ -4,16 +4,21 @@ import { IComment } from './Comment'
 import { ISpecialEvent } from './SpecialEvent'
 import { IUser } from './User'
 
+export interface IIdeaMeta extends Document {
+  likesCount: number
+  views: number
+  dislikesCount: number
+}
 
-export interface IIdea extends Document{
-  publisherId: IUser['_id'],
+export interface IIdea extends Document {
+  publisherId: IUser['_id']
   categories?: ICategory['_id'][]
   title: string
   content: string
   files?: string[]
-  views?: number
-  like?: number
-  dislike?: number
+  meta?: IIdeaMeta
+  likes?: IUser['_id'][]
+  dislikes?: IUser['_id'][]
   comments?: IComment['_id'][]
   createdAt?: Date
   specialEvent: ISpecialEvent['_id']
@@ -22,23 +27,36 @@ export interface IIdea extends Document{
 
 const ideaSchema = new Schema<IIdea>(
   {
-    publisherId: { type: Types.ObjectId, ref: 'User'},
+    publisherId: { type: Types.ObjectId, ref: 'User' },
     categories: [{ type: Types.ObjectId, ref: 'Category' }],
     title: String,
     content: String,
-    files: Array<String>,
-    views: { type: Number, required: false, default: 0 },
-    like: { type: Number, required: false, default: 0 },
-    dislike: { type: Number, required: false, default: 0 },
-    comments: [ { type: Types.ObjectId, ref: 'Comment'}],
+    files: Array<string>,
+    meta: {
+      views: { type: Number, default: 0 },
+      dislikesCount: { type: Number, default: 0 },
+      likesCount: { type: Number, default: 0 }
+    },
+    likes: [{ type: Types.ObjectId, ref: 'User', default: [] }],
+    dislikes: [{ type: Types.ObjectId, ref: 'User', default: [] }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment', default: [] }],
     createdAt: { type: Date, default: Date.now },
     specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
-    isAnonymous: { type: Boolean, default: false, required: false }
+    isAnonymous: { type: Boolean, default: false, required: false },
   },
   { timestamps: { updatedAt: true } }
 )
 
+ideaSchema.pre("save", async function (done) {
+  if (this.isModified("likes") || this.isModified("dislikes")) {
+    const likesCounter = await this.get("likes");
+    this.set("meta.likesCount", likesCounter.length)
+    const disLikesCounter = await this.get("dislikes");
+    this.set("meta.dislikesCount", disLikesCounter.length)
+  }
+  done();
+})
+
 const Idea: Model<IIdea> = model<IIdea>('Idea', ideaSchema)
 
 export default Idea
-

@@ -61,12 +61,13 @@ export const userSchema = new Schema<IUser>(
       default:
         'https://images.ladbible.com/resize?type=jpeg&url=http://20.theladbiblegroup.com/s3/content/1f1749975876b1a1df3e9670a0e7c733.jpg&quality=70&width=720&aspectratio=16:9&extend=white',
     },
+    email: {type: String, required: false, default: 'None'},
     birthday: { type: Date, required: false},
     phone: String,
     description: { type: String, required: false, default: 'No description' },
-    department: { type: Types.ObjectId, required: false },
+    department: { type: Types.ObjectId, required: false, ref: 'Department' },
     ideas: [{ type: Types.ObjectId, ref: 'Idea' }],
-    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    comments: [{ type: Types.ObjectId, ref: 'Comment', default: [] }],
   },
 
   { timestamps: { createdAt: true, updatedAt: true } }
