@@ -1,5 +1,5 @@
 import React from 'react'
-import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled , GroupOutlined, EllipsisOutlined, PicRightOutlined} from '@ant-design/icons'
+import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled, GroupOutlined, EllipsisOutlined, PicRightOutlined, FrownFilled } from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
@@ -70,35 +70,9 @@ function MenuFilter({ setFilter, filter }) {
     },
   ]
 
-  const eventItems: MenuProps['items'] = [
-    {
-      key: 'event1',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event1')}>
-          event1
-        </Text>
-      ),
-    },
-    {
-      key: 'event12',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event12')}>
-          event12
-        </Text>
-      ),
-    },
-    {
-      key: 'event123',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('event123')}>
-          event123
-        </Text>
-      ),
-    },
-    
-  ]
 
-  
+
+
   const categoryItems: MenuProps['items'] = [
     {
       key: 'teaching',
@@ -124,7 +98,7 @@ function MenuFilter({ setFilter, filter }) {
         </Text>
       ),
     },
-    
+
   ]
 
 
@@ -152,7 +126,7 @@ function MenuFilter({ setFilter, filter }) {
       <Col>
         <p style={{ fontSize: '19px', fontWeight: '400', marginBottom: '3px 0' }}>11,699,432 Ideas</p>
       </Col>
-      <Col style={{ width: '100%', justifyContent: 'end', fontSize: '15px', display: display }}>
+      <Col style={{ float: "right", width: '100%', justifyContent: 'end', fontSize: '15px', display: display }}>
         <Radio.Group defaultValue={filter} buttonStyle="solid" style={{}} onChange={e => onClickFilter(e.target.value)}>
           <StyledRadioButton value="new">
             <DingtalkCircleFilled /> Newest
@@ -163,35 +137,36 @@ function MenuFilter({ setFilter, filter }) {
           <StyledRadioButton value="best">
             <RocketFilled /> Best
           </StyledRadioButton>
-        </Radio.Group>
-        <Space wrap style={{ marginLeft: '8px' }}>
-        <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
-            <Button>
-              <GroupOutlined /> Department
-            </Button>
-          </Dropdown>
-          <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
-            <Button>
-            <PicRightOutlined />Category
-            </Button>
-          </Dropdown>
-          <Dropdown menu={{ items: eventItems }} placement="bottom" arrow trigger={['click']}>
-            <Button>
-            <EllipsisOutlined /> Event
-            </Button>
-          </Dropdown>
-          <Dropdown menu={{ items: topItems }} placement="bottom" arrow trigger={['click']}>
-            <Button>
-              <CrownFilled /> Top
-            </Button>
-          </Dropdown>
-          <Dropdown menu={{ items: moreItems }} placement="bottom" arrow trigger={['click']}>
-            <Button>
-              <SlidersFilled />
-            </Button>
-          </Dropdown>
-        </Space>
-        
+          <StyledRadioButton value="worst">
+            <FrownFilled /> Worst
+          </StyledRadioButton>
+        </Radio.Group >
+        <Col />
+        <Col>
+          <Space wrap style={{ float: "right" }}>
+            <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+              <Button>
+                <GroupOutlined /> Department
+              </Button>
+            </Dropdown>
+            <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
+              <Button>
+                <PicRightOutlined />Category
+              </Button>
+            </Dropdown>
+            <Dropdown menu={{ items: topItems }} placement="bottom" arrow trigger={['click']}>
+              <Button>
+                <CrownFilled /> Top
+              </Button>
+            </Dropdown>
+            <Dropdown menu={{ items: moreItems }} placement="bottom" arrow trigger={['click']}>
+              <Button>
+                <SlidersFilled />
+              </Button>
+            </Dropdown>
+          </Space>
+        </Col>
+
       </Col>
     </>
   )

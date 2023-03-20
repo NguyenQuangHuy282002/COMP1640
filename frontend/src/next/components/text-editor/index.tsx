@@ -1,4 +1,5 @@
 import { Editor } from 'react-draft-wysiwyg'
+import styled from 'styled-components'
 interface IRichTextEditor {
   editorState: any
   setEditorState: (val: any) => void
@@ -18,7 +19,7 @@ function RichTextEditor(props: IRichTextEditor) {
     list: { inDropdown: true },
     textAlign: { inDropdown: true },
     link: { inDropdown: true },
-    history: { inDropdown: true },
+    history: { inDropdown: false },
     image: {
       // uploadCallback: uploadImageCallBack,
       alt: { present: true, mandatory: true },
@@ -26,7 +27,7 @@ function RichTextEditor(props: IRichTextEditor) {
   }
 
   return (
-    <div style={style}>
+    <TextEditorWrapper style={style}>
       <Editor
         editorState={editorState}
         toolbarClassName="toolbarClassName"
@@ -35,29 +36,35 @@ function RichTextEditor(props: IRichTextEditor) {
         onEditorStateChange={(value: any) => {
           onChange(value)
         }}
-        toolbarStyle={{
-          background: '#f7fbfa',
-          border: '0.5px solid #ccc',
-        }}
-        editorStyle={{
-          border: '1px #ccc solid',
-          background: 'white',
-          padding: '0 10px',
-          wordBreak: 'break-word',
-          fontWeight: '400',
-          resize: 'vertical',
-          height: '160px',
-          width: '100%',
-          borderRadius: '5px',
-          overflow: 'auto',
-          boxShadow: 'inset 0px 1px 1px #ccc',
-        }}
         toolbar={toolBarOptions}
         stripPastedStyles
         ariaLabel="draftEditor"
         placeholder={placeholder || 'Description'}
       />
-    </div>
+    </TextEditorWrapper>
   )
 }
 export default RichTextEditor
+
+const TextEditorWrapper = styled.div`
+  & .editorClassName {
+    border: 1px #ccc solid;
+    background: white;
+    padding: 0 10px;
+    word-break: break-word;
+    font-weight: 400;
+    resize: vertical;
+    min-height: 150px;
+    width: 100%;
+    border-radius: 5px;
+    overflow: auto;
+  }
+  & .toolbarClassName {
+    background: #dbdbdb8b;
+    border: 0.5px solid #ccc;
+    border-radius: 5px;
+    & span {
+      color: #000000 !important;
+    }
+  }
+`

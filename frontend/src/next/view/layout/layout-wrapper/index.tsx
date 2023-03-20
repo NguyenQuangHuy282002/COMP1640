@@ -16,43 +16,86 @@ const LayoutWrapper = ({ children }) => {
   const contentStyle =
     windowWidth > 1000
       ? {
-          width: '100%',
-          background: 'none',
-        }
+        width: '100%',
+        background: 'none',
+      }
       : {
-          maxWidth: 'none',
-          width: '100%',
-        }
-  
-  useEffect(()=>{
-    const getSuggestions = async () =>
-      await Http.get('/api/v1/idea/suggest')
-        .then((res) => {
-          setSuggest(res.data.data)
-          ideaCount.updateState({number: res.data.count})
-        })
-        .catch(error => message.error('Failed to get suggestions!'))
-    getSuggestions()
-  })
+        maxWidth: 'none',
+        width: '100%',
+      }
 
   return (
     <>
-      <AppHeader suggest={suggest}/>
+      {
+        windowWidth > 1000 ? (
+          <Layout
+            style={{
+              width: '100%',
+              background: 'none',
+              display: 'flex',
+              justifyContent: 'space-between',
+              position: 'relative',
+            }}
+          >
+            <AppSidebar />
+            <Content style={contentStyle}>{children}</Content>
+            <RightSideBar />
+          </Layout>
+        ) : (
+          <><Layout
+            style={{
+              width: '100%',
+              background: 'none',
+              // display: 'flex',
+              // justifyContent: 'space-between',
+              position: 'relative',
+            }}
+          >
+            <AppSidebar />
+            <RightSideBar />
+            <Content style={contentStyle}>{children}</Content>
 
-      <Layout
-        style={{
-          width: '100%',
-          background: 'none',
-          display: 'flex',
-          justifyContent: 'space-between',
-          position: 'relative',
-        }}
-      >
-        <AppSidebar />
-        <Content style={contentStyle}>{children}</Content>
-        <RightSideBar />
-      </Layout>
-      <AppFooter/>
+
+          </Layout>
+          </>
+        )
+      }
+      <AppFooter />
+//   =======
+//           maxWidth: 'none',
+//           width: '100%',
+//         }
+  
+//   useEffect(()=>{
+//     const getSuggestions = async () =>
+//       await Http.get('/api/v1/idea/suggest')
+//         .then((res) => {
+//           setSuggest(res.data.data)
+//           ideaCount.updateState({number: res.data.count})
+//         })
+//         .catch(error => message.error('Failed to get suggestions!'))
+//     getSuggestions()
+//   })
+
+//   return (
+//     <>
+//       <AppHeader suggest={suggest}/>
+
+//       <Layout
+//         style={{
+//           width: '100%',
+//           background: 'none',
+//           display: 'flex',
+//           justifyContent: 'space-between',
+//           position: 'relative',
+//         }}
+//       >
+//         <AppSidebar />
+//         <Content style={contentStyle}>{children}</Content>
+//         <RightSideBar />
+//       </Layout>
+//       <AppFooter/>
+// >>>>>>> main
     </>
   )
 }
