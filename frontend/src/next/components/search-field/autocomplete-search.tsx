@@ -23,7 +23,8 @@ function AutoSearch({ suggest }) {
     // [...suggest.users, ...suggest.categories, ...suggest.ideas]
     {
 
-      const searchResults = suggest.filter(s => s['title'].match(`/^${query}$/i`) !== '')
+      const searchResults = suggest.filter(s => s['title'].search(`/${query}/i`) !== -1)
+      console.log(searchResults)
       return searchResults.map((sug, idx) => {
         const data = `${sug['title']}`
         const check = data.indexOf(query)
