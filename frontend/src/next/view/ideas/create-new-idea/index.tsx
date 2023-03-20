@@ -1,5 +1,5 @@
-import { QuestionCircleOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Divider, Form, Input, message, Select, Switch, Typography } from 'antd'
+import { ArrowLeftOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Switch, Typography } from 'antd'
 import axios from 'axios'
 import { convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
@@ -104,6 +104,7 @@ export default function CreateIdea() {
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
+      specialEvent: defaultEventId || form.getFieldValue('specialevent'),
     }
 
     if (!postForm.title || !postForm.content) {
@@ -134,53 +135,49 @@ export default function CreateIdea() {
   const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
   return (
-    <Form
-      form={form}
-      name="idea"
-      style={{
-        padding: paddingForm,
-      }}
+    <Card
+      title={
+        <Space align="center" size="middle">
+          <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/')} />
+          <Title style={{ fontSize: 18, margin: 0 }}> Create idea form</Title>
+        </Space>
+      }
+      style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0, marginRight: 10 }}
     >
-      {defaultEventId ? (
-        <>
-          <Title level={3} style={{ marginTop: 0 }}>
-            Create idea for {specialEvent[0].title}
-          </Title>
-          <Divider />
-        </>
-      ) : (
-        <Form.Item name="specialevent" style={{ marginBottom: '15px' }}>
-          <Select
-            style={{
-              float: 'left',
-              width: '40%',
-            }}
-            placeholder="Choose Special Event"
-          >
-            {specialEvent.map((event, index) => (
-              <Select.Option value={event._id} key={index}>
-                {event.title}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
-      <div
-        style={{
-          border: '0.1px solid #f6f7f8',
-          borderRadius: '5px',
-          padding: '10px 15px',
-          backgroundColor: 'white',
-        }}
+      <Form
+        form={form}
+        name="idea"
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        layout="horizontal"
+        labelAlign="left"
       >
-        <StyledFormItem
-          name="title"
-          required
-          style={{
-            padding: '5px',
-          }}
-          label="Title"
-        >
+        {defaultEventId ? (
+          <>
+            <Title level={3} style={{ marginTop: 0 }}>
+              Create idea for {specialEvent[0]?.title}
+            </Title>
+            <Divider />
+          </>
+        ) : (
+          <Form.Item name="specialevent" label="Special event" style={{ marginBottom: '15px' }}>
+            <Select
+              style={{
+                float: 'left',
+                width: '40%',
+              }}
+              placeholder="Choose Special Event"
+            >
+              {specialEvent.map((event, index) => (
+                <Select.Option value={event?._id} key={index}>
+                  {event?.title}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        <Form.Item name="title" required label="Title">
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 50 characters to summary your idea)"
@@ -188,16 +185,12 @@ export default function CreateIdea() {
             showCount
             autoComplete="off"
           ></Input>
-        </StyledFormItem>
-        <StyledFormItem
-          name="content"
-          required
-          style={{
-            padding: '5px',
-          }}
-        >
+        </Form.Item>
+
+        <Form.Item name="content" required label="Description">
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
-        </StyledFormItem>
+        </Form.Item>
+
         <DefaultUpload normFile={normFile} files={files}></DefaultUpload>
         <DraggerUpload normFile={normFile} files={files}></DraggerUpload>
 
@@ -232,12 +225,12 @@ export default function CreateIdea() {
         </Form.Item>
         <TermCondition isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
         <Form.Item wrapperCol={{ span: 15 }}>
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 20 }}>
+          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
             Post
           </Button>
         </Form.Item>
-      </div>
-    </Form>
+      </Form>
+    </Card>
   )
 }
 

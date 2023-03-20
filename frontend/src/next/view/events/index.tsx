@@ -1,6 +1,7 @@
-import { PlusCircleFilled, PlusCircleTwoTone } from '@ant-design/icons'
+import { PlusCircleTwoTone } from '@ant-design/icons'
 import { Button, Divider, Row, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
+import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import EventCardItem from './card-item'
@@ -49,12 +50,7 @@ function EventsPage() {
             <Title level={3} style={{ margin: 0 }}>
               Events list
             </Title>
-            <Button
-              style={{
-                color: '#FFFFFF',
-                textShadow: 'rgba(0, 0, 0, 0.25) 0 3px 8px',
-                backgroundImage: 'linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%)',
-              }}
+            <BlueColorButton
               icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
               onClick={() => {
                 setOpenModal(true)
@@ -63,7 +59,7 @@ function EventsPage() {
               size="large"
             >
               Add new event
-            </Button>
+            </BlueColorButton>
           </Row>
           <Divider />
           <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
