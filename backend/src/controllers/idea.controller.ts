@@ -4,6 +4,7 @@ import User from '../models/User'
 import Comment from '../models/Comment'
 import Category from '../models/Category'
 import SpecialEvent from '../models/SpecialEvent'
+import Department from '../models/Department'
 
 export const createIdea = async (req: any, res: any, next: any) => {
   try {
@@ -142,6 +143,65 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
       success: true,
       count: ideas.length,
       data: ideas,
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
+export const getAllIdeasByCategory = async (req: any, res: any, next: any) => {
+  try {
+    const categoryId = req.query.uid
+
+    const category = await Category.findById(categoryId)
+    if (!category) {
+      return next(new ApiErrorResponse(`Not found category id ${categoryId}`, 500))
+    }
+    const ideas = await Idea
+      .find({ categories: { "$in": [category._id] } }) //$all
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+      .populate({
+        path: 'publisherId',
+        select: ['name', 'avatar', 'email', 'role'],
+      })
+      .populate('categories')
+    res.status(200).json({
+      success: true,
+      count: ideas.length,
+      data: ideas,
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
+export const getAllIdeasByDepartment = async (req: any, res: any, next: any) => {
+  try {
+    const departmentId = req.query.uid
+
+    const department = await Department.findById(departmentId).populate({
+      path: 'users',
+      select: ['name', 'avatar', 'email', 'role'],
+      populate: {
+        path: 'ideas',
+        select: ['title', 'likes', 'dislikes', 'meta', 'createdAt', 'comments', 'isAnonymous', 'specialEvent', 'content']
+      }
+    })
+    if (!department) {
+      return next(new ApiErrorResponse(`Not found department id ${departmentId}`, 500))
+    }
+    // const ideas = await Idea
+    //   .find({ department: { "$in": [department._id] } }) //$all
+    //   .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+    //   .populate({
+    //     path: 'publisherId',
+    //     select: ['name', 'avatar', 'email', 'role'],
+    //   })
+    //   .populate('categories')
+    res.status(200).json({
+      success: true,
+      // count: department..length,
+      data: department,
     })
   } catch (err) {
     return next(new ApiErrorResponse(`${err.message}`, 500))
