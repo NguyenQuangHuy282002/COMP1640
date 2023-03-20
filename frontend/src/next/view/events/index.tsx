@@ -1,5 +1,5 @@
 import { PlusCircleTwoTone } from '@ant-design/icons'
-import { Button, Divider, Row, Space, Typography } from 'antd'
+import { Divider, Row, Skeleton, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
@@ -14,13 +14,16 @@ function EventsPage() {
   const [openModal, setOpenModal] = useState(false)
   const [allEventList, setAllEventList] = useState([])
   const [editEvent, setEditEvent] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const getEventList = async () => {
+    setLoading(true)
     await Http.get('/api/v1/event')
       .then(res => {
         setAllEventList(res.data.data)
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
@@ -34,16 +37,6 @@ function EventsPage() {
   }
 
   return (
-//<<<<<<< yesvansirevent
-//    <div style={{ padding: '10px', margin: 0 }}>
-//      <Button onClick={() => setOpenModal(true)}>Add new event</Button>
-//      <Divider />
-//      <Space direction="vertical" size="small" style={{ display: 'flex' }}>
-//      <EventCardItem></EventCardItem>
-//      </Space>
-//      <CreateEventModal onClose={() => setOpenModal(false)} open={openModal} onFinish={() => setOpenModal(false)} />
-//    </div>
-//=======
     <>
       {openModal ? (
         <CreateEventField
@@ -72,32 +65,31 @@ function EventsPage() {
             </BlueColorButton>
           </Row>
           <Divider />
-          <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-            {allEventList.map((event, index) => (
-              <EventCardItem
-                event={event}
-                key={index}
-                index={index}
-                setEditEvent={event => {
-                  setEditEvent(event)
-                  setOpenModal(true)
-                }}
-                handleDeleteEvent={handleDeleteEvent}
-              />
-            ))}
-          </Space>
+          <Skeleton loading={loading} avatar active>
+            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+              {allEventList.map((event, index) => (
+                <EventCardItem
+                  event={event}
+                  key={index}
+                  index={index}
+                  setEditEvent={event => {
+                    setEditEvent(event)
+                    setOpenModal(true)
+                  }}
+                  handleDeleteEvent={handleDeleteEvent}
+                />
+              ))}
+            </Space>
+          </Skeleton>
         </div>
       )}
     </>
-//>>>>>>> main
+    //>>>>>>> main
   )
 }
 
 export default EventsPage
 //<<<<<<< yesvansirevent
-
-
-
 
 // {data.map((event, index) => (
 //   <EventCardItem event={event} key={index} />

@@ -25,7 +25,6 @@ export default function EventDetails() {
   useEffect(() => {
     getEventDetails()
   }, [id])
-  console.log(event)
 
   const navigateIdeaForm = (id: string) => {
     navigate(`/submit?event=${id}`)

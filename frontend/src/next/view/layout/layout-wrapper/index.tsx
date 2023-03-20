@@ -9,7 +9,7 @@ import AppHeader from '../header'
 import RightSideBar from './right-sidebar'
 import AppSidebar from './sidebar'
 
-export const ideaCount = createSubscription({number: 0})
+export const ideaCount = createSubscription({ number: 0 })
 const LayoutWrapper = ({ children }) => {
   const windowWidth = useWindowSize()
   const [suggest, setSuggest] = useState()
@@ -23,21 +23,21 @@ const LayoutWrapper = ({ children }) => {
           maxWidth: 'none',
           width: '100%',
         }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     const getSuggestions = async () =>
       await Http.get('/api/v1/idea/suggest')
-        .then((res) => {
+        .then(res => {
           setSuggest(res.data.data)
-          ideaCount.updateState({number: res.data.count})
+          ideaCount.updateState({ number: res.data.count })
         })
         .catch(error => message.error('Failed to get suggestions!'))
     getSuggestions()
-  })
+  }, [])
 
   return (
     <>
-      <AppHeader suggest={suggest}/>
+      <AppHeader suggest={suggest} />
 
       <Layout
         style={{
@@ -52,7 +52,7 @@ const LayoutWrapper = ({ children }) => {
         <Content style={contentStyle}>{children}</Content>
         <RightSideBar />
       </Layout>
-      <AppFooter/>
+      <AppFooter />
     </>
   )
 }
