@@ -117,6 +117,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
       reactionTimeOut = setTimeout(() => disLikeHandler(ideaId), 500)
     }
   }
+  const nameZip = name.slice(0, 24)
   return (
     <>
       {windowWidth > 969 ? (
@@ -189,7 +190,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
             <Button icon={<CommentOutlined />} onClick={() => handleShowComment()} style={{ cursor: 'pointer' }}>
               {commentCount} Comments
             </Button>
-            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, name)}>
+            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, nameZip)}>
               DownLoad
             </Button>
             <Button icon={<ShareAltOutlined />}>Share</Button>

@@ -140,9 +140,9 @@ function MenuFilter({ setFilter, filter }) {
             <FrownFilled /> Worst
           </StyledRadioButton>
         </Radio.Group >
-        <Col />
+        </Col>
         <Col>
-          <Space wrap style={{ float: "right" }}>
+        <Space wrap style={{ float: "right" }}>
             <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
               <Button>
                 <GroupOutlined /> Department
