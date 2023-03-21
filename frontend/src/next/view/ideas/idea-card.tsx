@@ -1,24 +1,21 @@
 import {
   ClockCircleFilled,
   CloudDownloadOutlined,
+  CompassOutlined,
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
-  //<<<<<<< yesvansirevent
-  CompassOutlined,
   LockTwoTone,
-  //=======
   MessageTwoTone,
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
   PaperClipOutlined,
-  //>>>>>>> main
 } from '@ant-design/icons'
 import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
@@ -28,7 +25,7 @@ const { Text, Link } = Typography
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
@@ -72,11 +69,11 @@ function IdeaCard({ idea, isLoading }) {
                         <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
-                    // <Text key="list-vertical-lock">
-                    //   <Tag color="volcano" style={{ margin: 0 }}>
-                    //     <LockTwoTone /> cannot comments
-                    //   </Tag>
-                    // </Text>,
+                    <Text key="list-vertical-lock">
+                      <Tag color="volcano" style={{ margin: 0 }}>
+                        <LockTwoTone /> cannot comments
+                      </Tag>
+                    </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
                       {idea.meta.views} views

@@ -145,14 +145,3 @@ function AccountManager() {
 }
 
 export default AccountManager
-
-const accountc = [
-  {
-    key: '1',
-    id: '238456776345',
-    name: 'huy',
-    email: 'huy1234@gmail.com',
-    role: 'admin',
-    active: true,
-  },
-]

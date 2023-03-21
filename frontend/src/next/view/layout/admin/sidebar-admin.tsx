@@ -4,9 +4,7 @@ import {
   MenuFoldOutlined,
   MenuOutlined,
   MenuUnfoldOutlined,
-  TagOutlined,
   TeamOutlined,
-  UngroupOutlined,
   WeiboOutlined,
 } from '@ant-design/icons'
 import { Button, Dropdown, Layout, Menu, MenuProps } from 'antd'
@@ -40,16 +38,14 @@ const items: MenuProps['items'] = [
     'grp',
     null,
     [
-      getItem('Ideas', 'ideas', <WeiboOutlined />),
-      getItem('Tags', 'categories', <TagOutlined />),
+      getItem('Your Profile', 'ideas', <WeiboOutlined />),
       getItem('Users', 'accounts-manager', <TeamOutlined />),
-      getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
   ),
 ]
-function AppSidebar() {
+function SidebarAdmin() {
   const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const [tabKey, setTabKey] = useState(['home'])
@@ -83,8 +79,7 @@ function AppSidebar() {
               position: 'sticky',
               zIndex: 1,
               alignSelf: 'start',
-              height: '97vh',
-              top: '50px',
+              height: '100vh',
               boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
               paddingTop: '12px',
             }}
@@ -127,4 +122,4 @@ function AppSidebar() {
 //   width: 500px;
 // `
 
-export default AppSidebar
+export default SidebarAdmin

@@ -1,9 +1,9 @@
 import { SmileFilled } from '@ant-design/icons'
-import { Avatar, Badge, Col, Input, Layout, message, Row, Typography } from 'antd'
+import { Avatar, Badge, Col, Input, Layout, message, Row } from 'antd'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { handleFilter } from 'next/utils/handleFilter'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useSubscription } from '../../libs/global-state-hook'
 import useWindowSize from '../../utils/useWindowSize'
@@ -11,10 +11,8 @@ import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
 import MenuFilter from './menu-filter'
 
-const { Title } = Typography
-
 function HomePage() {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const [ideas, setIdeas] = useState([])
   const [isEnd, setEnd] = useState(false)

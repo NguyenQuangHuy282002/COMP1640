@@ -1,15 +1,12 @@
-import { useAuth } from '../../../hooks/auth-hook'
 import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
-import { useSnackbar } from 'notistack'
+import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
-import { userStore, userCredential } from '../user-store'
-import { useEffect } from 'react'
+import { userCredential, userStore } from '../user-store'
 const { Title } = Typography
 
 function Login() {
-  const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { state } = useLocation()
   const [form] = Form.useForm()
@@ -25,19 +22,20 @@ function Login() {
   const handleSubmit = async (val: any) => {
     await Http.post('/api/v1/auth/login', val)
       .then(async res => {
-        if (res.data?.success) {
-          localStorage.setItem(LOCALSTORAGE.USER, JSON.stringify(res.data.userMetaData))
+        if (res?.data?.success) {
+          localStorage.setItem(LOCALSTORAGE.USER, JSON.stringify(res.data.userMetaData._id))
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
-          message.success('Login successful')
-          navigate(state?.from || '/')
-          return window.location.reload();
 
+          navigate(state?.from || '/')
+          message.success('Login successful')
+
+          return window.location.reload()
         }
       })
       .catch(error => {
-        console.error(error.response.data.message)
-        message.error(`Login failed, ${error.response.data.message}`)
+        console.error(error)
+        message.error(`Login failed, ${error?.message}`)
       })
   }
 

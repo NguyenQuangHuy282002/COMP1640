@@ -23,6 +23,7 @@ const LayoutWrapper = ({ children }) => {
   }, [])
   const windowWidth = useWindowSize()
   const [suggest, setSuggest] = useState()
+
   const contentStyle =
     windowWidth > 1000
       ? {

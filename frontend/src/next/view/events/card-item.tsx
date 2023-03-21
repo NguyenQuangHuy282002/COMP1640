@@ -4,7 +4,6 @@
 // import type { ColumnsType } from 'antd/es/table';
 // import { Link } from 'react-router-dom'; // import Link component
 
-
 // const styles = {
 //   tableWrapper: {
 //     border: '1px solid #d9d9d9',
@@ -34,7 +33,6 @@
 //   />
 // );
 
-
 // interface DataType {
 //   key : any;
 //   title: any;
@@ -54,10 +52,8 @@ import {
   RocketTwoTone,
 } from '@ant-design/icons'
 import { Badge, Button, Card, Space } from 'antd'
-import { ColumnsType } from 'antd/es/table'
 import Link from 'antd/es/typography/Link'
-import Title from 'antd/es/typography/Title'
-import { useNavigate } from 'react-router-dom'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
 interface IEvent {
   _id: string
@@ -82,7 +78,7 @@ function EventCardItem({
   handleDeleteEvent: any
   setEditEvent: (event: any) => void
 }) {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
 
   const handleViewEventDetails = (id: string) => {
     navigate(`/event/${id}`)
@@ -140,10 +136,14 @@ function EventCardItem({
 const columns = [
   {
     title: 'Title',
-    dataIndex: 'title', 
-    render: (text, record) => <Link 
-    // to={`/eventdetail/${record.key}`}
-    >{text}</Link>, // use Link to wrap title
+    dataIndex: 'title',
+    render: (text, record) => (
+      <Link
+      // to={`/eventdetail/${record.key}`}
+      >
+        {text}
+      </Link>
+    ), // use Link to wrap title
   },
   {
     title: 'Description',
@@ -166,8 +166,7 @@ const columns = [
     title: 'FinalClosedDate',
     dataIndex: 'finalClosedDate',
   },
-];
-
+]
 
 const data = [
   {
@@ -187,7 +186,6 @@ const data = [
     startDate: '2/8/2002',
     firstClosedDate: '2/8/2002',
     finalClosedDate: '2/8/2002',
-
   },
   {
     key: '3',
@@ -197,7 +195,6 @@ const data = [
     startDate: '2/8/2002',
     firstClosedDate: '2/8/2002',
     finalClosedDate: '2/8/2002',
-
   },
   {
     key: '4',
@@ -207,7 +204,6 @@ const data = [
     startDate: '2/8/2002',
     firstClosedDate: '2/8/2002',
     finalClosedDate: '2/8/2002',
-
   },
   {
     key: '5',
@@ -218,8 +214,6 @@ const data = [
     firstClosedDate: '2/8/2002',
     finalClosedDate: '2/8/2002',
   },
-];
+]
 
-
-
-export default EventCardItem;
+export default EventCardItem

@@ -1,11 +1,11 @@
 import {
   CalendarOutlined,
+  DashboardFilled,
   HomeFilled,
   MenuFoldOutlined,
   MenuOutlined,
   MenuUnfoldOutlined,
   TagOutlined,
-  TeamOutlined,
   UngroupOutlined,
   WeiboOutlined,
 } from '@ant-design/icons'
@@ -34,22 +34,22 @@ function getItem(
 
 const items: MenuProps['items'] = [
   getItem('Home', 'home', <HomeFilled />),
+  getItem('Dashboard', 'dashboard', <DashboardFilled />),
   { type: 'divider' },
   getItem(
     'PUBLIC',
     'grp',
     null,
     [
-      getItem('Ideas', 'ideas', <WeiboOutlined />),
+      getItem('Your Profile', 'ideas', <WeiboOutlined />),
       getItem('Tags', 'categories', <TagOutlined />),
-      getItem('Users', 'accounts-manager', <TeamOutlined />),
       getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
   ),
 ]
-function AppSidebar() {
+function SidebarManager() {
   const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const [tabKey, setTabKey] = useState(['home'])
@@ -62,7 +62,7 @@ function AppSidebar() {
     setTabKey([val.key])
     switch (val.key) {
       case 'home':
-        navigate('/')
+        navigate('')
         break
       default:
         navigate(`/${val.key}`)
@@ -83,8 +83,7 @@ function AppSidebar() {
               position: 'sticky',
               zIndex: 1,
               alignSelf: 'start',
-              height: '97vh',
-              top: '50px',
+              height: '100vh',
               boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
               paddingTop: '12px',
             }}
@@ -121,10 +120,4 @@ function AppSidebar() {
   )
 }
 
-// const StyledMenu = styled(Menu)`
-//   background: #888888;
-//   font-size: 20px;
-//   width: 500px;
-// `
-
-export default AppSidebar
+export default SidebarManager

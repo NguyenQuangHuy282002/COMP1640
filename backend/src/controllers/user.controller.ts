@@ -1,6 +1,6 @@
-import { bcryptHash } from "../helpers/bcrypt.helper";
-import User from "../models/User";
-import ApiErrorResponse from "../utils/ApiErrorResponse";
+import { bcryptHash } from '../helpers/bcrypt.helper'
+import User from '../models/User'
+import ApiErrorResponse from '../utils/ApiErrorResponse'
 
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 
@@ -21,15 +21,17 @@ export const find = async (req: any, res: any, next: any) => {
 }
 
 export const findUser = async (req: any, res: any, next: any) => {
+  const { id } = req.params
   try {
-    const { username } = req.params.username
-    const user = await User.findOne({ username }).select('-password')
+    const user = await User.findById(id).select('-password')
+
     if (!user) {
       return next(new ApiErrorResponse('Account does not exists.', 404))
     }
     return res.status(200).json({
       email: user.email,
       picture: user.avatar,
+      userInfo: user,
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -102,5 +104,20 @@ export const search = async (req: any, res: any, next: any) => {
     })
   } catch (error) {
     next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const getTotalAccounts = async (req: any, res: any, next: any) => {
+  try {
+    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    if (!users) {
+      return next(new ApiErrorResponse('No account exists.', 404))
+    }
+    return res.status(200).json({
+      success: true,
+      total: users.length,
+    })
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
   }
 }

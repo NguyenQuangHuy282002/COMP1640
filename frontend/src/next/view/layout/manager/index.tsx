@@ -1,10 +1,11 @@
 import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { useEffect } from 'react'
-import useWindowSize from '../../utils/useWindowSize'
-import AppFooter from '../layout/footer'
-import SidebarAdmin from './sidebar-admin'
-const LayoutAdmin = ({ children }) => {
+import useWindowSize from '../../../utils/useWindowSize'
+import AppFooter from '../footer'
+import AppHeader from '../header'
+import SidebarManager from './sidebar-manager'
+
+const LayoutManager = ({ children }) => {
   const windowWidth = useWindowSize()
   const contentStyle =
     windowWidth > 1000
@@ -19,6 +20,7 @@ const LayoutAdmin = ({ children }) => {
 
   return (
     <>
+      <AppHeader />
       <Layout
         style={{
           width: '100%',
@@ -26,15 +28,15 @@ const LayoutAdmin = ({ children }) => {
           display: 'flex',
           justifyContent: 'space-between',
           position: 'relative',
-          height:'100%'
+          height: '100%',
         }}
       >
-        <SidebarAdmin />
+        <SidebarManager />
         <Content style={contentStyle}>{children}</Content>
       </Layout>
-      <AppFooter/>
+      <AppFooter />
     </>
   )
 }
 
-export default LayoutAdmin
+export default LayoutManager
