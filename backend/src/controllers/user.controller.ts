@@ -1,6 +1,6 @@
-import { bcryptHash } from "../helpers/bcrypt.helper";
-import User from "../models/User";
-import ApiErrorResponse from "../utils/ApiErrorResponse";
+import { bcryptHash } from '../helpers/bcrypt.helper'
+import User from '../models/User'
+import ApiErrorResponse from '../utils/ApiErrorResponse'
 
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 
@@ -102,5 +102,20 @@ export const search = async (req: any, res: any, next: any) => {
     })
   } catch (error) {
     next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const getTotalAccounts = async (req: any, res: any, next: any) => {
+  try {
+    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    if (!users) {
+      return next(new ApiErrorResponse('No account exists.', 404))
+    }
+    return res.status(200).json({
+      success: true,
+      total: users.length,
+    })
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
   }
 }
