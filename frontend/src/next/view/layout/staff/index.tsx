@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { createSubscription } from 'next/libs/global-state-hook'
 import useWindowSize from '../../../utils/useWindowSize'
 import { getItem } from '../admin'
 import AppFooter from '../footer'
@@ -34,7 +33,6 @@ const items: MenuProps['items'] = [
   ),
 ]
 
-export const ideaCount = createSubscription({ number: 0 })
 const LayoutStaff = ({ children }) => {
   const windowWidth = useWindowSize()
   const contentStyle =

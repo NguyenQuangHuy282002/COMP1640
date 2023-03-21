@@ -34,7 +34,12 @@ function CommentsList({ id, updateIdea }) {
       console.log(res)
       setData(res.data.data)
       setList(res.data.data)
-      setCurrentPage(res.data.next.page)
+      if (!res.data?.next) {
+        setMore(false)
+      }
+      else{
+        setCurrentPage(res.data.next?.page)
+      }
     })
   }, [updateIdea])
 

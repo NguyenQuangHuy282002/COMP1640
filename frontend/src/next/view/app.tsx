@@ -51,6 +51,16 @@ export default function App() {
             isLoggedIn: credential.tokenVerified,
             token: credential.token,
           })
+
+          const updateUserInfo = async () => {
+            await Http.get(`/api/v1/users/getProfile/${credential.userId}`)
+              .then(res => {
+                userStore.updateState(res.data.userInfo)
+                setRole(res.data.userInfo.role)
+              })
+              .catch(err => console.error(err.message))
+          }
+          updateUserInfo()
         } else {
           navigate('/login')
           return message.info('You need to login to access this application!')
@@ -63,24 +73,8 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    // const { state, setState } = useSubscription(userStore);
-    const userId = JSON.parse(localStorage.getItem(LOCALSTORAGE.USER))
-
-    if (userId) {
-      // dispatch(user);
-      const updateUserInfo = async () => {
-        await Http.get(`/api/v1/users/getProfile/${userId}`)
-          .then(res => {
-            userStore.updateState(res.data.userInfo)
-            setRole(res.data.userInfo.role)
-          })
-          .catch(err => console.error(err.message))
-      }
-      updateUserInfo()
-
-      role && navigate(`/${role}`)
-    }
-  }, [])
+    role && navigate(`/${role}`)
+  }, [role])
 
   let routes: any
 

@@ -20,9 +20,4 @@ const RightSideBar: React.FC = () => {
   )
 }
 
-const StyledCard = styled(Card)`
-  margin-top: 10px;
-  box-shadow: 5px 5px 5px 5px #888888;
-`
-
 export default RightSideBar

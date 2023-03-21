@@ -1,36 +1,28 @@
-import {
-  CarryOutOutlined,
-  DashboardOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, message, Row, Typography } from 'antd'
+import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, Layout, MenuProps, message, Row, Typography } from 'antd'
 import { Http } from 'next/api/http'
-import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 import AutoSearch from '../../components/search-field/autocomplete-search'
 import { imgDir } from '../../constants/img-dir'
-import { useSubscription } from '../../libs/global-state-hook'
+import { createSubscription, useSubscription } from '../../libs/global-state-hook'
 import useWindowSize from '../../utils/useWindowSize'
 import { userCredential, userStore } from '../auth/user-store'
-import { ideaCount } from './staff'
 
 const { Text } = Typography
 
+export const ideaCount = createSubscription({ number: 0 })
+
 function AppHeader() {
-  const navigate = useRoleNavigate()
+  const navigate = useNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
   const {
     state: { avatar },
-  } = useSubscription(userStore)
+  } = useSubscription(userStore, ['avatar'])
   const [suggest, setSuggest] = useState()
-
   useEffect(() => {
     const getSuggestions = async () =>
       await Http.get('/api/v1/idea/suggest')
@@ -41,7 +33,6 @@ function AppHeader() {
         .catch(error => message.error('Failed to get suggestions!'))
     getSuggestions()
   }, [])
-
   const userMenu: MenuProps['items'] = [
     {
       key: 'account',
@@ -130,12 +121,5 @@ function AppHeader() {
     </Layout.Header>
   )
 }
-
-const StyledMenu = styled(Menu)`
-  padding: 10px;
-  background: white;
-  font-size: 20px;
-  width: 510px;
-`
 
 export default AppHeader

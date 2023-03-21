@@ -15,7 +15,7 @@ import {
   likeIdea,
   omitVoteIdea,
 } from '../controllers/idea.controller'
-import { getPresignedUrl } from '../controllers/upload.controller'
+import { downloadFiles, getPresignedUrl } from '../controllers/upload.controller'
 import { authorize, authProtect } from '../middlewares/auth'
 
 export const ideaRouter = express.Router()
@@ -28,6 +28,7 @@ ideaRouter.get('/ideasByDepartment', authProtect, getAllIdeasByDepartment)
 ideaRouter.get('/preSignUrl', authProtect, getPresignedUrl)
 ideaRouter.get('/detail', authProtect, getIdea)
 ideaRouter.get('/ideaLikes', authProtect, getPostLikes)
+ideaRouter.get('/downloadFiles', authProtect, downloadFiles)
 ideaRouter.post('/create', authProtect, createIdea)
 ideaRouter.put('/dislike', authProtect, disLikeIdea)
 ideaRouter.put('/like', authProtect, likeIdea)
