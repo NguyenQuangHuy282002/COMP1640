@@ -8,7 +8,6 @@ import User from './models/User'
 
 async function main() {
   const config = await ReadConfig()
-  console.log(config)
   await initiateMongoServer(config.database.db_url!)
 
   const app = express()
@@ -19,14 +18,14 @@ async function main() {
   app.use(cors())
   router(app)
   console.log(`listen on ${config.server.port}`)
-  await User.seedAdmin(); // clone code ve xoa het account trong mongo de tao tk admin
+  await User.seedAdmin() // clone code ve xoa het account trong mongo de tao tk admin
   // khi tai khoan admin dc tao roi thi comment dong ben tren vao. tk: admin, mk: admin
-  
+
   app.listen(Number(config.server.port), '0.0.0.0', () => {
     const err = arguments[0]
     if (err) {
-      console.log(err)
+      console.error(err)
     }
   })
 }
-main().catch(err => console.log(`Cannot init server!, log: `, err))
+main().catch(err => console.error(`Cannot init server!, log: `, err))

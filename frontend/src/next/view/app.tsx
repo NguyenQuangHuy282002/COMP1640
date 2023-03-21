@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
 import CategoryManager from './categories'
-// import './index.css'
 import { Layout, message } from 'antd'
 import { Http, LOCALSTORAGE } from '../api/http'
 import { useAuth } from '../hooks/auth-hook'
@@ -20,6 +19,7 @@ import EventDetails from './events/event-details'
 import LayoutAdmin from './layout/admin'
 import LayoutManager from './layout/manager'
 import RoleAccess from './auth/role-access'
+import { createGlobalStyle } from 'styled-components'
 
 export default function App() {
   const navigate = useNavigate()
@@ -191,7 +191,18 @@ export default function App() {
 
   return (
     // <Router>
-    <>{routes}</>
+    <>
+      <GlobalStyle />
+      {routes}
+    </>
     // </Router>
   )
 }
+
+const GlobalStyle = createGlobalStyle`
+  .ant-layout-sider { 
+    position: absolute;
+  top: 0;
+  bottom: 0;
+  }
+`
