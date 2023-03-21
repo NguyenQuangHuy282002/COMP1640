@@ -6,10 +6,10 @@ import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
 import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useQuery } from 'next/utils/use-query'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
@@ -48,7 +48,7 @@ const fetchAllToS3 = async (files: any) => {
 export default function CreateIdea() {
   const [form] = Form.useForm()
   const { enqueueSnackbar } = useSnackbar()
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const query = useQuery()
   const defaultEventId = query.get('event')
 
@@ -101,13 +101,13 @@ export default function CreateIdea() {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
     const postForm = {
       title: form.getFieldValue('title'),
-      
+
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
       specialEvent: defaultEventId || form.getFieldValue('specialevent'),
     }
-    if(form.getFieldValue('specialevent')) {
+    if (form.getFieldValue('specialevent')) {
       postForm['specialevent'] = form.getFieldValue('specialevent')
     }
     if (!postForm.title || !postForm.content) {

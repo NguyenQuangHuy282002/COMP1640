@@ -1,8 +1,6 @@
-import { Layout, message } from 'antd'
+import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { Http } from 'next/api/http'
 import { createSubscription } from 'next/libs/global-state-hook'
-import { useEffect, useState } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import AppFooter from '../footer'
 import AppHeader from '../header'
@@ -12,7 +10,6 @@ import AppSidebar from './sidebar'
 export const ideaCount = createSubscription({ number: 0 })
 const LayoutWrapper = ({ children }) => {
   const windowWidth = useWindowSize()
-  const [suggest, setSuggest] = useState()
   const contentStyle =
     windowWidth > 1000
       ? {
@@ -24,20 +21,9 @@ const LayoutWrapper = ({ children }) => {
           width: '100%',
         }
 
-  useEffect(() => {
-    const getSuggestions = async () =>
-      await Http.get('/api/v1/idea/suggest')
-        .then(res => {
-          setSuggest(res.data.data)
-          ideaCount.updateState({ number: res.data.count })
-        })
-        .catch(error => message.error('Failed to get suggestions!'))
-    getSuggestions()
-  }, [])
-
   return (
     <>
-      <AppHeader suggest={suggest} />
+      <AppHeader />
 
       <Layout
         style={{

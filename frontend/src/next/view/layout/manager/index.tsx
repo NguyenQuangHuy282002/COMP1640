@@ -2,6 +2,7 @@ import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import useWindowSize from '../../../utils/useWindowSize'
 import AppFooter from '../footer'
+import AppHeader from '../header'
 import SidebarManager from './sidebar-manager'
 
 const LayoutManager = ({ children }) => {
@@ -19,6 +20,7 @@ const LayoutManager = ({ children }) => {
 
   return (
     <>
+      <AppHeader />
       <Layout
         style={{
           width: '100%',
