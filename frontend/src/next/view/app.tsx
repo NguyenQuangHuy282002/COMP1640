@@ -19,7 +19,7 @@ import LayoutWrapper from './layout/layout-wrapper'
 import UserProfile from './user-profile'
 
 import EventDetails from './events/event-details'
-
+import DepartmentDetail from './departments/department-detail'
 
 const App = () => {
   const navigate = useNavigate()
@@ -93,6 +93,7 @@ const App = () => {
           <Route path="/event" element={<EventsPage />} />
           <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/departments" element={<DepartmentManager />} />
+          <Route path="/departments/:id" element={<DepartmentDetail />} />
           <Route path="/categories" element={<CategoryManager />} />
           <Route path="/accounts-manager" element={<AccountManager />} />
           <Route path="/ideas" element={<UserProfile />} />
