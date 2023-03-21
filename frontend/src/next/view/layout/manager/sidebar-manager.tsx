@@ -72,31 +72,29 @@ function SidebarManager() {
   return (
     <>
       {windowWidth > 1000 ? (
-        <Layout.Sider width={278} style={{ background: 'transparent' }}>
-          <Layout.Sider
-            // collapsible
-            collapsed={collapsed}
-            onCollapse={value => setCollapsed(value)}
-            width={278}
-            style={{
-              backgroundColor: 'white',
-              position: 'sticky',
-              zIndex: 1,
-              alignSelf: 'start',
-              height: '100vh',
-              boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
-              paddingTop: '12px',
-            }}
+        <Layout.Sider
+          // collapsible
+          collapsed={collapsed}
+          onCollapse={value => setCollapsed(value)}
+          width={278}
+          style={{
+            backgroundColor: 'white',
+            position: 'sticky',
+            zIndex: 1,
+            alignSelf: 'start',
+            height: '100%',
+            boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
+            paddingTop: '12px',
+          }}
+        >
+          <Menu onClick={handleClickMenu} defaultSelectedKeys={tabKey} mode="inline" items={items} />
+          <Button
+            type="primary"
+            onClick={toggleCollapsed}
+            style={{ marginBottom: 16, float: 'right', marginRight: '16px' }}
           >
-            <Menu onClick={handleClickMenu} defaultSelectedKeys={tabKey} mode="inline" items={items} />
-            <Button
-              type="primary"
-              onClick={toggleCollapsed}
-              style={{ marginBottom: 16, float: 'right', marginRight: '16px' }}
-            >
-              {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            </Button>
-          </Layout.Sider>
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
         </Layout.Sider>
       ) : (
         <Dropdown menu={{ items: items }} trigger={['click']} overlayStyle={{ width: 200 }} placement="bottom">

@@ -21,7 +21,6 @@ const fetchPresignedUrl = async (url: any, file: any) => {
   try {
     const fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1)
     const type = file.type
-    console.log('file: ', fileExtension + '/' + type)
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
     const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
@@ -29,7 +28,7 @@ const fetchPresignedUrl = async (url: any, file: any) => {
         'Content-Type': type,
       },
     })
-    console.log(uploadFileToS3)
+
     return `https://yessir-bucket-tqt.s3.ap-northeast-1.amazonaws.com/${uploadConfig.data.key}`
   } catch (error) {
     console.error(error)
@@ -68,7 +67,6 @@ export default function CreateIdea() {
       const getEventList = async () => {
         await Http.get(`/api/v1/event?id=${defaultEventId}`)
           .then(res => {
-            console.log(res.data.data)
             setSpecialEvent(res.data.data)
           })
           .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
@@ -78,7 +76,6 @@ export default function CreateIdea() {
       const getEventList = async () => {
         await Http.get('/api/v1/event/available')
           .then(res => {
-            console.log(res.data.data)
             setSpecialEvent(res.data.data)
           })
           .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
@@ -88,12 +85,8 @@ export default function CreateIdea() {
   }, [])
   const normFile = (e: any) => {
     // handle event file changes in upload and dragger components
-    console.log('Upload event:', e)
     const fileList = e
-    console.log(Array.isArray(e))
     setFileState(fileList)
-    console.log('File list:', files)
-
     return e
   }
 
@@ -124,10 +117,8 @@ export default function CreateIdea() {
       postForm['files'] = fileNameList
     }
 
-    console.log('postForm: ', postForm)
     await Http.post('/api/v1/idea/create', postForm)
       .then(res => {
-        console.log('response', res)
         message.success('Upload Idea successfully!!')
         navigate('/')
       })

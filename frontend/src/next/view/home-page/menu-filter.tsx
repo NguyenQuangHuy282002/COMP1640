@@ -1,9 +1,18 @@
 import React from 'react'
-import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled, GroupOutlined, EllipsisOutlined, PicRightOutlined, FrownFilled } from '@ant-design/icons'
+import {
+  CrownFilled,
+  DingtalkCircleFilled,
+  FireFilled,
+  RocketFilled,
+  SlidersFilled,
+  GroupOutlined,
+  EllipsisOutlined,
+  PicRightOutlined,
+  FrownFilled
+} from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
-
 
 const { Text } = Typography
 
@@ -11,7 +20,6 @@ function MenuFilter({ setFilter, filter }) {
   const windowWidth = useWindowSize()
   const display = windowWidth < 1000 ? 'block' : 'flex'
   const onClickFilter = (val: any) => {
-    console.log('click ', val)
     setFilter(val)
   }
   const topItems: MenuProps['items'] = [
@@ -67,10 +75,6 @@ function MenuFilter({ setFilter, filter }) {
       ),
     },
   ]
-
-
-
-
   const categoryItems: MenuProps['items'] = [
     {
       key: 'teaching',
@@ -96,10 +100,7 @@ function MenuFilter({ setFilter, filter }) {
         </Text>
       ),
     },
-
   ]
-
-
 
   const moreItems: MenuProps['items'] = [
     {
@@ -164,8 +165,6 @@ function MenuFilter({ setFilter, filter }) {
             </Dropdown>
           </Space>
         </Col>
-
-      </Col>
     </>
   )
 }
@@ -173,7 +172,7 @@ function MenuFilter({ setFilter, filter }) {
 const StyledRadioButton = styled(Radio.Button)`
   :visited {
     background-color: #ccc;
-  };
+  }
 `
 
 export default MenuFilter
