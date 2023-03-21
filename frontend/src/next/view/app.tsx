@@ -1,25 +1,26 @@
+import { Layout, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
-import CategoryManager from './categories'
-import { Layout, message } from 'antd'
+import { createGlobalStyle } from 'styled-components'
 import { Http, LOCALSTORAGE } from '../api/http'
 import { useAuth } from '../hooks/auth-hook'
 import AccountManager from './accounts-manager'
 import Login from './auth/login'
+import RoleAccess from './auth/role-access'
 import { userCredential, userStore } from './auth/user-store'
+import CategoryManager from './categories'
+import DashboardAdmin from './dashboard'
 import DepartmentManager from './departments'
 import EventsPage from './events'
+import EventDetails from './events/event-details'
 import HomePage from './home-page'
 import CreateIdea from './ideas/create-new-idea'
 import IdeaDetail from './ideas/idea-detail/idea-detail'
-import LayoutWrapper from './layout/layout-wrapper'
-import UserProfile from './user-profile'
-import DashboardAdmin from './dashboard'
-import EventDetails from './events/event-details'
 import LayoutAdmin from './layout/admin'
+import LayoutCoordinator from './layout/coordinator'
 import LayoutManager from './layout/manager'
-import RoleAccess from './auth/role-access'
-import { createGlobalStyle } from 'styled-components'
+import LayoutStaff from './layout/staff'
+import UserProfile from './user-profile'
 
 export default function App() {
   const navigate = useNavigate()
@@ -95,9 +96,9 @@ export default function App() {
           element={
             <RoleAccess roles={['staff']}>
               <Layout>
-                <LayoutWrapper>
+                <LayoutStaff>
                   <Outlet />
-                </LayoutWrapper>
+                </LayoutStaff>
               </Layout>
             </RoleAccess>
           }
@@ -118,9 +119,9 @@ export default function App() {
           element={
             <RoleAccess roles={['coordinator']}>
               <Layout>
-                <LayoutWrapper>
+                <LayoutCoordinator>
                   <Outlet />
-                </LayoutWrapper>
+                </LayoutCoordinator>
               </Layout>
             </RoleAccess>
           }
@@ -200,9 +201,8 @@ export default function App() {
 }
 
 const GlobalStyle = createGlobalStyle`
-  .ant-layout-sider { 
-    position: absolute;
-  top: 0;
-  bottom: 0;
-  }
+  /* .ant-layout-sider { 
+   height: 100vh;
+   position: sticky;
+  } */
 `

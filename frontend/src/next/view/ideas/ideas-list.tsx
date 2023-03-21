@@ -3,7 +3,7 @@ import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
 import { handleFilter } from 'next/utils/handleFilter'
 import { useEffect, useState } from 'react'
-import { ideaCount } from '../layout/layout-wrapper'
+import { ideaCount } from '../layout/staff'
 import IdeaCard from './idea-card'
 
 function IdeasList({ ideas, loading, isEnd, loadMoreData }) {

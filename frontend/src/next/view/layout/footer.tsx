@@ -1,6 +1,6 @@
-import useWindowSize from '../../utils/useWindowSize'
-import { Layout, Space, Typography } from 'antd'
+import { Space, Typography } from 'antd'
 import { imgDir } from '../../constants/img-dir'
+import useWindowSize from '../../utils/useWindowSize'
 
 const { Title, Paragraph, Link } = Typography
 
@@ -8,7 +8,7 @@ function AppFooter() {
   const windowWidth = useWindowSize()
   const displayType = windowWidth < 969 ? 'horizontal' : 'vertical'
   return (
-    <Layout.Footer style={{ background: '#556270' }}>
+    <div style={{ display: 'block', background: '#556270' }}>
       <Space align="start" style={{ width: ' 100%' }} size={80}>
         <a href={'/'} style={{ marginRight: 20, display: 'contents' }}>
           <img src={imgDir + 'logo.png'} height="60" alt="Logo" />
@@ -18,7 +18,7 @@ function AppFooter() {
             level={3}
             style={{
               margin: 0,
-              color: '#e2f9f6'
+              color: '#e2f9f6',
             }}
           >
             Created By Team Member:
@@ -27,7 +27,7 @@ function AppFooter() {
             {windowWidth < 969 ? (
               <></>
             ) : (
-              <ul style={{color: "#ccc"}}>
+              <ul style={{ color: '#ccc' }}>
                 <li>Nguyen Quang Huy</li>
                 <li>Nguyen Huy Hoang</li>
                 <li>Tran Quang Khai</li>
@@ -43,7 +43,7 @@ function AppFooter() {
             level={3}
             style={{
               marginTop: 5,
-              color: '#e2f9f6'
+              color: '#e2f9f6',
             }}
           >
             Github resource
@@ -53,7 +53,7 @@ function AppFooter() {
           </Paragraph>
         </Space>
       </Space>
-    </Layout.Footer>
+    </div>
   )
 }
 
