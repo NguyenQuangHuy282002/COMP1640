@@ -20,7 +20,7 @@ const LayoutManager = ({ children }) => {
 
   return (
     <>
-      <AppHeader />
+      <AppHeader suggest={undefined}/>
       <Layout
         style={{
           width: '100%',

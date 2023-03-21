@@ -10,6 +10,7 @@ import {
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
+  PaperClipOutlined,
 } from '@ant-design/icons'
 import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
@@ -60,7 +61,7 @@ function IdeaCard({ idea, isLoading }) {
               windowWidth > 900
                 ? [
                     <Text strong key="list-vertical-star-o">
-                      <FireTwoTone style={{ padding: '5px' }} />
+                      <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
                       {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
@@ -76,6 +77,12 @@ function IdeaCard({ idea, isLoading }) {
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
                       {idea.meta.views} views
+                    </Text>,
+                    <Text key="list-vertical-files">
+                      <Tag color="#828DAB" style={{ margin: 0 }}>
+                      <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                      {idea?.files?.length || 0} attachments
+                      </Tag>
                     </Text>,
                   ]
                 : [

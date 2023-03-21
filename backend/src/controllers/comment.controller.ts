@@ -21,7 +21,7 @@ export const createComment = async (req: any, res: any, next: any) => {
         select: ['finalCloseDate']
       });
       if (new Date(idea.specialEvent.finalCloseDate) >= new Date()) {
-        return next(new ApiErrorResponse(`This idea reached final closure date, id:${commentBody.ideaId}`, 400))
+        return next(new ApiErrorResponse(`This idea reached final closure date, idea id: ${commentBody.ideaId}`, 400))
       }
     }
 
