@@ -8,19 +8,17 @@ import { useAuth } from '../hooks/auth-hook'
 import AccountManager from './accounts-manager'
 import Login from './auth/login'
 import { userCredential, userStore } from './auth/user-store'
-import Dashboard from './dashboard'
 import DepartmentManager from './departments'
 import EventsPage from './events'
 import HomePage from './home-page'
 import CreateIdea from './ideas/create-new-idea'
 import IdeaDetail from './ideas/idea-detail/idea-detail'
-import AppHeader from './layout/header'
 import LayoutWrapper from './layout/layout-wrapper'
 import UserProfile from './user-profile'
-
-import EventDetails from './events/event-details'
-import LayoutAdmin from './admin/layout-admin'
 import DashboardAdmin from './dashboard'
+import EventDetails from './events/event-details'
+import LayoutAdmin from './layout/admin'
+import LayoutManager from './layout/manager'
 
 const App = () => {
   const navigate = useNavigate()
@@ -89,12 +87,10 @@ const App = () => {
           }
         >
           <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/event" element={<EventsPage />} />
           <Route path="/event/:id" element={<EventDetails />} />
           <Route path="/departments" element={<DepartmentManager />} />
-          <Route path="/categories" element={<CategoryManager />} />
-          <Route path="/accounts-manager" element={<AccountManager />} />
+
           <Route path="/ideas" element={<HomePage />} />
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
@@ -111,7 +107,27 @@ const App = () => {
             </Layout>
           }
         >
-        <Route path="/admin/dashboard" element={<DashboardAdmin/>}></Route>
+          <Route path="/admin/accounts-manager" element={<AccountManager />} />
+        </Route>
+        <Route
+          path="/manager"
+          element={
+            <Layout>
+              <LayoutManager>
+                <Outlet />
+              </LayoutManager>
+            </Layout>
+          }
+        >
+          <Route path="/manager/dashboard" element={<DashboardAdmin />} />
+          <Route path="/manager/categories" element={<CategoryManager />} />
+          <Route path="/manager" element={<HomePage />} />
+          <Route path="/manager/event" element={<EventsPage />} />
+          <Route path="/manager/event/:id" element={<EventDetails />} />
+          <Route path="/manager/departments" element={<DepartmentManager />} />
+          <Route path="/manager/ideas" element={<HomePage />} />
+          <Route path="/manager/submit" element={<CreateIdea />} />
+          <Route path="/manager/idea" element={<IdeaDetail />} />
         </Route>
       </Routes>
     )

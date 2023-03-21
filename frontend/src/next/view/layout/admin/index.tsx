@@ -1,8 +1,7 @@
 import { Layout } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { useEffect } from 'react'
-import useWindowSize from '../../utils/useWindowSize'
-import AppFooter from '../layout/footer'
+import useWindowSize from '../../../utils/useWindowSize'
+import AppFooter from '../footer'
 import SidebarAdmin from './sidebar-admin'
 const LayoutAdmin = ({ children }) => {
   const windowWidth = useWindowSize()
@@ -26,13 +25,13 @@ const LayoutAdmin = ({ children }) => {
           display: 'flex',
           justifyContent: 'space-between',
           position: 'relative',
-          height:'100%'
+          height: '100%',
         }}
       >
         <SidebarAdmin />
         <Content style={contentStyle}>{children}</Content>
       </Layout>
-      <AppFooter/>
+      <AppFooter />
     </>
   )
 }

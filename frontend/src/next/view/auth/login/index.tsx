@@ -25,19 +25,18 @@ function Login() {
   const handleSubmit = async (val: any) => {
     await Http.post('/api/v1/auth/login', val)
       .then(async res => {
-        if (res.data?.success) {
+        if (res?.data?.success) {
           localStorage.setItem(LOCALSTORAGE.USER, JSON.stringify(res.data.userMetaData))
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
           message.success('Login successful')
           navigate(state?.from || '/')
-          return window.location.reload();
-
+          return window.location.reload()
         }
       })
       .catch(error => {
-        console.error(error.response.data.message)
-        message.error(`Login failed, ${error.response.data.message}`)
+        console.error(error)
+        message.error(`Login failed, ${error?.message}`)
       })
   }
 
