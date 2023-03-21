@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 
 const ColorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
 
-const IconText = ({ icon, text }) => (
+export const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
     {text}

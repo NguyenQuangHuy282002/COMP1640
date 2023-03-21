@@ -40,7 +40,6 @@ function HomePage() {
     const getAllIdeas = async () =>
       await Http.get(`/api/v1/idea?page=${curPage}&${tabQuery}`)
         .then(res => {
-          console.log('res', res)
           if (reset === true) {
             setIdeas([...res.data.data])
             if (res.data?.next?.page) {

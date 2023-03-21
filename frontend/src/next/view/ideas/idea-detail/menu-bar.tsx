@@ -27,10 +27,8 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   const [isDisLiked, setIsDisLiked] = useState(false)
 
   const fetchLikes = async (id: any) => {
-    console.log('id', id)
     await Http.get(`/api/v1/idea/ideaLikes?ideaId=${id}`)
       .then(res => {
-        console.log('ress', res)
         setIsLiked(res.data.likes.findIndex((like: any) => like._id === state._id) >= 0)
         setIsDisLiked(res.data.dislikes.findIndex((like: any) => like._id === state._id) >= 0)
         setLikes(res.data.likes.length - res.data.dislikes.length)
@@ -44,18 +42,14 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   useEffect(() => {
     return () => {
       if (isLiked) {
-        console.log('like')
         likeHandler(ideaId)
       } else if (isDisLiked) {
-        console.log('dislike')
         disLikeHandler(ideaId)
       } else {
-        console.log('dont like')
         omitHandler(ideaId)
       }
     }
   }, [isLiked, isDisLiked])
-
 
   useEffect(() => {
     fetchLikes(ideaId)

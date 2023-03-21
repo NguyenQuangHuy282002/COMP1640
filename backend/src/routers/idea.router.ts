@@ -1,7 +1,22 @@
 import express from 'express'
-import { createIdea, deleteIdea, disLikeIdea, editIdea, getAllIdeasByCategory, getAllIdeasByDepartment, getAllIdeasOfUser, getDataSuggestion, getIdea, getIdeas, getPostLikes, likeIdea, omitVoteIdea } from '../controllers/idea.controller'
+import {
+  createIdea,
+  deleteIdea,
+  disLikeIdea,
+  editIdea,
+  getAllIdeasByCategory,
+  getAllIdeasByDepartment,
+  getAllIdeasOfUser,
+  getDataSuggestion,
+  getIdea,
+  getIdeas,
+  getPostLikes,
+  getTotalIdea,
+  likeIdea,
+  omitVoteIdea,
+} from '../controllers/idea.controller'
 import { getPresignedUrl } from '../controllers/upload.controller'
-import { authProtect } from '../middlewares/auth'
+import { authorize, authProtect } from '../middlewares/auth'
 
 export const ideaRouter = express.Router()
 
@@ -19,3 +34,4 @@ ideaRouter.put('/like', authProtect, likeIdea)
 ideaRouter.put('/omitVote', authProtect, omitVoteIdea)
 ideaRouter.put('/edit/:ideaId', authProtect, editIdea)
 ideaRouter.delete('/delete/:ideaId', authProtect, deleteIdea)
+ideaRouter.get('/totalIdea', authProtect, authorize(['manager']), getTotalIdea)

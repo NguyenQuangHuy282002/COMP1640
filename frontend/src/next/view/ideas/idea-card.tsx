@@ -39,7 +39,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-  // console.log(idea)
+
   return (
     <>
       <StyledCard
