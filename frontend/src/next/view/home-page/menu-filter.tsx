@@ -1,11 +1,19 @@
 import React from 'react'
-import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled , GroupOutlined, EllipsisOutlined, PicRightOutlined} from '@ant-design/icons'
+import {
+  CrownFilled,
+  DingtalkCircleFilled,
+  FireFilled,
+  RocketFilled,
+  SlidersFilled,
+  GroupOutlined,
+  EllipsisOutlined,
+  PicRightOutlined,
+} from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
 
 type MenuItem = Required<MenuProps>['items'][number]
-
 
 const { Text } = Typography
 
@@ -13,7 +21,6 @@ function MenuFilter({ setFilter, filter }) {
   const windowWidth = useWindowSize()
   const display = windowWidth < 1000 ? 'block' : 'flex'
   const onClickFilter = (val: any) => {
-    console.log('click ', val)
     setFilter(val)
   }
   const topItems: MenuProps['items'] = [
@@ -95,10 +102,8 @@ function MenuFilter({ setFilter, filter }) {
         </Text>
       ),
     },
-    
   ]
 
-  
   const categoryItems: MenuProps['items'] = [
     {
       key: 'teaching',
@@ -124,10 +129,7 @@ function MenuFilter({ setFilter, filter }) {
         </Text>
       ),
     },
-    
   ]
-
-
 
   const moreItems: MenuProps['items'] = [
     {
@@ -165,19 +167,20 @@ function MenuFilter({ setFilter, filter }) {
           </StyledRadioButton>
         </Radio.Group>
         <Space wrap style={{ marginLeft: '8px' }}>
-        <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+          <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
             <Button>
               <GroupOutlined /> Department
             </Button>
           </Dropdown>
           <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
             <Button>
-            <PicRightOutlined />Category
+              <PicRightOutlined />
+              Category
             </Button>
           </Dropdown>
           <Dropdown menu={{ items: eventItems }} placement="bottom" arrow trigger={['click']}>
             <Button>
-            <EllipsisOutlined /> Event
+              <EllipsisOutlined /> Event
             </Button>
           </Dropdown>
           <Dropdown menu={{ items: topItems }} placement="bottom" arrow trigger={['click']}>
@@ -191,7 +194,6 @@ function MenuFilter({ setFilter, filter }) {
             </Button>
           </Dropdown>
         </Space>
-        
       </Col>
     </>
   )
@@ -200,7 +202,7 @@ function MenuFilter({ setFilter, filter }) {
 const StyledRadioButton = styled(Radio.Button)`
   :visited {
     background-color: #ccc;
-  };
+  }
 `
 
 export default MenuFilter
