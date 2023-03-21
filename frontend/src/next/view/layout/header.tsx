@@ -4,30 +4,45 @@ import {
   LogoutOutlined,
   MenuOutlined,
   TeamOutlined,
-  UserOutlined
+  UserOutlined,
 } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, Row, Typography } from 'antd'
+import { Avatar, Button, Dropdown, Layout, Menu, MenuProps, message, Row, Typography } from 'antd'
+import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import AutoSearch from '../../components/search-field/autocomplete-search'
 import { imgDir } from '../../constants/img-dir'
 import { useSubscription } from '../../libs/global-state-hook'
 import useWindowSize from '../../utils/useWindowSize'
 import { userCredential, userStore } from '../auth/user-store'
+import { ideaCount } from './layout-wrapper'
 
 const { Text } = Typography
 
-function AppHeader({suggest}) {
-  const navigate = useNavigate()
+function AppHeader() {
+  const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
-  const { avatar } = useSubscription(userStore).state
+  const {
+    state: { avatar },
+  } = useSubscription(userStore)
+  const [suggest, setSuggest] = useState()
+
+  useEffect(() => {
+    const getSuggestions = async () =>
+      await Http.get('/api/v1/idea/suggest')
+        .then(res => {
+          setSuggest(res.data.data)
+          ideaCount.updateState({ number: res.data.count })
+        })
+        .catch(error => message.error('Failed to get suggestions!'))
+    getSuggestions()
+  }, [])
 
   const menuItems: MenuProps['items'] = [
-    
     {
       key: 'dashboard',
       label: <Text style={{ fontSize: 18, margin: 0 }}>Dashboard</Text>,
@@ -80,7 +95,7 @@ function AppHeader({suggest}) {
     userCredential.state.logout()
     navigate('/login')
     enqueueSnackbar("You're fxking logout! man")
-    return window.location.reload();
+    return window.location.reload()
   }
 
   const handleClickMenu = async (val: any) => {
@@ -117,7 +132,7 @@ function AppHeader({suggest}) {
           <a href={'/'} style={{ marginRight: 20, marginBottom: 5, display: 'contents' }}>
             <img src={imgDir + 'logo.png'} height="50" alt="Logo" />
           </a>
-          <AutoSearch suggest={suggest}/>
+          <AutoSearch suggest={suggest} />
         </>
         {windowWidth < 1300 ? (
           <Dropdown

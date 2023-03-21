@@ -21,15 +21,17 @@ export const find = async (req: any, res: any, next: any) => {
 }
 
 export const findUser = async (req: any, res: any, next: any) => {
+  const { id } = req.params
   try {
-    const { username } = req.params.username
-    const user = await User.findOne({ username }).select('-password')
+    const user = await User.findById(id).select('-password')
+
     if (!user) {
       return next(new ApiErrorResponse('Account does not exists.', 404))
     }
     return res.status(200).json({
       email: user.email,
       picture: user.avatar,
+      userInfo: user,
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))

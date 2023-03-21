@@ -1,9 +1,9 @@
 import { ClockCircleOutlined, DislikeOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, List, message, Skeleton, Space, Tooltip } from 'antd'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { formatDayTime } from 'next/utils/helperFuncs'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const ColorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
 
@@ -15,7 +15,7 @@ const IconText = ({ icon, text }) => (
 )
 
 export default function IdeaCard({ ideaId, index }) {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const [loading, setLoading] = useState(false)
   const [ideaDetails, setIdeaDetails] = useState({
     publisherId: null,

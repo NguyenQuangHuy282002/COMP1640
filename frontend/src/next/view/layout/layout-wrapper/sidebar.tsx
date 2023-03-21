@@ -10,8 +10,8 @@ import {
   WeiboOutlined,
 } from '@ant-design/icons'
 import { Button, Dropdown, Layout, Menu, MenuProps } from 'antd'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import useWindowSize from '../../../utils/useWindowSize'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -50,7 +50,7 @@ const items: MenuProps['items'] = [
   ),
 ]
 function AppSidebar() {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const [tabKey, setTabKey] = useState(['home'])
   const [collapsed, setCollapsed] = useState(false)

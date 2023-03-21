@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Outlet, Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
 import CategoryManager from './categories'
 // import './index.css'
 import { Layout, message } from 'antd'
-import { LOCALSTORAGE } from '../api/http'
+import { Http, LOCALSTORAGE } from '../api/http'
 import { useAuth } from '../hooks/auth-hook'
 import AccountManager from './accounts-manager'
 import Login from './auth/login'
@@ -19,12 +19,13 @@ import DashboardAdmin from './dashboard'
 import EventDetails from './events/event-details'
 import LayoutAdmin from './layout/admin'
 import LayoutManager from './layout/manager'
+import RoleAccess from './auth/role-access'
 
-const App = () => {
+export default function App() {
   const navigate = useNavigate()
   const { login, logout, token, tokenVerified, userId } = useAuth()
   const [verify, setVerify] = useState(false)
-
+  const [role, setRole] = useState(null)
   useEffect(() => {
     userCredential.updateState({
       userId: userId,
@@ -62,10 +63,21 @@ const App = () => {
 
   useEffect(() => {
     // const { state, setState } = useSubscription(userStore);
-    const user = localStorage.getItem(LOCALSTORAGE.USER)
-    if (user) {
+    const userId = JSON.parse(localStorage.getItem(LOCALSTORAGE.USER))
+
+    if (userId) {
       // dispatch(user);
-      userStore.updateState(JSON.parse(user))
+      const updateUserInfo = async () => {
+        await Http.get(`/api/v1/users/getProfile/${userId}`)
+          .then(res => {
+            userStore.updateState(res.data.userInfo)
+            setRole(res.data.userInfo.role)
+          })
+          .catch(err => console.error(err.message))
+      }
+      updateUserInfo()
+
+      role && navigate(`/${role}`)
     }
   }, [])
 
@@ -76,59 +88,97 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/logout" />
+        <Route path="/" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
+
         <Route
-          path="/"
+          path="/staff"
           element={
-            <Layout>
-              <LayoutWrapper>
-                <Outlet />
-              </LayoutWrapper>
-            </Layout>
+            <RoleAccess roles={['staff']}>
+              <Layout>
+                <LayoutWrapper>
+                  <Outlet />
+                </LayoutWrapper>
+              </Layout>
+            </RoleAccess>
           }
         >
-          <Route path="/" element={<HomePage />} />
-          <Route path="/event" element={<EventsPage />} />
-          <Route path="/event/:id" element={<EventDetails />} />
-          <Route path="/departments" element={<DepartmentManager />} />
-
-          <Route path="/ideas" element={<HomePage />} />
-          <Route path="/account" element={<UserProfile />} />
-          <Route path="/submit" element={<CreateIdea />} />
-          <Route path="/idea" element={<IdeaDetail />} />
+          <Route path="" element={<HomePage />} />
+          <Route path="event" element={<EventsPage />} />
+          <Route path="event/:id" element={<EventDetails />} />
+          <Route path="departments" element={<DepartmentManager />} />
+          <Route path="ideas" element={<HomePage />} />
+          <Route path="account" element={<UserProfile />} />
+          <Route path="submit" element={<CreateIdea />} />
+          <Route path="idea" element={<IdeaDetail />} />
+          <Route path="eventdetail" element={<EventDetails />} />
         </Route>
-        <Route path="/eventdetail" element={<EventDetails />} />
+
+        <Route
+          path="/coordinator"
+          element={
+            <RoleAccess roles={['coordinator']}>
+              <Layout>
+                <LayoutWrapper>
+                  <Outlet />
+                </LayoutWrapper>
+              </Layout>
+            </RoleAccess>
+          }
+        >
+          <Route path="" element={<HomePage />} />
+          <Route path="event" element={<EventsPage />} />
+          <Route path="event/:id" element={<EventDetails />} />
+          <Route path="departments" element={<DepartmentManager />} />
+          <Route path="ideas" element={<HomePage />} />
+          <Route path="account" element={<UserProfile />} />
+          <Route path="submit" element={<CreateIdea />} />
+          <Route path="idea" element={<IdeaDetail />} />
+          <Route path="eventdetail" element={<EventDetails />} />
+        </Route>
+
         <Route
           path="/admin"
           element={
-            <Layout>
-              <LayoutAdmin>
-                <Outlet />
-              </LayoutAdmin>
-            </Layout>
+            <RoleAccess roles={['admin']}>
+              <Layout>
+                <LayoutAdmin>
+                  <Outlet />
+                </LayoutAdmin>
+              </Layout>
+            </RoleAccess>
           }
         >
-          <Route path="/admin/accounts-manager" element={<AccountManager />} />
+          <Route path="accounts-manager" element={<AccountManager />} />
+          <Route path="account" element={<UserProfile />} />
+          <Route path="" element={<HomePage />} />
+          <Route path="ideas" element={<HomePage />} />
         </Route>
+
         <Route
           path="/manager"
           element={
-            <Layout>
-              <LayoutManager>
-                <Outlet />
-              </LayoutManager>
-            </Layout>
+            <RoleAccess roles={['manager']}>
+              <Layout>
+                <LayoutManager>
+                  <Outlet />
+                </LayoutManager>
+              </Layout>
+            </RoleAccess>
           }
         >
-          <Route path="/manager/dashboard" element={<DashboardAdmin />} />
-          <Route path="/manager/categories" element={<CategoryManager />} />
-          <Route path="/manager" element={<HomePage />} />
-          <Route path="/manager/event" element={<EventsPage />} />
-          <Route path="/manager/event/:id" element={<EventDetails />} />
-          <Route path="/manager/departments" element={<DepartmentManager />} />
-          <Route path="/manager/ideas" element={<HomePage />} />
-          <Route path="/manager/submit" element={<CreateIdea />} />
-          <Route path="/manager/idea" element={<IdeaDetail />} />
+          <Route path="dashboard" element={<DashboardAdmin />} />
+          <Route path="categories" element={<CategoryManager />} />
+          <Route path="" element={<HomePage />} />
+          <Route path="event" element={<EventsPage />} />
+          <Route path="event/:id" element={<EventDetails />} />
+          <Route path="departments" element={<DepartmentManager />} />
+          <Route path="ideas" element={<HomePage />} />
+          <Route path="submit" element={<CreateIdea />} />
+          <Route path="idea" element={<IdeaDetail />} />
+          <Route path="ideas" element={<HomePage />} />
+          <Route path="account" element={<UserProfile />} />
         </Route>
+        <Route path="*" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
       </Routes>
     )
   } else {
@@ -145,5 +195,3 @@ const App = () => {
     // </Router>
   )
 }
-
-export default App
