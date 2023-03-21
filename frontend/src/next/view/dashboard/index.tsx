@@ -6,10 +6,6 @@ import LoadList from './charts/loadlist'
 import SmallStatistic from './charts/smallstatistic'
 
 function DashboardAdmin() {
-<<<<<<< HEAD
-  const navigate = useNavigate()
-=======
->>>>>>> 1c1a3de89bfa64ac414a993636fc5d373a085f19
   return (
     <>
       <Row
