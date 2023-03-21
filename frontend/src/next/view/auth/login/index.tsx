@@ -14,7 +14,7 @@ function Login() {
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential && credential.tokenVerified) {
-      navigate('/')
+      // navigate('/')
       message.info('You already logged in!')
     }
   }, [])
@@ -23,13 +23,9 @@ function Login() {
     await Http.post('/api/v1/auth/login', val)
       .then(async res => {
         if (res?.data?.success) {
-          localStorage.setItem(LOCALSTORAGE.USER, JSON.stringify(res.data.userMetaData._id))
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
-
-          navigate(state?.from || '/')
           message.success('Login successful')
-
           return window.location.reload()
         }
       })

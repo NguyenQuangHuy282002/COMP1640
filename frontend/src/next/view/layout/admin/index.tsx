@@ -1,9 +1,46 @@
-import { Layout } from 'antd'
+import { CalendarOutlined, HomeFilled, TeamOutlined, WeiboOutlined } from '@ant-design/icons'
+import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
+import React from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import AppFooter from '../footer'
 import AppHeader from '../header'
-import SidebarAdmin from './sidebar-admin'
+import AppSidebar from '../sidebar'
+
+type MenuItem = Required<MenuProps>['items'][number]
+
+export function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: 'group'
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem
+}
+
+const items: MenuProps['items'] = [
+  getItem('Home', 'home', <HomeFilled />),
+  { type: 'divider' },
+  getItem(
+    'PUBLIC',
+    'grp',
+    null,
+    [
+      getItem('Your Profile', 'ideas', <WeiboOutlined />),
+      getItem('Users', 'accounts-manager', <TeamOutlined />),
+      getItem('Events', 'event', <CalendarOutlined />),
+    ],
+    'group'
+  ),
+]
+
 const LayoutAdmin = ({ children }) => {
   const windowWidth = useWindowSize()
   const contentStyle =
@@ -19,7 +56,7 @@ const LayoutAdmin = ({ children }) => {
 
   return (
     <>
-      <AppHeader suggest={undefined}/>
+      <AppHeader />
       <Layout
         style={{
           width: '100%',
@@ -30,7 +67,7 @@ const LayoutAdmin = ({ children }) => {
           height: '100%',
         }}
       >
-        <SidebarAdmin />
+        <AppSidebar items={items} />
         <Content style={contentStyle}>{children}</Content>
       </Layout>
       <AppFooter />

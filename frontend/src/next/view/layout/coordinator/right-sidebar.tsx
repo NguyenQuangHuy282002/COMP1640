@@ -1,13 +1,10 @@
-import useWindowSize from '../../../utils/useWindowSize'
-import { Card, Layout } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { AppstoreOutlined, MenuOutlined } from '@ant-design/icons'
+import { Button, Card, Dropdown, Layout, MenuProps } from 'antd'
+import React from 'react'
 import styled from 'styled-components'
-import EventCard from '../sidebar-card/events-card'
-import { Button, Dropdown, Menu, MenuProps } from 'antd'
+import useWindowSize from '../../../utils/useWindowSize'
 import DepartmentCard from '../sidebar-card/department-card'
-import { MenuOutlined, AppstoreOutlined } from '@ant-design/icons';
-import { Http } from 'next/api/http'
-
+import EventCard from '../sidebar-card/events-card'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -16,7 +13,7 @@ function getItem(
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group',
+  type?: 'group'
 ): MenuItem {
   return {
     key,
@@ -24,7 +21,7 @@ function getItem(
     children,
     label,
     type,
-  } as MenuItem;
+  } as MenuItem
 }
 
 const items: MenuProps['items'] = [
@@ -39,21 +36,11 @@ const items: MenuProps['items'] = [
     getItem('Event 3', '3'),
     getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
   ]),
-
-];
-
+]
 
 const RightSideBar: React.FC = () => {
   const windowSize = useWindowSize()
-  const [events, setEvents] = useState([])
-  useEffect(() => {
-    const fetchEvents = async () => {
-      await Http.get('/api/v1/event/')
-      .then(res => setEvents(res.data.data))
-      .catch(err => console.log(err, 'error to fetch events'))
-    }
-    fetchEvents();
-  }, [])
+
   return (
     <>
       {windowSize < 1000 ? (
@@ -74,8 +61,11 @@ const RightSideBar: React.FC = () => {
           />
         </Dropdown>
       ) : (
-        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px', marginTop: 15 }}>
-          <EventCard events={events}/>
+        <Layout.Sider
+          width={278}
+          style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px', marginTop: 15 }}
+        >
+          <EventCard />
           <DepartmentCard />
         </Layout.Sider>
       )}
