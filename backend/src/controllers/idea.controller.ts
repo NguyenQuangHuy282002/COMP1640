@@ -89,7 +89,7 @@ export const getIdeas = async (req: any, res: any, next: any) => {
     }
 
     let ideas = Idea.find(options)
-      .select('title meta likes dislikes createdAt comments isAnonymous specialEvent content')
+      .select('title meta likes dislikes createdAt comments isAnonymous specialEvent content files')
       .populate('specialEvent')
       .populate({
         path: 'publisherId',
@@ -102,9 +102,13 @@ export const getIdeas = async (req: any, res: any, next: any) => {
       ideas.sort({ "meta.views": -1 })
     } else if (trending == 'best') {
       ideas.sort({ 'meta.likesCount': -1 })
-    } else if(trending == 'worst') {
+    } else if (trending == 'worst') {
       ideas.sort({ 'meta.dislikesCount': -1 })
-    }else {
+    }
+    else if (trending == 'oldest') {
+      ideas.sort({ createdAt: 1 })
+    }
+    else {
       ideas.sort({ createdAt: -1 })
     }
 
@@ -133,7 +137,7 @@ export const getAllIdeasOfUser = async (req: any, res: any, next: any) => {
     }
     const ideas = await Idea
       .find({ publisherId: { "$in": user._id } })
-      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content files')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
@@ -159,7 +163,7 @@ export const getAllIdeasByCategory = async (req: any, res: any, next: any) => {
     }
     const ideas = await Idea
       .find({ categories: { "$in": [category._id] } }) //$all
-      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content')
+      .select('title likes dislikes meta createdAt comments isAnonymous specialEvent content files')
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
@@ -184,7 +188,7 @@ export const getAllIdeasByDepartment = async (req: any, res: any, next: any) => 
       select: ['name', 'avatar', 'email', 'role'],
       populate: {
         path: 'ideas',
-        select: ['title', 'likes', 'dislikes', 'meta', 'createdAt', 'comments', 'isAnonymous', 'specialEvent', 'content']
+        select: ['title', 'likes', 'dislikes', 'meta', 'createdAt', 'comments', 'isAnonymous', 'specialEvent', 'content', 'files']
       }
     })
     if (!department) {
@@ -210,7 +214,6 @@ export const getAllIdeasByDepartment = async (req: any, res: any, next: any) => 
 
 export const getIdea = async (req: any, res: any, next: any) => {
   try {
-    console.log(req.query.id)
     const idea = await Idea.findById(req.query.id)
       .populate({
         path: 'publisherId',
@@ -220,7 +223,6 @@ export const getIdea = async (req: any, res: any, next: any) => {
       .populate('specialEvent')
     idea.meta.views = idea.meta.views + 1
     await idea.save()
-    console.log(idea)
     res.status(200).json({
       success: true,
       data: idea,
@@ -331,7 +333,7 @@ export const likeIdea = async (req: any, res: any, next: any) => {
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId)
     if (idea.likes.indexOf(userId) >= 0) {
-      return
+      return res.status(200).json({ success: true, message: 'already like!' });
     }
     if (idea.dislikes.indexOf(userId) >= 0) {
       idea.dislikes = idea.dislikes.filter(like => like.toString() !== userId)
@@ -340,7 +342,7 @@ export const likeIdea = async (req: any, res: any, next: any) => {
       idea.likes.push(userId)
     }
     await idea.save()
-    res.status(200).json({ success: true, message: 'idea liked!', idea })
+    res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
   }
@@ -352,7 +354,7 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId)
     if (idea.dislikes.indexOf(userId) >= 0) {
-      return
+      return res.status(200).json({ success: true, message: 'already dislike!' });
     }
     if (idea.likes.indexOf(userId) >= 0) {
       idea.likes = idea.likes.filter(like => like.toString() !== userId)
@@ -362,7 +364,7 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
     }
 
     await idea.save()
-    res.status(200).json({ success: true, message: 'idea liked!', idea })
+    res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
   }
@@ -373,8 +375,9 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
     const { ideaId } = req.body;
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId);
-    if (idea.dislikes.indexOf(userId) === -1 || idea.likes.indexOf(userId) === -1) {
-      return
+    console.log(userId);
+    if (idea.dislikes.indexOf(userId) === -1 && idea.likes.indexOf(userId) === -1) {
+      return res.status(200).json({ success: true, message: 'already omit!' });
     }
     if (idea.likes.indexOf(userId) >= 0) {
       idea.likes = idea.likes.filter(like => like.toString() !== userId);
@@ -384,7 +387,8 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
     }
 
     await idea.save();
-    res.status(200).json({ success: true, message: 'omit oke!', idea });
+    console.log('yessir')
+    res.status(200).json({ success: true, message: 'omit oke!' });
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
   }

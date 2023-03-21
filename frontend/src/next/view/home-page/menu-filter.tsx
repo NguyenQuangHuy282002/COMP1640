@@ -4,8 +4,6 @@ import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
 
-type MenuItem = Required<MenuProps>['items'][number]
-
 
 const { Text } = Typography
 

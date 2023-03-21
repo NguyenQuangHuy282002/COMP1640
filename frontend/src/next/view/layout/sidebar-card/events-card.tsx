@@ -21,25 +21,21 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuProps['items'] = [
-
-  getItem('Special Event', 'menu', <AppstoreOutlined />, [
-    getItem('Event 1', '1'),
-    getItem('Event 2', '2'),
-    getItem('Event 3', '3'),
-    getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
-  ]),
 
 
-
-
-];
-
-const EventCard: React.FC = () => {
+function EventCard ({events}) {
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
   };
+  
+  console.log('e',events)
+  const items: MenuProps['items'] = [
 
+    getItem('Special Events Going On', 'menu', <AppstoreOutlined />, [
+      events.map(event => getItem(event.title, event._id)),
+      getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
+    ]),
+  ];
   return (
     <Menu
       onClick={onClick}

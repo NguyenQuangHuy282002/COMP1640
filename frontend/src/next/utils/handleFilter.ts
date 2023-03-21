@@ -31,8 +31,8 @@ export const handleFilter = (sortType: any, key?: any) => {
       return 'tab=best';
     case 'oldest':
       return 'sort=oldest';
-    // case 'popular':
-    //   return (a, b) => b.posts_count - a.posts_count;
+    case 'worst':
+      return 'sort=worst';
     // case 'Name':
     //   return (a, b) => a.tagname.localeCompare(b.tagname);
     // case 'Username':

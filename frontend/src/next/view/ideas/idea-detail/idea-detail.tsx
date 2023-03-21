@@ -55,7 +55,7 @@ function IdeaDetail() {
         setEditorState(initialState)
         return message.success('Your comment are hanlded')
       })
-      .catch(error => message.error('error: ', error.message))
+      .catch(error => message.error(`Something went wrong: ${error.response?.data?.message}`))
   }
   return (
     <>
@@ -71,7 +71,7 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={data[0]?.comments.length } ideaId={id} handleShowComment={handleShowComment} />
+            <MenuBar commentCount={data[0]?.comments.length } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} />
           </StyledContent>
 
           <StyledContent>

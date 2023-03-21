@@ -1,11 +1,12 @@
 import useWindowSize from '../../../utils/useWindowSize'
 import { Card, Layout } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import EventCard from '../sidebar-card/events-card'
 import { Button, Dropdown, Menu, MenuProps } from 'antd'
 import DepartmentCard from '../sidebar-card/department-card'
 import { MenuOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { Http } from 'next/api/http'
 
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -44,7 +45,15 @@ const items: MenuProps['items'] = [
 
 const RightSideBar: React.FC = () => {
   const windowSize = useWindowSize()
-
+  const [events, setEvents] = useState([])
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await Http.get('/api/v1/event/')
+      .then(res => setEvents(res.data.data))
+      .catch(err => console.log(err, 'error to fetch events'))
+    }
+    fetchEvents();
+  }, [])
   return (
     <>
       {windowSize < 1000 ? (
@@ -65,8 +74,8 @@ const RightSideBar: React.FC = () => {
           />
         </Dropdown>
       ) : (
-        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px' }}>
-          <EventCard />
+        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px', marginTop: 15 }}>
+          <EventCard events={events}/>
           <DepartmentCard />
         </Layout.Sider>
       )}
