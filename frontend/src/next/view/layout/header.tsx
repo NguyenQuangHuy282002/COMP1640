@@ -47,8 +47,8 @@ function AppHeader() {
   const handleLogout = () => {
     userCredential.state.logout()
     navigate('/login')
-    enqueueSnackbar("You're fxking logout! man")
-    return window.location.reload()
+    window.location.reload();
+    return enqueueSnackbar("You're logout! man")
   }
 
   const handleClickMenu = async (val: any) => {

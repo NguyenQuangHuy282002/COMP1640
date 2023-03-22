@@ -1,4 +1,5 @@
 import { Layout, message } from 'antd'
+import UnAuthorize from 'next/components/fobidden/unauthorize'
 import { useEffect, useState } from 'react'
 import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
@@ -24,9 +25,9 @@ import UserProfile from './user-profile'
 
 export default function App() {
   const navigate = useNavigate()
-  const { login, logout, token, tokenVerified, userId } = useAuth()
+  const { login, logout, token, tokenVerified, userId, role } = useAuth()
   const [verify, setVerify] = useState(false)
-  const [role, setRole] = useState(null)
+  // const [role, setRole] = useState(null)
   useEffect(() => {
     userCredential.updateState({
       userId: userId,
@@ -56,8 +57,7 @@ export default function App() {
             await Http.get(`/api/v1/users/getProfile/${credential.userId}`)
               .then(res => {
                 userStore.updateState(res.data.userInfo)
-                console.log(res.data.userInfo)
-                setRole(res.data.userInfo.role)
+                // setRole(res.data.userInfo.role)
               })
               .catch(err => console.error(err.message))
           }
@@ -75,7 +75,7 @@ export default function App() {
 
   useEffect(() => {
     role && navigate(`/${role}`)
-  }, [role])
+  }, [])
 
   let routes: any
 
@@ -84,7 +84,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/logout" />
-        <Route path="/" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
+        <Route path="/" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
 
         <Route
           path="/staff"
@@ -149,6 +149,7 @@ export default function App() {
           <Route path="departments" element={<DepartmentManager />} />
           <Route path="" element={<HomePage />} />
           <Route path="ideas" element={<HomePage />} />
+          <Route path="idea" element={<IdeaDetail />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
         </Route>
@@ -176,7 +177,8 @@ export default function App() {
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
         </Route>
-        <Route path="*" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
+        <Route path="*" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
+        <Route path="/unauthorize" element={<UnAuthorize></UnAuthorize>}></Route>
       </Routes>
     )
   } else {

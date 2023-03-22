@@ -22,8 +22,10 @@ function Login() {
         if (res?.data?.success) {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
-          message.success('Login successful')
-          return window.location.reload()
+
+          window.location.reload()
+          return message.success('Login successful')
+
         }
       })
       .catch(error => {

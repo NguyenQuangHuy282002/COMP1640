@@ -6,7 +6,7 @@ const RoleAccess = ({ roles = [], children }) => {
   const {
     state: { role },
   } = useSubscription(userStore, ['role'])
-  return !roles.length || roles.includes(role) ? <>{children}</> : <Navigate to="/login" replace />
+  return !roles.length || roles.includes(role) ? <>{children}</> : <Navigate to="/unauthorize" replace />
 }
 
 export default RoleAccess

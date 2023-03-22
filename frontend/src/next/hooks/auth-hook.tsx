@@ -1,6 +1,7 @@
 import { Http, LOCALSTORAGE } from '../api/http'
 import { useState, useCallback, useEffect } from 'react'
-import { userCredential } from '../view/auth/user-store'
+import { userStore } from '../view/auth/user-store'
+import jwt_decode from 'jwt-decode'
 
 let logoutTimer
 
@@ -9,13 +10,17 @@ export const useAuth = () => {
   const [tokenVerified, setTokenVerified] = useState(false)
   const [tokenExpirationDate, setTokenExpirationDate] = useState(new Date())
   const [userId, setUserId] = useState('')
+  const [role, setRole] = useState('')
   const login = useCallback((uid: any, token: any, tokenVerified: any, expirationDate?: any) => {
     setToken(token)
     setUserId(uid)
     setTokenVerified(tokenVerified)
-    const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60)
-    setTokenExpirationDate(expirationDateToken)
-    // console.log('vai ca l', expirationDateToken)
+    const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60);
+    setTokenExpirationDate(expirationDateToken);
+    const payload = jwt_decode(token)
+    console.log('payload', payload);
+    setRole(payload['user']['role'])
+    userStore.updateState({ role: payload['user']['role']})
     localStorage.setItem(
       LOCALSTORAGE.CREDENTIALS,
       JSON.stringify({
@@ -48,8 +53,6 @@ export const useAuth = () => {
     const storedData = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
       fetchVerify(storedData?.token)
-      // console.log('tokenv', tokenVerified)
-      // console.log(storedData.tokenVerified)
       if (storedData.tokenVerified) {
         login(storedData.userId, storedData.token, true, new Date(storedData.expiration))
       } else {
@@ -69,5 +72,5 @@ export const useAuth = () => {
     setTokenVerified(result.data.success)
   }
 
-  return { token, login, logout, userId, tokenVerified, fetchVerify }
+  return { token, login, logout, userId, tokenVerified, fetchVerify, role }
 }

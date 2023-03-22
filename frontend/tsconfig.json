@@ -24,5 +24,13 @@
     "src/next",
     "src/types",
     "src/index.tsx"
- ]
+ ],
+ "paths": {
+  "crypto": [
+    "node_modules/crypto-browserify"
+  ],
+  "stream": [
+    "node_modules/stream-browserify"
+  ]
+}
 }
