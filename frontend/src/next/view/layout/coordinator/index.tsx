@@ -1,19 +1,10 @@
-import {
-  CalendarOutlined,
-  HomeFilled,
-  TagOutlined,
-  TeamOutlined,
-  UngroupOutlined,
-  WeiboOutlined,
-} from '@ant-design/icons'
+import { CalendarOutlined, HomeFilled, UngroupOutlined, WeiboOutlined } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import React from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
-import AppFooter from '../footer'
 import AppHeader from '../header'
 import AppSidebar from '../sidebar'
-import RightSideBar from './right-sidebar'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -42,8 +33,6 @@ const items: MenuProps['items'] = [
     null,
     [
       getItem('Ideas', 'ideas', <WeiboOutlined />),
-      getItem('Tags', 'categories', <TagOutlined />),
-      getItem('Users', 'accounts-manager', <TeamOutlined />),
       getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
@@ -78,15 +67,7 @@ const LayoutCoordinator = ({ children }) => {
         }}
       >
         <AppSidebar items={items} />
-        <Content style={contentStyle}>
-          {
-            <>
-              {children}
-              <RightSideBar />
-              <AppFooter />
-            </>
-          }
-        </Content>
+        <Content style={contentStyle}>{<>{children}</>}</Content>
       </Layout>
     </>
   )

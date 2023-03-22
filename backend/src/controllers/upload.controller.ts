@@ -63,11 +63,9 @@ export const getPresignedUrl = (req: any, res: any, next: any) => {
 }
 
 const multiFilesStream = fileKeys => {
-  // using archiver package to create archive object with zip setting -> level from 0(fast, low compression) to 10(slow, high compression)
   const archive = archiver('zip', { zlib: { level: 5 } })
   const s3 = initS3AWS()
   for (const element of fileKeys) {
-    // using pass through stream object to wrap the stream from aws s3
     const realKey = element.slice(element.lastIndexOf('/') - 24)
     console.log(realKey)
     const passthrough = new PassThrough()
@@ -77,7 +75,6 @@ const multiFilesStream = fileKeys => {
     })
       .createReadStream()
       .pipe(passthrough)
-    // name parameter is the name of the file that the file needs to be when unzipped.
     archive.append(passthrough, { name: realKey })
   }
   return archive

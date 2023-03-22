@@ -71,7 +71,6 @@ function EventsPage() {
                 <EventCardItem
                   event={event}
                   key={index}
-                  index={index}
                   setEditEvent={event => {
                     setEditEvent(event)
                     setOpenModal(true)

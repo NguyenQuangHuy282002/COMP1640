@@ -1,7 +1,7 @@
-import useWindowSize from '../../../utils/useWindowSize'
-import { Card, Layout } from 'antd'
+import { Layout } from 'antd'
 import React from 'react'
-import styled from 'styled-components'
+import useWindowSize from '../../../utils/useWindowSize'
+import DepartmentCard from '../sidebar-card/department-card'
 import EventCard from '../sidebar-card/events-card'
 
 const RightSideBar: React.FC = () => {
@@ -12,8 +12,12 @@ const RightSideBar: React.FC = () => {
       {windowSize < 1000 ? (
         <></>
       ) : (
-        <Layout.Sider width={278} style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px' }}>
+        <Layout.Sider
+          width={278}
+          style={{ background: 'transparent', boxSizing: 'border-box', paddingRight: '16px', marginTop: 16 }}
+        >
           <EventCard />
+          <DepartmentCard />
         </Layout.Sider>
       )}
     </>

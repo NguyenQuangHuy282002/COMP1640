@@ -1,14 +1,11 @@
 import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
 import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
 import { userCredential, userStore } from '../user-store'
 const { Title } = Typography
 
 function Login() {
-  const navigate = useNavigate()
-  const { state } = useLocation()
   const [form] = Form.useForm()
 
   useEffect(() => {

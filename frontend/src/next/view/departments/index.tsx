@@ -76,12 +76,12 @@ function DepartmentManager() {
 
   useEffect(() => {
     setLoading(true)
-    const getAllUser = async () =>
+    const getAllDepartment = async () =>
       await Http.get('/api/v1/department')
         .then(res => setDeparments(res.data.data))
         .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
         .finally(() => setLoading(false))
-    getAllUser()
+    getAllDepartment()
   }, [])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
