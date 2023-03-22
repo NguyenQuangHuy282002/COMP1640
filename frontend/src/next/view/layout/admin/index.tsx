@@ -1,4 +1,4 @@
-import { CalendarOutlined, HomeFilled, TeamOutlined, WeiboOutlined } from '@ant-design/icons'
+import { CalendarOutlined, HomeFilled, TeamOutlined, UngroupOutlined, WeiboOutlined } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import React from 'react'
@@ -35,6 +35,7 @@ const items: MenuProps['items'] = [
     [
       getItem('Your Profile', 'ideas', <WeiboOutlined />),
       getItem('Users', 'accounts-manager', <TeamOutlined />),
+      getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
@@ -70,7 +71,6 @@ const LayoutAdmin = ({ children }) => {
         <AppSidebar items={items} />
         <Content style={contentStyle}>{children}</Content>
       </Layout>
-      <AppFooter />
     </>
   )
 }

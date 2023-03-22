@@ -3,7 +3,8 @@ import {
   CaretUpFilled,
   CommentOutlined,
   DownloadOutlined,
-  FireTwoTone, ShareAltOutlined
+  FireTwoTone,
+  ShareAltOutlined,
 } from '@ant-design/icons'
 import { Button, message, Radio, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
@@ -117,7 +118,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
       reactionTimeOut = setTimeout(() => disLikeHandler(ideaId), 500)
     }
   }
-  const nameZip = name.slice(0, 24)
+
   return (
     <>
       {windowWidth > 969 ? (
@@ -190,7 +191,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
             <Button icon={<CommentOutlined />} onClick={() => handleShowComment()} style={{ cursor: 'pointer' }}>
               {commentCount} Comments
             </Button>
-            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, nameZip)}>
+            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, name.slice(0, 24))}>
               DownLoad
             </Button>
             <Button icon={<ShareAltOutlined />}>Share</Button>
@@ -221,8 +222,6 @@ function str2bytes(str) {
   }
   return bytes
 }
-
-
 
 function MobileMenuBar({ vote, commentCount, handleShowComment, ideaId }) {
   return (

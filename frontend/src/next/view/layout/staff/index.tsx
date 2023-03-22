@@ -22,13 +22,7 @@ const items: MenuProps['items'] = [
     'PUBLIC',
     'grp',
     null,
-    [
-      getItem('Ideas', 'ideas', <WeiboOutlined />),
-      getItem('Tags', 'categories', <TagOutlined />),
-      getItem('Users', 'accounts-manager', <TeamOutlined />),
-      getItem('Departments', 'departments', <UngroupOutlined />),
-      getItem('Events', 'event', <CalendarOutlined />),
-    ],
+    [getItem('Ideas', 'ideas', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />)],
     'group'
   ),
 ]
@@ -61,14 +55,9 @@ const LayoutStaff = ({ children }) => {
       >
         <AppSidebar items={items} />
         <Content style={contentStyle}>
-          {
-            <>
-              {children}
-              <RightSideBar />
-              <AppFooter />
-            </>
-          }
+          <>{children}</>
         </Content>
+        <RightSideBar />
       </Layout>
     </>
   )

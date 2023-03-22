@@ -56,6 +56,7 @@ export default function App() {
             await Http.get(`/api/v1/users/getProfile/${credential.userId}`)
               .then(res => {
                 userStore.updateState(res.data.userInfo)
+                console.log(res.data.userInfo)
                 setRole(res.data.userInfo.role)
               })
               .catch(err => console.error(err.message))
@@ -89,7 +90,7 @@ export default function App() {
           path="/staff"
           element={
             <RoleAccess roles={['staff']}>
-              <Layout>
+              <Layout style={{ minHeight: '100vh' }}>
                 <LayoutStaff>
                   <Outlet />
                 </LayoutStaff>
@@ -112,7 +113,7 @@ export default function App() {
           path="/coordinator"
           element={
             <RoleAccess roles={['coordinator']}>
-              <Layout>
+              <Layout style={{ minHeight: '100vh' }}>
                 <LayoutCoordinator>
                   <Outlet />
                 </LayoutCoordinator>
@@ -135,7 +136,7 @@ export default function App() {
           path="/admin"
           element={
             <RoleAccess roles={['admin']}>
-              <Layout>
+              <Layout style={{ minHeight: '100vh' }}>
                 <LayoutAdmin>
                   <Outlet />
                 </LayoutAdmin>
@@ -145,15 +146,18 @@ export default function App() {
         >
           <Route path="accounts-manager" element={<AccountManager />} />
           <Route path="account" element={<UserProfile />} />
+          <Route path="departments" element={<DepartmentManager />} />
           <Route path="" element={<HomePage />} />
           <Route path="ideas" element={<HomePage />} />
+          <Route path="event" element={<EventsPage />} />
+          <Route path="event/:id" element={<EventDetails />} />
         </Route>
 
         <Route
           path="/manager"
           element={
             <RoleAccess roles={['manager']}>
-              <Layout>
+              <Layout style={{ minHeight: '100vh' }}>
                 <LayoutManager>
                   <Outlet />
                 </LayoutManager>
@@ -161,12 +165,11 @@ export default function App() {
             </RoleAccess>
           }
         >
+          <Route path="" element={<HomePage />} />
           <Route path="dashboard" element={<DashboardAdmin />} />
           <Route path="categories" element={<CategoryManager />} />
-          <Route path="" element={<HomePage />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
-          <Route path="departments" element={<DepartmentManager />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />

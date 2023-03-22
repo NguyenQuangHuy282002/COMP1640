@@ -1,9 +1,9 @@
 import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, Layout, MenuProps, message, Row, Typography } from 'antd'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import AutoSearch from '../../components/search-field/autocomplete-search'
 import { imgDir } from '../../constants/img-dir'
 import { createSubscription, useSubscription } from '../../libs/global-state-hook'
@@ -15,24 +15,14 @@ const { Text } = Typography
 export const ideaCount = createSubscription({ number: 0 })
 
 function AppHeader() {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
   const {
     state: { avatar },
   } = useSubscription(userStore, ['avatar'])
-  const [suggest, setSuggest] = useState()
-  useEffect(() => {
-    const getSuggestions = async () =>
-      await Http.get('/api/v1/idea/suggest')
-        .then(res => {
-          setSuggest(res.data.data)
-          ideaCount.updateState({ number: res.data.count })
-        })
-        .catch(error => message.error('Failed to get suggestions!'))
-    getSuggestions()
-  }, [])
+
   const userMenu: MenuProps['items'] = [
     {
       key: 'account',
@@ -95,7 +85,7 @@ function AppHeader() {
           <a href={'/'} style={{ marginRight: 20, marginBottom: 5, display: 'contents' }}>
             <img src={imgDir + 'logo.png'} height="50" alt="Logo" />
           </a>
-          <AutoSearch suggest={suggest} />
+          <AutoSearch />
         </>
         {windowWidth < 1300 ? (
           <Dropdown menu={{ items: userMenu }} trigger={['click']} overlayStyle={{ width: 200 }} placement="bottom">

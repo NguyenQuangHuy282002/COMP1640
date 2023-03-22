@@ -80,8 +80,8 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-files">
                       <Tag color="#828DAB" style={{ margin: 0 }}>
-                      <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
-                      {idea?.files?.length || 0} attachments
+                        <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                        {idea?.files?.length || 0} attachments
                       </Tag>
                     </Text>,
                   ]
