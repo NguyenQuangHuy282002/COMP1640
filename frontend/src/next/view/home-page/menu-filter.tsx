@@ -139,6 +139,9 @@ function MenuFilter({ setFilter, filter }) {
           <StyledRadioButton value="worst">
             <FrownFilled /> Worst
           </StyledRadioButton>
+          <StyledRadioButton value="oldest">
+            <FrownFilled /> Oldest
+          </StyledRadioButton>
         </Radio.Group >
         </Col>
         <Col>
