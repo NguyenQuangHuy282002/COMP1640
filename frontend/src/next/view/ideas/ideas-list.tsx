@@ -1,13 +1,13 @@
-import { Button, Divider, List, message } from 'antd'
-import { Http } from 'next/api/http'
+import { Button, Divider, List } from 'antd'
 import { useSubscription } from 'next/libs/global-state-hook'
-import { handleFilter } from 'next/utils/handleFilter'
-import { useEffect, useState } from 'react'
-import { ideaCount } from '../layout/layout-wrapper'
+import { ideaCount } from '../layout/header'
+
 import IdeaCard from './idea-card'
 
 function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
-  const { number } = useSubscription(ideaCount).state
+  const {
+    state: { number },
+  } = useSubscription(ideaCount)
   const loadMore =
     !isEnd && !loading && ideas?.length <= number ? (
       <div

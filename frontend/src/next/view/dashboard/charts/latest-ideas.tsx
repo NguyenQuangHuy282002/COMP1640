@@ -26,7 +26,6 @@ const LatestIdeaList: React.FC = () => {
     getAllIdeas()
   }, [])
 
-  console.log('ideaList', ideaList)
   const loadMore =
     !initLoading && !loading ? (
       <div

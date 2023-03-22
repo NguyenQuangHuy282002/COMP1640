@@ -1,5 +1,25 @@
 import { createSubscription } from '../../libs/global-state-hook'
 
-export const userStore = createSubscription({ isActivate: false, isBanned: false, role: '', name: '', _id: '', avatar: '', birthday: Date, email: '', phone: '', description: '', username: '', interests: [], department: '' })
+export const userStore = createSubscription({
+  isActivate: false,
+  isBanned: false,
+  role: '',
+  name: '',
+  _id: '',
+  avatar: '',
+  birthday: Date,
+  email: '',
+  phone: '',
+  description: '',
+  username: '',
+  interests: [],
+  department: { name: '' },
+})
 
-export const userCredential = createSubscription({ userId: '', token: '', isLoggedIn: false, login: (uid:any, token:any,  tokenVerified:any, expirationDate?:any) => { }, logout: () => { } })
+export const userCredential = createSubscription({
+  userId: '',
+  token: '',
+  isLoggedIn: false,
+  login: (uid: any, token: any, tokenVerified: any, expirationDate?: any) => {},
+  logout: () => {},
+})

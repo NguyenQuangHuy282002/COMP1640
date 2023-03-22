@@ -9,25 +9,16 @@ export default function UnAuthorize() {
   useEffect(() =>{
     setTimeout(() => {
       navigate(state?.from || '/')
-      return message.info('Your role are not permitted to access this page')
-  }, 3000)}, [])
+      return message.warning('Your role are not permitted to access this page')
+  }, 2000)
+}, 
+  [])
   return (
     <>
       <div className="message">You are not authorized.</div>
       <div className="message2">You tried to access a page you did not have prior authorization for.</div>
       <div className="container">
         <div className="neon">403</div>
-        <div className="door-frame">
-          <div className="door">
-            <div className="rectangle"></div>
-            <div className="handle"></div>
-            <div className="window">
-              <div className="eye"></div>
-              <div className="eye eye2"></div>
-              <div className="leaf"></div>
-            </div>
-          </div>
-        </div>
       </div>
     </>
   )

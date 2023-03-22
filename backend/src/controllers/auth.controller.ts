@@ -7,7 +7,7 @@ import { senVerification } from '../utils/mailer'
 // @route POST /api/v1/auth/create -- create user account
 export const createAccount = async (req: any, res: any, next: any) => {
   try {
-    const { username, firstName, lastName, password, role, phone, birthday } = req.body
+    const { username, name, password, role, phone, birthday, department } = req.body
 
     const isUserExists = await User.findOne({ username: username.toLowerCase() })
     if (isUserExists) {
@@ -15,7 +15,6 @@ export const createAccount = async (req: any, res: any, next: any) => {
     }
 
     const passwordHash = await bcryptHash(password)
-    const name = firstName + ' ' + lastName
     const newAccount = await new User({
       username,
       name,
@@ -23,6 +22,7 @@ export const createAccount = async (req: any, res: any, next: any) => {
       role,
       phone,
       birthday,
+      department,
       isActivate: true,
       isBanned: false,
     }).save()
@@ -44,7 +44,7 @@ export const login = async (req: any, res: any, next: any) => {
     if (user.department) {
       user = await user.populate({
         path: 'department',
-        select: ['name']
+        select: ['name'],
       })
     }
     const checkPassword = await bcryptCompare(password, user!.password)
@@ -96,7 +96,7 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
         description: userData.description || '',
         interests: userData.interests || [],
         isBanned: userData.isBanned || false,
-        department: userData.department?.name || 'None'
+        department: userData.department?.name || 'None',
       },
       message,
       accessToken: accessToken,
@@ -113,8 +113,8 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
 
 export const verifyAccessToken = async (req: any, res: any, next: any) => {
   try {
-    const { token } = req.body;
-    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET);
+    const { token } = req.body
+    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET)
     if (verify) {
       return res.status(200).json({
         success: true,

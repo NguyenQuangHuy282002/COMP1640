@@ -13,7 +13,7 @@ export const likeHandler = async id => {
   }
 }
 
-export const omitHandler = async (id) => {
+export const omitHandler = async id => {
   try {
     const result = await Http.put('/api/v1/idea/omitVote', { ideaId: id })
     console.log('dont like', result)
@@ -22,7 +22,7 @@ export const omitHandler = async (id) => {
   }
 }
 
-export const disLikeHandler = async (id) => {
+export const disLikeHandler = async id => {
   try {
     const result = await Http.put('/api/v1/idea/dislike', { ideaId: id })
     console.log('dislike', result)
@@ -30,29 +30,24 @@ export const disLikeHandler = async (id) => {
     console.error(e)
   }
 }
-export type ResponseType =
-    | 'arraybuffer'
-    | 'blob'
-    | 'document'
-    | 'json'
-    | 'text'
-    | 'stream';
+export type ResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
 
 export const handleDownloadFiles = async (id: any, name?: any) => {
   const token = Http._getHeader()
   const options = {
     headers: {
       ...token,
-      'Content-Type': 'application/zip; charset=utf-8'
+      'Content-Type': 'application/zip; charset=utf-8',
     },
     params: {},
     responseType: 'arraybuffer' as ResponseType,
   }
-  const fileName = name ? `${name}.zip` : 'attachments.zip';
-  await axios.get(`${SERVER_ENPOINT}/api/v1/idea/downloadFiles?id=${id}`, options)
+  const fileName = name ? `${name}.zip` : 'attachments.zip'
+  await axios
+    .get(`${SERVER_ENPOINT}/api/v1/idea/downloadFiles?id=${id}`, options)
     .then(res => {
       message.success('The attachments are handled and downloaded!!')
-      return new Blob([res.data], { type: "application/zip" })
+      return new Blob([res.data], { type: 'application/zip' })
     })
     .then(blob => {
       // const href = window.URL.createObjectURL(blob)
@@ -66,5 +61,4 @@ export const handleDownloadFiles = async (id: any, name?: any) => {
       saveAs(blob, `${fileName}`)
     })
     .catch(err => Promise.reject(() => message.error(err)))
-
 }

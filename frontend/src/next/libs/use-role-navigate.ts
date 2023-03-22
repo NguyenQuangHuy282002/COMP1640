@@ -7,6 +7,7 @@ export default function useRoleNavigate() {
   const {
     state: { role },
   } = useSubscription(userStore, ['role'])
+
   const roleBasedNavigate = endPoint => navigate(role ? `/${role}${endPoint}` : endPoint)
 
   return roleBasedNavigate

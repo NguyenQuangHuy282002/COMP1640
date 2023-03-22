@@ -23,7 +23,12 @@ export const find = async (req: any, res: any, next: any) => {
 export const findUser = async (req: any, res: any, next: any) => {
   const { id } = req.params
   try {
-    const user = await User.findById(id).select('-password')
+    const user = await User.findById(id)
+      .select('-password')
+      .populate({
+        path: 'department',
+        select: ['name'],
+      })
 
     if (!user) {
       return next(new ApiErrorResponse('Account does not exists.', 404))

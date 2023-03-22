@@ -1,48 +1,3 @@
-// <<<<<<< yesvansirevent
-// import React from 'react';
-// import { Space, Table, Tag } from 'antd';
-// import type { ColumnsType } from 'antd/es/table';
-// import { Link } from 'react-router-dom'; // import Link component
-
-// const styles = {
-//   tableWrapper: {
-//     border: '1px solid #d9d9d9',
-//     borderRadius: '5px',
-//   },
-//   tableHeaderCell: {
-//     color: '#1890ff',
-//     fontSize: '14px',
-//   },
-//   tableRowEven: {
-//     backgroundColor: '#f5f5f5',
-//   },
-//   tableRowOdd: {
-//     backgroundColor: '#fff',
-//   },
-//   tableCell: {
-//     fontFamily: 'Open Sans, sans-serif',
-//   },
-// };
-
-// const EventCardItem: React.FC = () => (
-//   <Table
-//     columns={columns}
-//     dataSource={data}
-//     style={styles.tableWrapper}
-//     bordered
-//   />
-// );
-
-// interface DataType {
-//   key : any;
-//   title: any;
-//   description: any;
-//   department: any;
-//   startDate: any;
-//   firstClosedDate: any;
-//   finalClosedDate: any;
-// =======
-
 import {
   ClockCircleTwoTone,
   DeleteOutlined,
@@ -65,16 +20,12 @@ interface IEvent {
   ideas: any
 }
 
-const COLOR_LIST = ['#ff494924', '#dbfb3d28', '#49ffb639', '#993dfb46', '#49adff49']
-
 function EventCardItem({
   event,
-  index,
   handleDeleteEvent,
   setEditEvent,
 }: {
   event: IEvent
-  index: number
   handleDeleteEvent: any
   setEditEvent: (event: any) => void
 }) {
@@ -99,7 +50,7 @@ function EventCardItem({
           </Link>
         }
         bordered={false}
-        style={{ width: '100%', display: 'block', backgroundColor: COLOR_LIST[index % 5] }}
+        style={{ width: '100%', display: 'block' }}
         extra={
           <Space wrap>
             <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewEventDetails(event._id)} />

@@ -34,7 +34,8 @@ function UserProfile() {
         .catch(err => message.error('Fail to get your ideas'))
     }
     getMyIdea()
-  })
+  }, [])
+
   const [activeTabKey, setActiveTabKey] = useState('edit')
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
@@ -69,7 +70,7 @@ function UserProfile() {
             </Text>
             <Text>
               <b>Department: </b>
-              {state?.department}
+              {state?.department?.name}
             </Text>
           </Space>
         </Card>

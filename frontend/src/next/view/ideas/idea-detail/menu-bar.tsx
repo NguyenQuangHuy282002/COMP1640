@@ -3,7 +3,8 @@ import {
   CaretUpFilled,
   CommentOutlined,
   DownloadOutlined,
-  FireTwoTone, ShareAltOutlined
+  FireTwoTone,
+  ShareAltOutlined,
 } from '@ant-design/icons'
 import { Button, message, Radio, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
@@ -221,8 +222,6 @@ function str2bytes(str) {
   }
   return bytes
 }
-
-
 
 function MobileMenuBar({ vote, commentCount, handleShowComment, ideaId }) {
   return (
