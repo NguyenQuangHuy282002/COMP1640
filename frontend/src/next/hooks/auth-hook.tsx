@@ -15,7 +15,6 @@ export const useAuth = () => {
     setTokenVerified(tokenVerified)
     const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(expirationDateToken);
-    // console.log('vai ca l', expirationDateToken)
     localStorage.setItem(
       LOCALSTORAGE.CREDENTIALS,
       JSON.stringify({

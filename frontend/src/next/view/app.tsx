@@ -20,6 +20,7 @@ import LayoutAdmin from './layout/admin'
 import LayoutManager from './layout/manager'
 import RoleAccess from './auth/role-access'
 import { createGlobalStyle } from 'styled-components'
+import UnAuthorize from 'next/components/fobidden/unauthorize'
 
 export default function App() {
   const navigate = useNavigate()
@@ -88,7 +89,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/logout" />
-        <Route path="/" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
+        <Route path="/" element={<Navigate to={role ? `/${role}` : '/unauthorize'} replace />} />
 
         <Route
           path="/staff"
@@ -178,7 +179,8 @@ export default function App() {
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
         </Route>
-        <Route path="*" element={<Navigate to={role ? `/${role}` : '/login'} replace />} />
+        <Route path="*" element={<Navigate to={role ? `/${role}` : '/unauthorize'} replace />} />
+        <Route path="/unauthorize" element={<UnAuthorize></UnAuthorize>}></Route>
       </Routes>
     )
   } else {

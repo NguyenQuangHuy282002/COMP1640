@@ -1,8 +1,9 @@
 import { Col, Row } from 'antd'
 import Title from 'antd/es/typography/Title'
+// import EventChart from './charts/eventChart'
 import EventPieChart from './charts/eventPieChart'
-import LarsestEventIdea from './charts/largest-event-chart'
 import LatestIdeaList from './charts/latest-ideas'
+// import LoadList from './charts/loadlist'
 import SmallStatistic from './charts/smallstatistic'
 
 function DashboardAdmin() {
@@ -64,7 +65,9 @@ function DashboardAdmin() {
             borderRadius: '5px',
           }}
         >
-          <LarsestEventIdea />
+          <EventPieChart />
+          <LatestIdeaList />
+
         </Col>
       </Row>
       <Row
