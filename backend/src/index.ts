@@ -26,7 +26,7 @@ async function main() {
     const err = arguments[0]
     if (err) {
       console.log(err)
-    }
+    } 
   })
 }
 main().catch(err => console.log(`Cannot init server!, log: `, err))

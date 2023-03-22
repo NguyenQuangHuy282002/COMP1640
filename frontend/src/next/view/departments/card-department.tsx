@@ -52,13 +52,13 @@ function DepartmentCardItem({
                     }
                     bordered={false}
                     style={{ width: '100%', display: 'block', backgroundColor: COLOR_LIST[index % 5] }}
-                    extra={
-                        <Space wrap>
-                            <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewDepartmentDetails(department._id)} />
-                            <Button type="text" icon={<EditOutlined />} onClick={() => setEditDepartment(department)} />
-                            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteDepartment(department._id)} />
-                        </Space>
-                    }
+                    // extra={
+                    //     <Space wrap>
+                    //         <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewDepartmentDetails(department._id)} />
+                    //         <Button type="text" icon={<EditOutlined />} onClick={() => setEditDepartment(department)} />
+                    //         <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteDepartment(department._id)} />
+                    //     </Space>
+                    // }
                     headStyle={{ borderBottom: '2px solid #d7d7d7' }}
                 >
                     <div>

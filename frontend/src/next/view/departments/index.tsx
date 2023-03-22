@@ -42,7 +42,7 @@ function DepartmentManager() {
   }, [deparments, searchKey])
 
 
-  const getEventList = async () => {
+  const getDepartmentList = async () => {
     await Http.get('/api/v1/department')
       .then(res => {
         setAllDepartment(res.data.data)
@@ -51,7 +51,7 @@ function DepartmentManager() {
   }
 
   useEffect(() => {
-    getEventList()
+    getDepartmentList()
   }, [openModal])
 
   const handleDeleteDepartment = async (id: string) => {
