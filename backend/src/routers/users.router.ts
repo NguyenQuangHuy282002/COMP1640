@@ -14,7 +14,7 @@ import { authorize, authProtect } from '../middlewares/auth'
 export const usersRouter = express.Router()
 
 usersRouter.get('/', authProtect, authorize(['admin']), find)
-usersRouter.delete('/deleteUser/:userId', authProtect, deleteUser)
+usersRouter.delete('/deleteUser/:userId', authProtect, authorize(['admin']), deleteUser)
 usersRouter.put('/changePassword', authProtect, changePassword)
 usersRouter.put('/updateProfile', authProtect, updateUser)
 usersRouter.put('/updateProfilePicture', authProtect, updateProfilePicture)

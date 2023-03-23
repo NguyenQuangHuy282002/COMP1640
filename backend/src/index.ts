@@ -1,10 +1,12 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import router from './routers/api'
-import cookieParser from 'cookie-parser'
-import { ReadConfig } from './config'
+import http from 'http'
+import { createSocketIO } from './utils/socket'
 import initiateMongoServer from './common/db'
+import { ReadConfig } from './config'
 import User from './models/User'
+import router from './routers/api'
 
 async function main() {
   const config = await ReadConfig()
@@ -21,7 +23,11 @@ async function main() {
   await User.seedAdmin() // clone code ve xoa het account trong mongo de tao tk admin
   // khi tai khoan admin dc tao roi thi comment dong ben tren vao. tk: admin, mk: admin
 
-  app.listen(Number(config.server.port), '0.0.0.0', () => {
+  let server = http.createServer(app)
+
+  createSocketIO(server)
+
+  server.listen(Number(config.server.port), '0.0.0.0', () => {
     const err = arguments[0]
     if (err) {
       console.error(err)
