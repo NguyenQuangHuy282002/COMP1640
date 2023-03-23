@@ -17,7 +17,7 @@ const apiRouter = (app: Express) => {
   app.use('/api/v1/event', specialEventRouter)
   app.use('/api/v1/idea', ideaRouter)
   app.use('/api/v1/comment', commentRouter)
-  app.use('api/v1/hastag',hastagRouter)
+  app.use('/api/v1/hastag',hastagRouter)
   app.use(serverErrorHandler)
 }
 

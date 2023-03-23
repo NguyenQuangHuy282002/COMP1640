@@ -13,7 +13,10 @@ import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
 import Tags from './tag'
-import AddHastag from './add-hastag';
+// import AddHastag from './add-hastag';
+// import Hastags from './hastag';
+import FormItem from 'antd/es/form/FormItem'
+import HashtagInput from './HastagInput';
 
 const fetchPresignedUrl = async (url: any, file: any) => {
   try {
@@ -200,6 +203,10 @@ export default function CreateIdea() {
           <Tags setCategories={setCategories} />
 
         </Form.Item>
+        {/* <Form.Item label="Tags (max: 5)">
+          <Hastags setCategories={setCategories} />
+
+        </Form.Item> */}
         {/* <AddHastag
           isOpen={openModal}
           onCloseModal={() => setOpenModal(false)}
@@ -207,7 +214,7 @@ export default function CreateIdea() {
           hastags={hastags}
           currentHastag={currentHastag}
         /> */}
-        <Form.Item>
+        {/* <Form.Item>
           {openModal1 ? (
             <AddHastag
               isOpen={openModal1}
@@ -230,7 +237,11 @@ export default function CreateIdea() {
             </div>
           )}
 
-        </Form.Item>
+        </Form.Item> */}
+
+        <FormItem>
+          <HashtagInput />
+        </FormItem>
 
         <Form.Item
           name="agreement"
