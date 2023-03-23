@@ -15,12 +15,12 @@ export const useAuth = () => {
     setToken(token)
     setUserId(uid)
     setTokenVerified(tokenVerified)
-    const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60);
-    setTokenExpirationDate(expirationDateToken);
+    const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60)
+    setTokenExpirationDate(expirationDateToken)
     const payload = jwt_decode(token)
-    console.log('payload', payload);
+    console.log('payload', payload)
     setRole(payload['user']['role'])
-    userStore.updateState({ role: payload['user']['role']})
+    userStore.updateState({ role: payload['user']['role'] })
     localStorage.setItem(
       LOCALSTORAGE.CREDENTIALS,
       JSON.stringify({

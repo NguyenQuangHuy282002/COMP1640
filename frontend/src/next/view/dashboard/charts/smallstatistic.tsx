@@ -1,9 +1,12 @@
 import { Card, Col, message, Row } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { Http } from 'next/api/http'
+import { useSocket } from 'next/socket.io'
 import React, { useEffect, useState } from 'react'
 
 const SmallStatistic: React.FC = () => {
+  const { appSocket } = useSocket()
+
   const [totalAccount, setTotalAccount] = useState(0)
   const [totalIdea, setTotalIdea] = useState(0)
   const [totalEvent, setTotalEvent] = useState(0)
@@ -31,6 +34,24 @@ const SmallStatistic: React.FC = () => {
     getTotalAccount()
     getTotalIdea()
   }, [])
+
+  const updateTotalAccount = data => setTotalAccount(data?.total || 0)
+  const updateTotalIdea = data => setTotalIdea(data?.total || 0)
+  const updateTotalEventAvailable = data => setTotalEvent(data?.total || 0)
+
+  useEffect(() => {
+    // App socket
+    appSocket.on('total_account', updateTotalAccount)
+    appSocket.on('total_idea', updateTotalAccount)
+    appSocket.on('total_event_available', updateTotalEventAvailable)
+
+    // The listeners must be removed in the cleanup step, in order to prevent multiple event registrations
+    return () => {
+      appSocket.off('total_account', updateTotalAccount)
+      appSocket.off('total_idea', updateTotalAccount)
+      appSocket.off('total_event_available', updateTotalEventAvailable)
+    }
+  }, [updateTotalAccount, updateTotalIdea, updateTotalEventAvailable])
 
   return (
     <Row gutter={16}>

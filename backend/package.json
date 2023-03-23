@@ -39,6 +39,7 @@
     "faker": "^6.6.6",
     "google-auth-library": "^8.7.0",
     "googleapis": "^111.0.0",
+    "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^4.7.0",
     "mongoose": "^6.9.1",
@@ -46,7 +47,7 @@
     "nodemailer": "^6.7.6",
     "path": "^0.12.7",
     "redis": "^4.6.4",
-    "socket.io": "^4.6.0",
+    "socket.io": "^4.6.1",
     "stream": "^0.0.2",
     "uuid": "^9.0.0"
   }
