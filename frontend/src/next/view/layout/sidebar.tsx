@@ -1,5 +1,5 @@
 import { MenuOutlined } from '@ant-design/icons'
-import { Button, Dropdown } from 'antd'
+import { Button, Dropdown, Layout } from 'antd'
 import useWindowSize from 'next/utils/useWindowSize'
 import SiderMenu from './sider-menu'
 
@@ -9,7 +9,9 @@ function AppSidebar({ items }) {
   return (
     <>
       {windowWidth > 1000 ? (
-        <SiderMenu menuItems={items} />
+        <Layout.Sider width={278} style={{background: 'transparent'}}>
+          <SiderMenu menuItems={items} />
+        </Layout.Sider>
       ) : (
         <Dropdown menu={{ items: items }} trigger={['click']} overlayStyle={{ width: 200 }} placement="bottom">
           <Button
@@ -18,6 +20,7 @@ function AppSidebar({ items }) {
             style={{
               position: 'sticky',
               zIndex: 3,
+              background: '#49708A',
               alignSelf: 'start',
               top: '10px',
               border: '1px solid #ccc',

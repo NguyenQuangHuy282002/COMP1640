@@ -5,8 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-
 }
 
 
@@ -15,6 +13,40 @@ code {
     monospace;
 }
 
-.ccccc {
-  color: #e2f9f6;
+
+
+.ant-layout-sider-trigger {
+  background-color: #5365d6 !important;
+  height: 36px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  display: flex !important;
 }
+
+.menu-sidebar .ant-menu-title-content {
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 400  !important;
+}
+
+.menu-sidebar .ant-menu-item-icon {
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 600  !important;
+}
+
+.menu-sidebar .ant-menu-item-group-title {
+  color: #ffffff !important;
+}
+
+.cc{
+  color: #45bdece6
+}
+.ant-layout-sider-children .ant-layout-sider-collapsed {
+  width: 60px !important;
+  min-width: none !important;
+}
+
+/* .anticon .anticon-weibo .ant-menu-item-icon {
+  color: #232446 !important
+} */

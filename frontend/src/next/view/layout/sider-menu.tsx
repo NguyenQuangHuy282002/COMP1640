@@ -1,6 +1,8 @@
 import { Layout, Menu } from 'antd'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useState } from 'react'
+import '../../../index.css'
+
 
 export default function SiderMenu({ menuItems }) {
   const navigate = useRoleNavigate()
@@ -21,8 +23,35 @@ export default function SiderMenu({ menuItems }) {
     setCollapsed(!collapsed)
   }
   return (
-    <Layout.Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} width={280}>
-      <Menu onClick={handleClickMenu} defaultSelectedKeys={tabKey} mode="inline" theme="dark" items={menuItems} />
-    </Layout.Sider>
+    <>
+      <Layout.Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={toggleCollapsed}
+        width={278}
+        style={{
+          background: '#6e80d2',
+          position: 'sticky',
+          zIndex: 1,
+          alignSelf: 'start',
+          height: '97vh',
+          top: '50px',
+          boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
+          paddingTop: '12px',
+        }}
+      >
+        <Menu
+        className="menu-sidebar"
+          onClick={handleClickMenu}
+          defaultSelectedKeys={tabKey}
+          mode="inline"
+          theme="dark"
+          items={menuItems}
+          style={{
+            background: 'transparent',
+          }}
+        />
+      </Layout.Sider>
+    </>
   )
 }

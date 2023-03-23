@@ -53,9 +53,9 @@ const LayoutManager = ({ children }) => {
           {
             <>
               {children}
-              <AppFooter />
             </>
           }
+          <AppFooter />
         </Content>
       </Layout>
     </>

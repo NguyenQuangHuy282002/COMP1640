@@ -1,4 +1,5 @@
 import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useEffect } from 'react'
 import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
@@ -7,7 +8,7 @@ const { Title } = Typography
 
 function Login() {
   const [form] = Form.useForm()
-
+  const navigate = useRoleNavigate()
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential && credential.tokenVerified) {
@@ -23,9 +24,9 @@ function Login() {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
 
+          navigate('/')
           window.location.reload()
-          return message.success('Login successful')
-
+          message.success('Login successful')
         }
       })
       .catch(error => {
@@ -35,7 +36,7 @@ function Login() {
   }
 
   return (
-    <Row style={{ width: '100%', marginTop: 100, justifyContent: 'center' }}>
+    <Row style={{ width: '100%', paddingTop: 70, paddingBottom: 50, justifyContent: 'center', background: '#2e4d68' }}>
       <Card>
         <Space align="center" direction="vertical">
           <img src={`${imgDir}logo.png`} height={300} alt="logo" />
