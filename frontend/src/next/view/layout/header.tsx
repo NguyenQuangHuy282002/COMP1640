@@ -4,6 +4,7 @@ import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AutoSearch from '../../components/search-field/autocomplete-search'
 import { imgDir } from '../../constants/img-dir'
 import { createSubscription, useSubscription } from '../../libs/global-state-hook'
@@ -16,6 +17,7 @@ export const ideaCount = createSubscription({ number: 0 })
 
 function AppHeader() {
   const navigate = useRoleNavigate()
+  const navigator = useNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
@@ -46,8 +48,8 @@ function AppHeader() {
 
   const handleLogout = () => {
     userCredential.state.logout()
-    navigate('/login')
-    window.location.reload();
+    navigator('/login')
+    // window.location.reload();
     return enqueueSnackbar("You're logout! man")
   }
 

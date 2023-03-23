@@ -9,7 +9,7 @@ export default function UnAuthorize() {
   useEffect(() =>{
     setTimeout(() => {
       navigate(state?.from || '/')
-      return message.warning('Your role are not permitted to access this page')
+      return message.warning('Your role are not permitted to access that page')
   }, 2000)
 }, 
   [])

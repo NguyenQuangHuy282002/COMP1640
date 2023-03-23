@@ -70,7 +70,7 @@ function UserProfile() {
             </Text>
             <Text>
               <b>Department: </b>
-              {state?.department?.name}
+              {state?.department?.name || 'None'}
             </Text>
           </Space>
         </Card>
