@@ -50,40 +50,40 @@ function MenuFilter({ setFilter, filter }) {
     },
   ]
 
-  const departmentItems: MenuProps['items'] = [
-    {
-      key: 'computing',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('computing')}>
-          Computing
-        </Text>
-      ),
-    },
-    {
-      key: 'desgin',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('desgin')}>
-          Desgin
-        </Text>
-      ),
-    },
-    {
-      key: 'bussiness',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('bussiness')}>
-          Bussiess
-        </Text>
-      ),
-    },
-    {
-      key: 'ABC',
-      label: (
-        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('ABC')}>
-          ABC
-        </Text>
-      ),
-    },
-  ]
+  // const departmentItems: MenuProps['items'] = [
+  //   {
+  //     key: 'computing',
+  //     label: (
+  //       <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('computing')}>
+  //         Computing
+  //       </Text>
+  //     ),
+  //   },
+  //   {
+  //     key: 'desgin',
+  //     label: (
+  //       <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('desgin')}>
+  //         Desgin
+  //       </Text>
+  //     ),
+  //   },
+  //   {
+  //     key: 'bussiness',
+  //     label: (
+  //       <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('bussiness')}>
+  //         Bussiess
+  //       </Text>
+  //     ),
+  //   },
+  //   {
+  //     key: 'ABC',
+  //     label: (
+  //       <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('ABC')}>
+  //         ABC
+  //       </Text>
+  //     ),
+  //   },
+  // ]
 
 
 
@@ -159,11 +159,11 @@ function MenuFilter({ setFilter, filter }) {
         <Col />
         <Col>
           <Space wrap style={{ float: "right" }}>
-            <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+            {/* <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
               <Button>
                 <GroupOutlined /> Department
               </Button>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
               <Button>
                 <PicRightOutlined />Category

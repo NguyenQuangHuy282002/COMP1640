@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Tag } from 'antd';
-import axios from 'axios';
+import { Input, Tag, Button } from 'antd';
 import { Http } from '../../../api/http'
+
 
 const { Search } = Input;
 
@@ -29,15 +29,7 @@ const HashtagInput = () => {
         }
     };
 
-    // const handleInputChange = (e) => {
-    //     const value = e.target.value;
-    //     if (value && value.trim() !== '') {
-    //         const newHashtags = value.split(' ').filter((tag) => tag.startsWith('@'));
-    //         setHashtags(newHashtags);
-    //     } else {
-    //         setHashtags([]);
-    //     }
-    // };
+
 
     return (
         <>
@@ -51,12 +43,17 @@ const HashtagInput = () => {
                 style={{ marginBottom: '24px' }}
             />
             {hashtags.length > 0 && (
-                <div>
+                <div style={{}}>
                     {hashtags.map((tag) => (
-                        <Tag key={tag}>{tag}</Tag>
+                        <Tag color='orange' style={{ padding: '3px', color: 'blue', fontFamily: "Georgia", fontSize: '14px', fontWeight: 'bold' }}
+                            key={tag}>{tag}
+                        </Tag>
                     ))}
                 </div>
             )}
+
+
+
         </>
     );
 };
