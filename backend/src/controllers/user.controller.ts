@@ -99,6 +99,16 @@ export const deleteUser = async (req: any, res: any, next: any) => {
   }
 }
 
+export const deactiveUser = async (req: any, res: any, next: any) => {
+  try {
+    const deactiveUser = await User.findByIdAndUpdate(req.body.id, { isActivate: false })
+
+    return res.status(200).json({ success: true, message: 'User de-active successfully', user: deactiveUser })
+  } catch (error) {
+    next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
 export const search = async (req: any, res: any, next: any) => {
   try {
     const searchTerm = req.params.searchTerm

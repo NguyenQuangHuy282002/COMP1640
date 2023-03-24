@@ -1,6 +1,7 @@
 import express from 'express'
 import {
   changePassword,
+  deactiveUser,
   deleteUser,
   find,
   findUser,
@@ -15,6 +16,7 @@ export const usersRouter = express.Router()
 
 usersRouter.get('/', authProtect, authorize(['admin']), find)
 usersRouter.delete('/deleteUser/:userId', authProtect, authorize(['admin']), deleteUser)
+usersRouter.post('/deactiveUser', authProtect, authorize(['admin']), deactiveUser)
 usersRouter.put('/changePassword', authProtect, changePassword)
 usersRouter.put('/updateProfile', authProtect, updateUser)
 usersRouter.put('/updateProfilePicture', authProtect, updateProfilePicture)
