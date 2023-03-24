@@ -1,8 +1,14 @@
-import User from '../models/User'
+import { bcryptCompare, bcryptHash } from '../helpers/bcrypt.helper'
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
-import { bcryptHash, bcryptCompare } from '../helpers/bcrypt.helper'
+import User from '../models/User'
 import ApiErrorResponse from '../utils/ApiErrorResponse'
 import { senVerification } from '../utils/mailer'
+import { io } from '../utils/socket'
+
+export const updateAccountNumberRealTime = async () => {
+  const totalAccount = await User.find({ $ne: { role: 'admin' } }).select('-password')
+  io.emit('total_account', { total: totalAccount.length })
+}
 
 // @route POST /api/v1/auth/create -- create user account
 export const createAccount = async (req: any, res: any, next: any) => {
@@ -26,6 +32,8 @@ export const createAccount = async (req: any, res: any, next: any) => {
       isActivate: true,
       isBanned: false,
     }).save()
+
+    updateAccountNumberRealTime()
 
     res.status(200).json({ success: true, savedUser: newAccount })
   } catch (err) {
