@@ -12,7 +12,7 @@ const authRouter = express.Router()
 
 authRouter.post('/create', authProtect, authorize(['admin']), createAccount)
 authRouter.post('/login', login)
-authRouter.post('/sendVerificationEmail', sendVerificationEmail)
+authRouter.post('/sendVerificationEmail', authProtect, sendVerificationEmail)
 authRouter.post('/verifyToken', verifyAccessToken)
 authRouter.get('/refreshToken', authProtect, refreshToken)
 

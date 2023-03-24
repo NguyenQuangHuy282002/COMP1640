@@ -166,7 +166,6 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     if (isActivate) {
       return next(new ApiErrorResponse(`User ${id} is already activated`, 400))
     }
-
     const verificationToken = generateJWToken(
       {
         id: id,
@@ -176,12 +175,10 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     )
     const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
     const isSent = await senVerification(email, username, verificationUrl)
-    if (isSent == true) {
-      res.status(200).json({
-        success: isSent,
-        message: `send email successfully`,
-      })
+    if (isSent.status === 400) {
+      return next(new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500))
     }
+    res.status(200).json({success: true, isSent})
   } catch (error) {
     next(new ApiErrorResponse(error))
   }
