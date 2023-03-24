@@ -1,7 +1,6 @@
 import {
   ClockCircleFilled,
   CloudDownloadOutlined,
-  CompassOutlined,
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
@@ -9,10 +8,11 @@ import {
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
-  LockTwoTone
+  LockTwoTone,
+  CompassOutlined
   //>>>>>>> main
 } from '@ant-design/icons'
-import { Avatar, Button, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
+import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -40,7 +40,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-
+  // console.log(idea)
   return (
     <>
       <StyledCard
@@ -116,10 +116,10 @@ function IdeaCard({ idea, isLoading }) {
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">
                       {/* 373B44 004853 */}
-                      <strong>{idea.departmentName ? idea.departmentName : 'No department'}</strong>
+                      <strong>{idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}</strong>
                     </Tag>
                     <Tag icon={<CompassOutlined />} color="#FA6900">
-                      <strong>{idea.specialEvent ? idea.specialEvent : 'No Event'}</strong>
+                      <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
                     </Tag>
                     <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
                   </Typography.Text>

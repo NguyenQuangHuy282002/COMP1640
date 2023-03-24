@@ -11,7 +11,7 @@ interface IEditProfileForm {
   userInfo: IUserInfo
 }
 
-function EditProfileForm(props: IEditProfileForm) {
+function EditProfileForm(props: any) {
   const { userInfo } = props
   const [description, setDescription] = useState(userInfo.description)
 
@@ -71,7 +71,7 @@ function EditProfileForm(props: IEditProfileForm) {
       </Row>
 
       <Form.Item name="description" label="Description" labelAlign="left">
-        <RichTextEditor setEditorState={setDescription} editorState={description} />
+        {/* <RichTextEditor setEditorState={setDescription} editorState={description} /> */}
       </Form.Item>
       <Form.Item name="interests" label="Interests" labelAlign="left">
         <Input />

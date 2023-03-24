@@ -81,7 +81,6 @@ const App = () => {
           path="/"
           element={
             <Layout>
-              <AppHeader />
               <LayoutWrapper>
                 <Outlet />
               </LayoutWrapper>
@@ -96,7 +95,7 @@ const App = () => {
           <Route path="/departments/:id" element={<DepartmentDetail />} />
           <Route path="/categories" element={<CategoryManager />} />
           <Route path="/accounts-manager" element={<AccountManager />} />
-          <Route path="/ideas" element={<UserProfile />} />
+          <Route path="/ideas" element={<HomePage />} />
           <Route path="/account" element={<UserProfile />} />
           <Route path="/submit" element={<CreateIdea />} />
           <Route path="/idea" element={<IdeaDetail />} />

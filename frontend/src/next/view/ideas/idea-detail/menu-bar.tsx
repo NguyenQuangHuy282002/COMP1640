@@ -12,19 +12,17 @@ import { useSubscription } from 'next/libs/global-state-hook'
 import { userStore } from 'next/view/auth/user-store'
 import { useEffect, useState } from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
-import { disLikeHandler, likeHandler } from './idea-detail-service'
+import { disLikeHandler, likeHandler, omitHandler } from './idea-detail-service'
 import { debounce } from 'lodash'
 
 let reactionTimeOut = null
 
-export default function MenuBar({ commentCount, handleShowComment, likes, dislikes, ideaId }) {
+export default function MenuBar({ commentCount, handleShowComment, ideaId }) {
   const windowWidth = useWindowSize()
   const [likers, setLikers] = useState([])
   const [dislikers, setDisLikers] = useState([])
   const { state } = useSubscription(userStore)
   const [likesCount, setLikes] = useState(0)
-  // let initIdeaLiked = false
-  // let initIdeaDisLiked = false
   const [isLiked, setIsLiked] = useState(false)
   const [isDisLiked, setIsDisLiked] = useState(false)
 
@@ -43,6 +41,21 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
         return message.error(error.message)
       })
   }
+  useEffect(() => {
+    return () => {
+      if (isLiked) {
+        console.log('like')
+        likeHandler(ideaId)
+      } else if (isDisLiked) {
+        console.log('dislike')
+        disLikeHandler(ideaId)
+      } else {
+        console.log('dont like')
+        omitHandler(ideaId)
+      }
+    }
+  }, [isLiked, isDisLiked])
+
 
   useEffect(() => {
     fetchLikes(ideaId)
@@ -98,11 +111,11 @@ export default function MenuBar({ commentCount, handleShowComment, likes, dislik
         >
           {isLiked ? (
             <Button icon={<CaretUpFilled />} onClick={() => handleLikePost()} type="primary">
-              {likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}
+              <a>{likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}</a>
             </Button>
           ) : (
             <Button icon={<CaretUpFilled />} onClick={() => handleLikePost()}>
-              {likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}
+              <a>{likesCount >= 0 ? <> +{likesCount}</> : <> {likesCount}</>}</a>
             </Button>
           )}
           {isDisLiked ? (

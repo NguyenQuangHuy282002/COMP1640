@@ -22,7 +22,8 @@ function AutoSearch({ suggest }) {
   const searchResult = (query: string) =>
     // [...suggest.users, ...suggest.categories, ...suggest.ideas]
     {
-      const searchResults = suggest.filter(s => s['title'].indexOf(query) > 0)
+
+      const searchResults = suggest.filter(s => s['title'].match(`/^${query}$/i`) !== '')
       return searchResults.map((sug, idx) => {
         const data = `${sug['title']}`
         const check = data.indexOf(query)
@@ -42,7 +43,7 @@ function AutoSearch({ suggest }) {
                     {data.slice(0, check + 10)}...
                   </a>
                 </span>
-                <span>{getRandomInt(15, 5)} results </span>
+                <span>{getRandomInt(5, 1)} results </span>
               </div>
             ),
         }

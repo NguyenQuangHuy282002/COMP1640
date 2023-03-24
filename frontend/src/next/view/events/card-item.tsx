@@ -7,6 +7,7 @@ import {
   RocketTwoTone,
 } from '@ant-design/icons'
 import { Badge, Button, Card, Space } from 'antd'
+import { ColumnsType } from 'antd/es/table'
 import Link from 'antd/es/typography/Link'
 import { useNavigate } from 'react-router-dom'
 
@@ -42,7 +43,7 @@ function EventCardItem({
   return (
     <Badge.Ribbon
       text={event?.ideas?.length}
-      color={event?.ideas?.length > 5 ? 'green' : event?.ideas.length === 0 ? 'red' : 'volcano'}
+      color={event?.ideas?.length > 5 ? 'green' : event?.ideas?.length === 0 ? 'red' : 'volcano'}
     >
       <Card
         title={

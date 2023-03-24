@@ -5,9 +5,10 @@ export interface IUserInfo {
   username: string
   birthday: string
   email: string
-  image?: string
+  avatar?: string
   phone?: string
-  courses?: string[] | Array<any>
   description?: string
   interests?: string[]
+  isBanned?: boolean
+  _id?: string
 }

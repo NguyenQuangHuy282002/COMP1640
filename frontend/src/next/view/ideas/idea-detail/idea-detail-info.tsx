@@ -19,7 +19,7 @@ export default function IdeaDetailInfo({ item }) {
             <Text type="secondary" style={{marginLeft: 10}}>Posted {formatDayTime(item?.createdAt ? item?.createdAt : Date.now())}</Text>
           </span>
           <Text type="secondary" keyboard style={{opacity: 0.7}}>
-            <EyeOutlined /> {item?.views} views
+            <EyeOutlined /> {item?.meta?.views} views
           </Text>
         </Space>
       </Space>
