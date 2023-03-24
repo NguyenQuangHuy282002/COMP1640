@@ -38,6 +38,21 @@ function AccountManager() {
       .catch(error => enqueueSnackbar('Failed to delete account !', { variant: 'error' }))
   }
 
+  const handleDeactiveAccount = async id => {
+    await await Http.post('/api/v1/users/deactiveUser', { id })
+      .then(res =>
+        setAccounts(
+          accounts.map(acc => {
+            if (acc._id === id) {
+              acc.isActivate = false
+            }
+            return acc
+          })
+        )
+      )
+      .catch(error => enqueueSnackbar('Failed to update account !', { variant: 'error' }))
+  }
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'ID',
@@ -92,7 +107,7 @@ function AccountManager() {
       title: 'Actions',
       render: (_, record: any) => (
         <Space wrap>
-          <Button type="text" icon={<EditOutlined />} />
+          <Button type="text" icon={<EditOutlined />} onClick={() => handleDeactiveAccount(record._id)} />
           <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteAccount(record._id)} />
         </Space>
       ),
