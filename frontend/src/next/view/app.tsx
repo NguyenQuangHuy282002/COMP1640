@@ -14,6 +14,7 @@ import DashboardAdmin from './dashboard'
 import DepartmentManager from './departments'
 import EventsPage from './events'
 import EventDetails from './events/event-details'
+import CategoryDetails from './categories/category-details'
 import HomePage from './home-page'
 import CreateIdea from './ideas/create-new-idea'
 import IdeaDetail from './ideas/idea-detail/idea-detail'
@@ -169,6 +170,7 @@ export default function App() {
           <Route path="" element={<HomePage />} />
           <Route path="dashboard" element={<DashboardAdmin />} />
           <Route path="categories" element={<CategoryManager />} />
+          <Route path="category/:id" element={<CategoryDetails />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
           <Route path="ideas" element={<HomePage />} />
