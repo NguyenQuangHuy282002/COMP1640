@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, List } from 'antd'
 import Comment from './comment'
 import { Http } from 'next/api/http'
+import { useSocket } from 'next/socket.io'
 interface DataType {
   gender?: string
   name: {
@@ -21,6 +22,7 @@ interface DataType {
 
 const count = 3
 function CommentsList({ id, updateIdea }) {
+  const { appSocket } = useSocket()
   const [initLoading, setInitLoading] = useState(true)
   const [isMore, setMore] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -36,13 +38,31 @@ function CommentsList({ id, updateIdea }) {
       setList(res.data.data)
       if (!res.data?.next) {
         setMore(false)
-      }
-      else{
+      } else {
         setCurrentPage(res.data.next?.page)
       }
     })
   }, [updateIdea])
 
+  const updateComments = (info) => {
+    setList(data.concat([...new Array(1)].map(() => ({ loading: true, name: {}, picture: {} }))))
+    setData([info.comment, ...data])
+    setList([info.comment, ...list])
+    return
+  }
+
+  useEffect(() => {
+    appSocket.on('comments', data => {
+      if (data.ideaId === id) {
+        updateComments(data)
+      }
+    })
+
+    return () => {
+      appSocket.off('comments')
+    }
+  }, [updateComments])
+  
   const onLoadMore = () => {
     setLoading(true)
     setList(data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} }))))
@@ -83,7 +103,7 @@ function CommentsList({ id, updateIdea }) {
         style={{ width: '100%' }}
         renderItem={item => (
           // <List.Item>
-            <Comment item={item} loading={item.loading}/>
+          <Comment item={item} loading={item.loading} />
           // </List.Item>
         )}
       />
