@@ -2,6 +2,7 @@ import { SlidersFilled } from '@ant-design/icons'
 import { Button, Dropdown, List, MenuProps, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { useSocket } from 'next/socket.io'
+import { handleFilter } from 'next/utils/handleFilter'
 import { useEffect, useState } from 'react'
 import Comment from './comment'
 interface DataType {
@@ -21,36 +22,26 @@ interface DataType {
   loading: boolean
 }
 
-const count = 3
 function CommentsList({ id, updateIdea }) {
   const { appSocket } = useSocket()
   const [initLoading, setInitLoading] = useState(true)
-  const [isMore, setMore] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<DataType[]>([])
   const [list, setList] = useState<DataType[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [filter, setFilter] = useState('new')
 
   useEffect(() => {
-    Http.get(`/api/v1/comment?ideaId=${id}`).then(res => {
+    const query = handleFilter(filter)
+    Http.get(`/api/v1/comment?ideaId=${id}&${query}`).then(res => {
       setInitLoading(false)
       console.log(res)
-      setData(res.data.data)
       setList(res.data.data)
-      if (!res.data?.next) {
-        setMore(false)
-      } else {
-        setCurrentPage(res.data.next?.page)
-      }
     })
   }, [updateIdea, filter])
 
   const updateComments = info => {
-    setList(data.concat([...new Array(1)].map(() => ({ loading: true, name: {}, picture: {} }))))
-    setData([info.comment, ...data])
-    setList([info.comment, ...list])
-    return
+    return setList([info.comment, ...list])
+  }
+  const onClickFilter = (val: any) => {
+    setFilter(val)
   }
 
   useEffect(() => {
@@ -65,55 +56,20 @@ function CommentsList({ id, updateIdea }) {
     }
   }, [updateComments])
 
-  const onLoadMore = () => {
-    setLoading(true)
-    setList(data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} }))))
-    Http.get(`/api/v1/comment/?ideaId=${id}&page=${currentPage}`).then(res => {
-      const newData = data.concat(res.data.data)
-      setData(newData)
-      setList(newData)
-      setLoading(false)
-      if (!res.data?.next) {
-        setMore(false)
-      } else {
-        setCurrentPage(res.data.next.page)
-      }
-      window.dispatchEvent(new Event('resize'))
-    })
-  }
-
-  const loadMore = (
-    <>
-      {isMore && !initLoading && !loading ? (
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: 12,
-            height: 32,
-            lineHeight: '32px',
-          }}
-        >
-          <Button onClick={onLoadMore}>More</Button>
-        </div>
-      ) : (
-        <></>
-      )}
-    </>
-  )
 
   const moreItems: MenuProps['items'] = [
     {
       key: 'new',
       label: (
-        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => setFilter('your-department')}>
+        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('new')}>
           Newest
         </Typography.Text>
       ),
     },
     {
-      key: 'old',
+      key: 'oldest',
       label: (
-        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => setFilter('your-ideas')}>
+        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('oldest')}>
           Oldest
         </Typography.Text>
       ),
@@ -140,13 +96,16 @@ function CommentsList({ id, updateIdea }) {
       <List
         loading={initLoading}
         itemLayout="vertical"
-        loadMore={loadMore}
+        pagination={{
+          onChange: (page) => {
+            console.log(page);
+          },
+          pageSize: 5,
+        }}
         dataSource={list}
         style={{ width: '100%' }}
         renderItem={item => (
-          // <List.Item>
           <Comment item={item} loading={item.loading} />
-          // </List.Item>
         )}
       />
     </>

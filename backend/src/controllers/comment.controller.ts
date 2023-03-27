@@ -22,11 +22,11 @@ export const createComment = async (req: any, res: any, next: any) => {
         path: 'specialEvent',
         select: ['finalCloseDate']
       });
-      console.log(new Date(idea.specialEvent.finalCloseDate), new Date())
-      console.log(new Date(idea.specialEvent.finalCloseDate) <= new Date())
-      // if (new Date(idea.specialEvent.finalCloseDate) >= new Date()) {
-      //   return next(new ApiErrorResponse(`This idea reached final closure date, idea id: ${commentBody.ideaId}`, 400))
-      // }
+      // console.log(new Date(idea.specialEvent.finalCloseDate), new Date())
+      // console.log(new Date(idea.specialEvent.finalCloseDate) <= new Date())
+      if (new Date(idea.specialEvent.finalCloseDate) <= new Date()) {
+        return next(new ApiErrorResponse(`This idea reached final closure date, idea id: ${commentBody.ideaId}`, 400))
+      }
     }
 
     const data = { content: commentBody.content, ideaId: commentBody.ideaId, isAnonymous: commentBody.isAnonymous }
@@ -78,26 +78,8 @@ export const getComments = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query;
     const { ideaId } = reqQuery;
-    console.log('id', ideaId);
-    const page = parseInt(reqQuery.page) || 1;
-    const offset = (page - 1) * 5;
     const trending = reqQuery.tab || null;
-    const endIndex = page * 5;
     const results = {};
-
-    if (endIndex < (await Comment.countDocuments().exec())) {
-      results['next'] = {
-        page: page + 1,
-        limit: 5,
-      };
-    }
-
-    if (offset > 0) {
-      results['previous'] = {
-        page: page - 1,
-        limit: 5,
-      };
-    }
 
     let options: any = { ideaId: ideaId }
 
@@ -112,22 +94,23 @@ export const getComments = async (req: any, res: any, next: any) => {
       comments
         .sort({ like: -1 })
     }
-
+    if (trending == 'oldest') {
+      comments
+        .sort({ date: 1 })
+    }
     else {
       comments
         .sort({ date: -1 })
     }
 
     results['results'] = await comments
-      .limit(5)
-      .skip(offset)
+      // .limit(5)
+      // .skip(offset)
       .exec();
 
     res.status(200).json({
       success: true,
       count: results['results'].length,
-      next: results['next'],
-      previous: results['previous'],
       data: results['results']
     })
   } catch (err) {

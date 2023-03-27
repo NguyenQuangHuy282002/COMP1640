@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
 import { AutoComplete, Input, message } from 'antd'
 import type { SelectProps } from 'antd/es/select'
-import useWindowSize from '../../utils/useWindowSize'
 import { Http } from 'next/api/http'
 import { ideaCount } from 'next/view/layout/header'
+import { useEffect, useState } from 'react'
 
 const getRandomInt = (max: number, min = 0) => Math.floor(Math.random() * (max - min + 1)) + min
 
@@ -23,8 +22,10 @@ function AutoSearch() {
   }, [])
 
   const searchResult = (query: string) => {
-    const searchResults = suggest.filter(s => s['title'].search(`/${query}/i`) !== -1)
-    console.log(searchResults)
+    const searchResults = suggest.filter(
+      s => s?.title?.replaceAll(' ', '').toLowerCase().includes(query.replaceAll(' ', '').toLowerCase()) !== -1
+    )
+
     return searchResults.map((sug, idx) => {
       const data = `${sug['title']}`
       const check = data.indexOf(query)

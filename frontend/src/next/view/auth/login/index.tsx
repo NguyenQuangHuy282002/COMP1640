@@ -12,7 +12,6 @@ function Login() {
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential && credential.tokenVerified) {
-      // navigate('/')
       message.info('You already logged in!')
     }
   }, [])
@@ -27,7 +26,9 @@ function Login() {
           window.location.reload()
           message.success('Login successful')
         }
+        return res.data.userMetaData.role
       })
+      .then(enpoint => navigate(`/${enpoint}`))
       .catch(error => {
         console.error(error)
         message.error(`Login failed, ${error?.message}`)
