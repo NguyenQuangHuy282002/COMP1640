@@ -22,15 +22,12 @@ export const createComment = async (req: any, res: any, next: any) => {
         path: 'specialEvent',
         select: ['finalCloseDate']
       });
-      // console.log(new Date(idea.specialEvent.finalCloseDate), new Date())
-      // console.log(new Date(idea.specialEvent.finalCloseDate) <= new Date())
       if (new Date(idea.specialEvent.finalCloseDate) <= new Date()) {
         return next(new ApiErrorResponse(`This idea reached final closure date, idea id: ${commentBody.ideaId}`, 400))
       }
     }
 
     const data = { content: commentBody.content, ideaId: commentBody.ideaId, isAnonymous: commentBody.isAnonymous }
-    console.log(data)
     const newComment = {...data, userId: req.payload?.user?.id};
     let savedComment = await Comment.create(newComment);
     const user = await User.findById(req.payload?.user?.id);
@@ -38,17 +35,17 @@ export const createComment = async (req: any, res: any, next: any) => {
     idea.comments.push(savedComment._id);
     user.save();
     idea.save();
-    savedComment = await savedComment.populate({
-      path: 'userId',
-      select: ["name", "avatar", "email", "role"]
-    })
+    // savedComment = await savedComment.populate({
+    //   path: 'userId',
+    //   select: ["name", "avatar", "email", "role"]
+    // })
     io.emit('comments', { action: 'create', ideaId: commentBody.ideaId, comment: savedComment })
-    // if(commentBody.publisherEmail) {
-    //   activeMailer(user.name, commentBody.publisherEmail, new Date(), idea._id)
-    //   .then((data) => console.log('isSent', data))
-    //   .catch((error) => console.log('error', error))
+    if(commentBody.publisherEmail) {
+      activeMailer(user.name, commentBody.publisherEmail, new Date(), idea._id)
+      .then((data) => console.log('isSent', data))
+      .catch((error) => console.log('error', error))
 
-    // }
+    }
     res.status(200).json({
       success: true,
       message: 'Comment is created successfully',
@@ -62,15 +59,16 @@ export const createComment = async (req: any, res: any, next: any) => {
 export const activeMailer = async (name: any, email: any, date: any, ideaId: any) => {
   try {
     const title = 'Your idea has received a new comment'
-    const content = `${name} has commented on your idea, commented at ${new Date(date).toUTCString()}. Check now by click the link bellow`
-    const url = `http://localhost:3000/idea?id=${ideaId}`
+    const content = `${name} has commented on your idea, commented at ${new Date(date).toUTCString()}.  Check now by click the link bellow`
+    const url = `http://localhost:3000/staff/idea?id=${ideaId}`
     const isSent = await sendNotification(email, content, title, date, url);
+    console.log(isSent)
     if (isSent.status === 400) {
       return new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500)
     }
     return isSent
   } catch (err) {
-    throw new Error(err.message);
+    return new ApiErrorResponse(`${err.message}`, 500)
   }
 }
 
