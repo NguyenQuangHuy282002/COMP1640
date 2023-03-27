@@ -82,8 +82,8 @@ function IdeaDetail() {
 
           <StyledContent>
             <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
-              <Text strong>
-                Comment as <Text mark>{name}</Text>
+              <Text>
+                Comment as <Text strong>{name}</Text>
               </Text>
               {/* <RichTextEditor editorState={editorState} setEditorState={setEditorState} /> */}
               <CreateComment user={{avatar, name}} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email}/>

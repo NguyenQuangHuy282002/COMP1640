@@ -37,7 +37,7 @@ export default function App() {
       login: login,
       logout: logout,
     })
-  })
+  }, [])
 
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))

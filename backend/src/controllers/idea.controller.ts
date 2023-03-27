@@ -59,7 +59,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
-
+    
     const page = parseInt(reqQuery.page) || 1
     const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
@@ -131,11 +131,11 @@ export const getIdeas = async (req: any, res: any, next: any) => {
 
 export const getTotalIdea = async (req: any, res: any, next: any) => {
   try {
-    const ideas = await Idea.find({})
+    const ideasLength = await Idea.count()
 
     res.status(200).json({
       success: true,
-      total: ideas.length,
+      total: ideasLength,
     })
   } catch (err) {
     return next(new ApiErrorResponse(`${err.message}`, 500))

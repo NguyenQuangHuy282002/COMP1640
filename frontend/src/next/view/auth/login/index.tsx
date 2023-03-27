@@ -24,6 +24,7 @@ function Login() {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
           navigate(`/${res.data.userMetaData.role}`)
+          window.location.reload()
           message.success('Login successful')
         }
       })

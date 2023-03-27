@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Button, List } from 'antd'
-import Comment from './comment'
+import { SlidersFilled } from '@ant-design/icons'
+import { Button, Dropdown, List, MenuProps, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { useSocket } from 'next/socket.io'
+import { useEffect, useState } from 'react'
+import Comment from './comment'
 interface DataType {
   gender?: string
   name: {
@@ -29,6 +30,7 @@ function CommentsList({ id, updateIdea }) {
   const [data, setData] = useState<DataType[]>([])
   const [list, setList] = useState<DataType[]>([])
   const [currentPage, setCurrentPage] = useState(1)
+  const [filter, setFilter] = useState('new')
 
   useEffect(() => {
     Http.get(`/api/v1/comment?ideaId=${id}`).then(res => {
@@ -42,9 +44,9 @@ function CommentsList({ id, updateIdea }) {
         setCurrentPage(res.data.next?.page)
       }
     })
-  }, [updateIdea])
+  }, [updateIdea, filter])
 
-  const updateComments = (info) => {
+  const updateComments = info => {
     setList(data.concat([...new Array(1)].map(() => ({ loading: true, name: {}, picture: {} }))))
     setData([info.comment, ...data])
     setList([info.comment, ...list])
@@ -62,7 +64,7 @@ function CommentsList({ id, updateIdea }) {
       appSocket.off('comments')
     }
   }, [updateComments])
-  
+
   const onLoadMore = () => {
     setLoading(true)
     setList(data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} }))))
@@ -81,20 +83,60 @@ function CommentsList({ id, updateIdea }) {
   }
 
   const loadMore = (
-    <div
-      style={{
-        textAlign: 'center',
-        marginTop: 12,
-        height: 32,
-        lineHeight: '32px',
-      }}
-    >
-      {isMore && !initLoading && !loading ? <Button onClick={onLoadMore}>More</Button> : null}
-    </div>
+    <>
+      {isMore && !initLoading && !loading ? (
+        <div
+          style={{
+            textAlign: 'center',
+            marginTop: 12,
+            height: 32,
+            lineHeight: '32px',
+          }}
+        >
+          <Button onClick={onLoadMore}>More</Button>
+        </div>
+      ) : (
+        <></>
+      )}
+    </>
   )
+
+  const moreItems: MenuProps['items'] = [
+    {
+      key: 'new',
+      label: (
+        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => setFilter('your-department')}>
+          Newest
+        </Typography.Text>
+      ),
+    },
+    {
+      key: 'old',
+      label: (
+        <Typography.Text style={{ fontSize: 15, margin: 0 }} onClick={() => setFilter('your-ideas')}>
+          Oldest
+        </Typography.Text>
+      ),
+    },
+  ]
 
   return (
     <>
+      <Space
+        style={{
+          width: '100%',
+          borderBottom: '0.5px #ccc solid',
+          padding: '10px',
+          display: 'flex',
+          justifyContent: 'end',
+        }}
+      >
+        <Dropdown menu={{ items: moreItems }} placement="bottom" arrow trigger={['click']}>
+          <Button>
+            <SlidersFilled />
+          </Button>
+        </Dropdown>
+      </Space>
       <List
         loading={initLoading}
         itemLayout="vertical"
