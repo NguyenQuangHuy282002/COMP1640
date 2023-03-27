@@ -22,7 +22,7 @@
   border-radius: 50px;
   padding-right: 10px;
   border: 1px solid #ccc;
-  background: #f7f3f3;
+  background: #fcfbfbf0;
 
 }
 .comment_input_wrap input {
@@ -33,6 +33,8 @@
   padding: 0 15px;
   color: var(--color-primary);
   background: transparent;
+  resize: vertical;
+
 }
 .comment_circle_icon {
   height: 30px;

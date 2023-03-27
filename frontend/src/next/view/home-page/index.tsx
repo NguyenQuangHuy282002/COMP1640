@@ -20,6 +20,7 @@ function HomePage() {
   const [optionsQuery, setOptionsQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalIdea, setTotalIdea] = useState(0)
   const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
   const { avatar } = useSubscription(userStore).state
   const handleClickTyping = async () => {
@@ -32,6 +33,16 @@ function HomePage() {
     setOptionsQuery(query)
     loadMoreData(true, query, 1)
   }, [filter])
+
+  const getTotalIdea = async () => {
+    await Http.get('/api/v1/idea/totalIdea')
+      .then(res => setTotalIdea(res.data?.total))
+      .catch(err => message.error('Failed to get total ideas!'))
+  }
+
+  useEffect(() => {
+    getTotalIdea()
+  },[])
 
   const loadMoreData = (reset: boolean = false, filter?, page?) => {
     setLoading(true)
@@ -84,7 +95,7 @@ function HomePage() {
         </Col>
       </StyledRow>
       <StyledRow style={{}}>
-        <MenuFilter setFilter={setFilter} filter={filter} />
+        <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea}/>
       </StyledRow>
       <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
     </Layout.Content>
