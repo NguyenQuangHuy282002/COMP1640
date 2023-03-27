@@ -100,13 +100,12 @@ export default function App() {
         >
           <Route path="" element={<HomePage />} />
           <Route path="event" element={<EventsPage />} />
-          <Route path="event/:id" element={<EventDetails />} />
+          <Route path="event/:id" element={<EventDetails role="staff" />} />
           <Route path="departments" element={<DepartmentManager />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
-          <Route path="eventdetail" element={<EventDetails />} />
         </Route>
 
         <Route
@@ -129,7 +128,6 @@ export default function App() {
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
-          <Route path="eventdetail" element={<EventDetails />} />
         </Route>
 
         <Route
@@ -150,7 +148,7 @@ export default function App() {
           <Route path="" element={<HomePage />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="idea" element={<IdeaDetail />} />
-          <Route path="event" element={<EventsPage />} />
+          <Route path="event" element={<EventsPage role="admin" />} />
           <Route path="event/:id" element={<EventDetails />} />
         </Route>
 

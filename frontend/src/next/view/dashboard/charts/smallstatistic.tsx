@@ -37,19 +37,19 @@ const SmallStatistic: React.FC = () => {
 
   const updateTotalAccount = data => setTotalAccount(data?.total || 0)
   const updateTotalIdea = data => setTotalIdea(data?.total || 0)
-  const updateTotalEventAvailable = data => setTotalEvent(data?.total || 0)
+  const updateTotalEventAvailable = data => setTotalEvent(data?.totalAvailable || 0)
 
   useEffect(() => {
     // App socket
     appSocket.on('total_account', updateTotalAccount)
     appSocket.on('total_idea', updateTotalIdea)
-    appSocket.on('total_event_available', updateTotalEventAvailable)
+    appSocket.on('all_events', updateTotalEventAvailable)
 
     // The listeners must be removed in the cleanup step, in order to prevent multiple event registrations
     return () => {
       appSocket.off('total_account', updateTotalAccount)
       appSocket.off('total_idea', updateTotalIdea)
-      appSocket.off('total_event_available', updateTotalEventAvailable)
+      appSocket.off('all_events', updateTotalEventAvailable)
     }
   }, [updateTotalAccount, updateTotalIdea, updateTotalEventAvailable])
 

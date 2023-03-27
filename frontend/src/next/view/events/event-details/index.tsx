@@ -1,20 +1,21 @@
-import { ClockCircleTwoTone, FireTwoTone, RocketTwoTone } from '@ant-design/icons'
-import { Alert, Button, Card, Empty, List, Space, Typography } from 'antd'
+import { ArrowLeftOutlined, ClockCircleTwoTone, FireTwoTone, RocketTwoTone } from '@ant-design/icons'
+import { Alert, Button, Card, Empty, List, Row, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
+import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import IdeaCard from './idea-card'
 
 const { Title } = Typography
 
-export default function EventDetails() {
+export default function EventDetails({ role }: { role?: string }) {
   const { id } = useParams()
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useRoleNavigate()
   const [event, setEvent] = useState(null)
-
+  const isEventClosed = useMemo(() => new Date(event?.firstCloseDate) < new Date(), [event])
   const getEventDetails = async () => {
     await Http.get(`/api/v1/event?id=${id}`)
       .then(res => {
@@ -32,11 +33,24 @@ export default function EventDetails() {
   }
   return (
     <Card
-      title={<Title style={{ margin: 0, fontSize: 24, textOverflow: 'ellipsis' }}>{event?.title}</Title>}
+      title={
+        <Space align="center" size="large">
+          <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/event')} />
+          <Title style={{ margin: 0, fontSize: 24, textOverflow: 'ellipsis' }}>{event?.title}</Title>
+        </Space>
+      }
       style={{ borderRadius: 0, height: '100%', marginRight: 16 }}
-      headStyle={{ backgroundColor: '#1677ff6d', borderRadius: 0 }}
+      headStyle={{ borderRadius: 0 }}
     >
       <Title style={{ margin: '0px 0px 16px', fontSize: 18, color: '#1677ff' }}>About this event:</Title>
+      {isEventClosed && (
+        <Alert
+          style={{ marginBottom: 16 }}
+          type="error"
+          description={'This event is closed, you cannot add a new idea to it.'}
+        />
+      )}
+
       <Alert
         type="success"
         description={
@@ -70,8 +84,12 @@ export default function EventDetails() {
       <Title style={{ margin: '20px 0px 16px', fontSize: 18, color: '#1677ff' }}>Description:</Title>
       <Alert type="info" description={<div dangerouslySetInnerHTML={{ __html: event?.description }} />} />
 
-      <Title style={{ margin: '20px 0px 16px', fontSize: 18, color: '#1677ff' }}>Ideas in this event:</Title>
-
+      <Row style={{ alignItems: 'center', justifyContent: 'space-between', margin: '20px 0px 16px' }}>
+        <Title style={{ margin: 0, fontSize: 18, color: '#1677ff' }}>Ideas in this event:</Title>
+        {role === 'staff' && event?.ideas?.length && !isEventClosed ? (
+          <BlueColorButton onClick={() => navigateIdeaForm(event._id)}>Add new idea</BlueColorButton>
+        ) : null}
+      </Row>
       {event?.ideas?.length ? (
         <List
           itemLayout="vertical"
@@ -93,9 +111,9 @@ export default function EventDetails() {
           description={<span>There is no any idea yet</span>}
           style={{ width: '100%', padding: 20 }}
         >
-          <Button type="primary" onClick={() => navigateIdeaForm(event._id)}>
-            Create Now
-          </Button>
+          {role === 'staff' && !isEventClosed ? (
+            <BlueColorButton onClick={() => navigateIdeaForm(event._id)}>Create Now</BlueColorButton>
+          ) : null}
         </Empty>
       )}
     </Card>

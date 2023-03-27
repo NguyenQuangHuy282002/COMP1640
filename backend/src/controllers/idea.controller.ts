@@ -6,6 +6,7 @@ import Category from '../models/Category'
 import SpecialEvent from '../models/SpecialEvent'
 import Department from '../models/Department'
 import { io } from '../utils/socket'
+import { updateEventNumberRealTime } from '../routers/specialEvent.router'
 
 export const updateIdeaNumberRealTime = async () => {
   const totalIdea = await Idea.find({})
@@ -46,6 +47,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
     user.ideas.push(savedIdea._id)
     user.save()
     updateIdeaNumberRealTime()
+    updateEventNumberRealTime()
     res.status(200).json({
       success: true,
       message: 'idea is created successfully',
@@ -314,6 +316,7 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
     user.comments = newUserComment
     user.save()
     updateIdeaNumberRealTime()
+    updateEventNumberRealTime()
     res.status(200).json({ success: true, message: 'idea is deleted!', deletedIdea: deletedIdea, user })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))

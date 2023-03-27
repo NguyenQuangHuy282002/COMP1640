@@ -24,10 +24,12 @@ function EventCardItem({
   event,
   handleDeleteEvent,
   setEditEvent,
+  role,
 }: {
   event: IEvent
   handleDeleteEvent: any
   setEditEvent: (event: any) => void
+  role?: string
 }) {
   const navigate = useRoleNavigate()
 
@@ -42,10 +44,7 @@ function EventCardItem({
     >
       <Card
         title={
-          <Link
-            style={{ color: '#000000', fontSize: '20px', fontWeight: 600 }}
-            onClick={() => handleViewEventDetails(event._id)}
-          >
+          <Link style={{ fontSize: '20px', fontWeight: 600 }} onClick={() => handleViewEventDetails(event._id)}>
             {event?.title}
           </Link>
         }
@@ -54,8 +53,10 @@ function EventCardItem({
         extra={
           <Space wrap>
             <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewEventDetails(event._id)} />
-            <Button type="text" icon={<EditOutlined />} onClick={() => setEditEvent(event)} />
-            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteEvent(event._id)} />
+            {role === 'admin' && <Button type="text" icon={<EditOutlined />} onClick={() => setEditEvent(event)} />}
+            {role === 'admin' && (
+              <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteEvent(event._id)} />
+            )}
           </Space>
         }
         headStyle={{ borderBottom: '2px solid #d7d7d7' }}
@@ -83,88 +84,5 @@ function EventCardItem({
     </Badge.Ribbon>
   )
 }
-
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    render: (text, record) => (
-      <Link
-      // to={`/eventdetail/${record.key}`}
-      >
-        {text}
-      </Link>
-    ), // use Link to wrap title
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    // key: 'description',
-  },
-  {
-    title: 'Department',
-    dataIndex: 'department',
-  },
-  {
-    title: 'StartDate',
-    dataIndex: 'startDate',
-  },
-  {
-    title: 'FirstClosedDate',
-    dataIndex: 'firstClosedDate',
-  },
-  {
-    title: 'FinalClosedDate',
-    dataIndex: 'finalClosedDate',
-  },
-]
-
-const data = [
-  {
-    key: '1',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    key: '2',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    key: '3',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    key: '4',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-  {
-    key: '5',
-    title: 'adshkjfgk asdgfhjgjhds',
-    description: 'gdsahkgfkjhasgdf',
-    department: 'Computing',
-    startDate: '2/8/2002',
-    firstClosedDate: '2/8/2002',
-    finalClosedDate: '2/8/2002',
-  },
-]
 
 export default EventCardItem
