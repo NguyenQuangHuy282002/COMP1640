@@ -3,6 +3,7 @@ import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/ico
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -24,6 +25,7 @@ function getItem(
 
 function EventCard() {
   const [events, setEvents] = useState<any>([])
+  const navigate = useRoleNavigate()
   useEffect(() => {
     const fetchEvents = async () => {
       await Http.get('/api/v1/event/')
@@ -33,20 +35,24 @@ function EventCard() {
     fetchEvents()
   }, [])
 
-  const onClick: MenuProps['onClick'] = e => {
-    console.log('click ', e)
+  const onClickEventItem: MenuProps['onClick'] = e => {
+    navigate(`/event/${e.key}`)
   }
 
-  console.log('e', events)
   const items: MenuProps['items'] = [
     getItem('Special Events Going On', 'menu', <AppstoreOutlined />, [
-      events.map(event => getItem(event.title, event._id)),
-      getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
+      ...events.slice(0, 3).map(event => getItem(event.title, event._id)),
+      getItem(
+        'More Event',
+        'sub-menu',
+        null,
+        events.slice(3).map(event => getItem(event.title, event._id))
+      ),
     ]),
   ]
   return (
     <Menu
-      onClick={onClick}
+      onClick={onClickEventItem}
       style={{ width: 256 }}
       defaultSelectedKeys={['']}
       defaultOpenKeys={['menu']}
