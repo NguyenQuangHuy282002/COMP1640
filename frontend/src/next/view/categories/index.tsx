@@ -1,17 +1,25 @@
-import { PlusCircleTwoTone } from '@ant-design/icons'
-import { Divider, Row, Skeleton, Space, Typography } from 'antd'
+import { PlusCircleTwoTone,PlusCircleOutlined } from '@ant-design/icons'
+import { Divider, Row, Skeleton, Space, Typography, Button, Card } from 'antd'
 import { Http } from 'next/api/http'
 import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import CategoryCardItem from './card-item'
+import AddCategoryModal from './add-new-category'
 
 const { Title } = Typography
+
+const AddCategory = ({ openModal }) => (
+  <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
+    Add new category
+  </Button>
+)
 
 function CategoryManager() {
   const { enqueueSnackbar } = useSnackbar()
   const [openModal, setOpenModal] = useState(false)
   const [allCategoryList, setAllCategoryList] = useState([])
+  const [currentCategory, setCurrentCategory] = useState({ name: '' })
   const [editCategory, setEditCategory] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -37,24 +45,22 @@ function CategoryManager() {
 
   return (
     <>
-        <div style={{ padding: 20, margin: 0 }}>
-          <Row justify="space-between">
-            <Title level={3} style={{ margin: 0 }}>
-              Categorys list
-            </Title>
-            <BlueColorButton
-              icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
-              onClick={() => {
-                setOpenModal(true)
-                setEditCategory(null)
-              }}
-              size="large"
-            >
-              Add new category
-            </BlueColorButton>
-          </Row>
-          <Divider />
-          <Skeleton loading={loading} avatar active>
+    <Row gutter={16} style={{ padding: '10px', margin: 0 }}>
+      <Card
+        title="All categories"
+        extra={
+          <AddCategory
+            openModal={() => {
+              setOpenModal(true)
+              setCurrentCategory({ name: '' })
+            }}
+          />
+        }
+        bordered={false}
+        style={{ width: '100%' }}
+        bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
+      > 
+      <Skeleton loading={loading} avatar active>
             <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
               {allCategoryList.map((category, index) => (
                 <CategoryCardItem
@@ -68,19 +74,19 @@ function CategoryManager() {
                 />
               ))}
             </Space>
-          </Skeleton>
-        </div>
-
+          </Skeleton>     
+      </Card>
+      <AddCategoryModal
+        isOpen={openModal}
+        onCloseModal={() => setOpenModal(false)}
+        setCategoriesList={setAllCategoryList}
+        categoriesList={allCategoryList}
+        currentCategory={currentCategory}
+      />
+    </Row>
     </>
-    //>>>>>>> main
   )
 }
 
 export default CategoryManager
-//<<<<<<< yesvansirCategory
 
-// {data.map((category, index) => (
-//   <CategoryCardItem category={category} key={index} />
-// ))}
-//=======
-//>>>>>>> main
