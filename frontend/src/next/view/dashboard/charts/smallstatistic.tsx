@@ -55,7 +55,7 @@ const SmallStatistic: React.FC = () => {
 
   return (
     <Row gutter={16}>
-      <Col span={8}>
+      <Col xs={24} sm={24} md={8} xxl={8} style={{ marginBottom: 10 }}>
         <Card bordered={false}>
           <Title level={3} style={{ margin: 0 }}>
             Total Accounts
@@ -65,7 +65,7 @@ const SmallStatistic: React.FC = () => {
           </Title>
         </Card>
       </Col>
-      <Col span={8}>
+      <Col xs={24} sm={24} md={8} xxl={8} style={{ marginBottom: 10 }}>
         <Card bordered={false}>
           <Title level={3} style={{ margin: 0 }}>
             Total Ideas
@@ -75,7 +75,7 @@ const SmallStatistic: React.FC = () => {
           </Title>
         </Card>
       </Col>
-      <Col span={8}>
+      <Col xs={24} sm={24} md={8} xxl={8} style={{ marginBottom: 10 }}>
         <Card bordered={false}>
           <Title level={3} style={{ margin: 0 }}>
             Total event incomming

@@ -11,7 +11,7 @@ function DashboardAdmin() {
       <Row
         gutter={{ xs: 8, sm: 16, md: 24 }}
         style={{
-          margin: '10px',
+          padding: '10px',
         }}
       >
         <Col span={24}>
@@ -21,7 +21,7 @@ function DashboardAdmin() {
       <Row
         gutter={{ xs: 8, sm: 16, md: 24 }}
         style={{
-          margin: '10px',
+          padding: '10px',
         }}
       >
         <Col
@@ -49,13 +49,23 @@ function DashboardAdmin() {
           <LarsestEventIdea />
         </Col>
       </Row>
+
+      <Row
+        gutter={{ xs: 8, sm: 16, md: 24 }}
+        style={{
+          padding: '10px',
+        }}
+      >
+        <LarsestEventIdea />
+      </Row>
+
       <Row
         style={{
           background: 'white',
           border: '1px solid #ccc',
           borderRadius: '5px',
           width: 'auto',
-          margin: '20px',
+          margin: '10px',
         }}
       >
         <Col span={24} style={{ display: 'flex', justifyContent: 'center', borderBottom: 'inset' }}>
