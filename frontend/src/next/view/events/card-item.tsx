@@ -40,7 +40,7 @@ function EventCardItem({
   return (
     <Badge.Ribbon
       text={event?.ideas?.length}
-      color={event?.ideas?.length > 5 ? 'green' : event?.ideas?.length === 0 ? 'red' : 'volcano'}
+      color={new Date(event?.firstCloseDate) > new Date() ? (event?.ideas?.length === 0 ? 'red' : 'volcano') : 'green'}
     >
       <Card
         title={

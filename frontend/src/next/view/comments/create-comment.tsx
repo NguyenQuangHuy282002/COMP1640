@@ -10,7 +10,7 @@ interface Commentprops {
   ideaId?: string
   setComments?: void
   setCount?: void
-  email?: any
+  email?: string
   setUpdateIdea?: any
 }
 
@@ -21,7 +21,7 @@ export default function CreateComment(props: Commentprops) {
   const [text, setText] = useState('')
   const [cursorPosition, setCursorPosition] = useState()
   const textRef = useRef(null)
-  
+
   const { user, ideaId, setComments, setCount, email, setUpdateIdea } = props
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function CreateComment(props: Commentprops) {
   }
 
   const handleSubmitComment = async () => {
-    if(text.length === 0 || !text) {
+    if (text.length === 0 || !text) {
       return message.error('Type your comment first !!')
     }
     const payload = {
@@ -48,7 +48,7 @@ export default function CreateComment(props: Commentprops) {
       isAnonymous: isAnonymous,
     }
     setText('')
-    
+
     await Http.post('/api/v1/comment/create', payload)
       .then(res => {
         setUpdateIdea(prev => ++prev)
@@ -57,7 +57,7 @@ export default function CreateComment(props: Commentprops) {
       .catch(error => message.error(`Something went wrong: ${error.response?.data?.message}`))
   }
 
-  const _handleKeyDown = (e) => {
+  const _handleKeyDown = e => {
     if (e.key === 'Enter') {
       handleSubmitComment()
     }
@@ -79,7 +79,7 @@ export default function CreateComment(props: Commentprops) {
             value={text}
             placeholder="Write a comment..."
             onChange={e => setText(e.target.value)}
-            onKeyDown={(e) => _handleKeyDown(e)}
+            onKeyDown={e => _handleKeyDown(e)}
           />
           <div
             className="comment_circle_icon hover2"
@@ -90,18 +90,11 @@ export default function CreateComment(props: Commentprops) {
             <i className="emoji_icon" style={{ color: '#9a9999', fontSize: '16px' }}>
               <SmileOutlined />
             </i>
-          
           </div>
-          <Divider type="vertical" style={{ color: "black"}}></Divider>
+          <Divider type="vertical" style={{ color: 'black' }}></Divider>
           <Space style={{ justifyContent: 'end', display: 'flex', paddingLeft: '5px' }} direction="horizontal">
-            {
-              windowWidth > 1000 ? 'Anonymous:' : '🎭'
-            }
-            <Switch
-              onChange={() => setIsAnonymous(!isAnonymous)}
-              checkedChildren="On"
-              unCheckedChildren="Off"
-            />
+            {windowWidth > 1000 ? 'Anonymous:' : '🎭'}
+            <Switch onChange={() => setIsAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
           </Space>
           {/* <div className="comment_circle_icon hover2">
             <i className="gif_icon"></i>

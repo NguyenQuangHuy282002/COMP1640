@@ -59,7 +59,7 @@ function EventsPage({ role }: { role?: string }) {
         />
       ) : (
         <div style={{ padding: 20, margin: 0 }}>
-          <Row justify="space-between">
+          <Row justify="space-between" align={'middle'}>
             <Title level={3} style={{ margin: 0 }}>
               Events list
             </Title>
