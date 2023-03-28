@@ -15,6 +15,9 @@ export async function ReadConfig() {
     app: {
       dir: resolvedir('../frontend/build'),
     },
+    sib: {
+      key: process.env.SIB_API_KEY
+    }
   }
   Object.defineProperty(config.database, 'db_url', {
     enumerable: false,

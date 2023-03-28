@@ -12,7 +12,6 @@ function Login() {
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential && credential.tokenVerified) {
-      // navigate('/')
       message.info('You already logged in!')
     }
   }, [])
@@ -24,9 +23,12 @@ function Login() {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
           navigate(`/${res.data.userMetaData.role}`)
+          window.location.reload()
           message.success('Login successful')
         }
+        return res.data.userMetaData.role
       })
+      .then(enpoint => navigate(`/${enpoint}`))
       .catch(error => {
         console.error(error)
         message.error(`Login failed, ${error?.message}`)

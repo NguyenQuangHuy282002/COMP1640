@@ -1,6 +1,7 @@
 import { Card, Skeleton, Space, Tag, Typography } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { Http } from 'next/api/http'
+import { useSocket } from 'next/socket.io'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts'
@@ -15,6 +16,7 @@ const getPath = (x, y, width, height) => {
 }
 
 export default function LarsestEventIdea() {
+  const { appSocket } = useSocket()
   const { enqueueSnackbar } = useSnackbar()
   const [eventList, setEventList] = useState([])
   const [loading, setLoading] = useState(false)
@@ -36,9 +38,32 @@ export default function LarsestEventIdea() {
       .finally(() => setLoading(false))
   }
 
+  const updateEventRealTime = data => {
+    console.log('=>>>>>>>>>>data', data)
+    setEventList(
+      data.event
+        .sort((a, b) => b.ideas.length - a.ideas.length)
+        .slice(0, 10)
+        .map(event => ({
+          name: event.title,
+          totalIdea: event.ideas.length,
+        }))
+    )
+  }
+
   useEffect(() => {
     getEventList()
   }, [])
+
+  useEffect(() => {
+    // App socket
+    appSocket.on('all_events', updateEventRealTime)
+
+    // The listeners must be removed in the cleanup step, in order to prevent multiple event registrations
+    return () => {
+      appSocket.off('all_events', updateEventRealTime)
+    }
+  }, [updateEventRealTime])
 
   return (
     <Skeleton avatar title={false} loading={loading} active>

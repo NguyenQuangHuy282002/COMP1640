@@ -6,6 +6,7 @@ import Category from '../models/Category'
 import SpecialEvent from '../models/SpecialEvent'
 import Department from '../models/Department'
 import { io } from '../utils/socket'
+import { updateEventNumberRealTime } from '../routers/specialEvent.router'
 
 export const updateIdeaNumberRealTime = async () => {
   const totalIdea = await Idea.find({})
@@ -46,6 +47,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
     user.ideas.push(savedIdea._id)
     user.save()
     updateIdeaNumberRealTime()
+    updateEventNumberRealTime()
     res.status(200).json({
       success: true,
       message: 'idea is created successfully',
@@ -59,7 +61,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
-
+    
     const page = parseInt(reqQuery.page) || 1
     const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
@@ -131,11 +133,11 @@ export const getIdeas = async (req: any, res: any, next: any) => {
 
 export const getTotalIdea = async (req: any, res: any, next: any) => {
   try {
-    const ideas = await Idea.find({})
+    const ideasLength = await Idea.count()
 
     res.status(200).json({
       success: true,
-      total: ideas.length,
+      total: ideasLength,
     })
   } catch (err) {
     return next(new ApiErrorResponse(`${err.message}`, 500))
@@ -314,6 +316,7 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
     user.comments = newUserComment
     user.save()
     updateIdeaNumberRealTime()
+    updateEventNumberRealTime()
     res.status(200).json({ success: true, message: 'idea is deleted!', deletedIdea: deletedIdea, user })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))

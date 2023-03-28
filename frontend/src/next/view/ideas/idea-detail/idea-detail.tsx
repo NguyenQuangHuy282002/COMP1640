@@ -1,12 +1,11 @@
-import { Button, Layout, message, Space, Switch, Typography } from 'antd'
+import { Layout, message, Space, Typography } from 'antd'
 import { Content } from 'antd/es/layout/layout'
-import { convertToRaw, EditorState } from 'draft-js'
-import draftToHtml from 'draftjs-to-html'
 import { Http } from 'next/api/http'
-import RichTextEditor from 'next/components/text-editor'
 import { useSubscription } from 'next/libs/global-state-hook'
+import { useSocket } from 'next/socket.io'
 import { useQuery } from 'next/utils/use-query'
 import { userStore } from 'next/view/auth/user-store'
+import CreateComment from 'next/view/comments/create-comment'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
@@ -18,18 +17,18 @@ import MenuBar from './menu-bar'
 const { Text, Link } = Typography
 
 function IdeaDetail() {
-  const initialState = () => EditorState.createEmpty()
+  const { appSocket } = useSocket()
   const [data, setData] = useState([])
-  const [editorState, setEditorState] = useState(initialState)
   const [showComment, setShowComment] = useState(false)
   const [updateIdea, setUpdateIdea] = useState(0)
-  const [isAnonymousMode, setIsAnonymousMode] = useState(false)
+  const [commentCount, setCommentCount] = useState(0)
 
   const query = useQuery()
   const id = query.get('id')
-  const { name } = useSubscription(userStore).state
+  const { name, avatar } = useSubscription(userStore).state
   const windowWidth = useWindowSize()
   const padding = windowWidth < 969 ? '10px 0' : '15px 60px 50px'
+
 
   const handleShowComment = () => {
     setShowComment(!showComment)
@@ -37,26 +36,33 @@ function IdeaDetail() {
   useEffect(() => {
     const getIdea = async () =>
       await Http.get(`/api/v1/idea/detail?id=${id}`)
-        .then(res => setData([res.data.data]))
+        .then(res => {
+          setData([res.data.data])
+          setCommentCount(res.data.data.comments.length)
+        })
         .catch(error => message.error('Failed to fetch idea !'))
     getIdea()
   }, [updateIdea])
 
-  const handleSubmitComment = async () => {
-    const payload = {
-      content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-      ideaId: data[0]?._id,
-      publisherEmail: data[0]?.publisherId.email,
-      isAnonynous: isAnonymousMode,
+  const updateCommentLength = (info) => {
+    if(info.action === 'create') {
+      return setCommentCount(commentCount + 1)
+    } else {
+      return setCommentCount(commentCount - 1)
     }
-    await Http.post('/api/v1/comment/create', payload)
-      .then(res => {
-        setUpdateIdea(updateIdea + 1)
-        setEditorState(initialState)
-        return message.success('Your comment are hanlded')
-      })
-      .catch(error => message.error(`Something went wrong: ${error.response?.data?.message}`))
   }
+
+  useEffect(() => {
+    appSocket.on('comments', data => {
+      if (data.ideaId === id) {
+        updateCommentLength(data)
+      }
+    })
+    return () => {
+      appSocket.off('comments')
+    }
+  }, [updateCommentLength])
+
   return (
     <>
       {data ? (
@@ -71,34 +77,17 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={data[0]?.comments.length} ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} />
+
+            <MenuBar commentCount={commentCount } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} />
           </StyledContent>
 
           <StyledContent>
             <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
-              <Text strong>
-                Comment as <Text mark>{name}</Text>
+              <Text>
+                Comment as <Text strong>{name}</Text>
               </Text>
-              <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
-            </Space>
-            <Space style={{ justifyContent: 'end', display: 'flex', paddingRight: '44px' }} direction="horizontal">
-              Anonymous Mode:{' '}
-              <Switch
-                onChange={() => setIsAnonymousMode(!isAnonymousMode)}
-                checkedChildren="On"
-                unCheckedChildren="Off"
-              />
-              <Button
-                type="primary"
-                shape="round"
-                disabled={false}
-                style={{ marginLeft: 20 }}
-                onClick={() => {
-                  handleSubmitComment()
-                }}
-              >
-                Comment
-              </Button>
+              {/* <RichTextEditor editorState={editorState} setEditorState={setEditorState} /> */}
+              <CreateComment user={{avatar, name}} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email}/>
             </Space>
           </StyledContent>
           <StyledContent>
