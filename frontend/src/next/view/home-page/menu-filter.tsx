@@ -1,11 +1,18 @@
 import React from 'react'
-import { CrownFilled, DingtalkCircleFilled, FireFilled, RocketFilled, SlidersFilled, GroupOutlined, EllipsisOutlined, PicRightOutlined, FrownFilled } from '@ant-design/icons'
+import {
+  CrownFilled,
+  DingtalkCircleFilled,
+  FireFilled,
+  RocketFilled,
+  SlidersFilled,
+  GroupOutlined,
+  EllipsisOutlined,
+  PicRightOutlined,
+  FrownFilled
+} from '@ant-design/icons'
 import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
-
-type MenuItem = Required<MenuProps>['items'][number]
-
 
 const { Text } = Typography
 
@@ -13,7 +20,6 @@ function MenuFilter({ setFilter, filter }) {
   const windowWidth = useWindowSize()
   const display = windowWidth < 1000 ? 'block' : 'flex'
   const onClickFilter = (val: any) => {
-    console.log('click ', val)
     setFilter(val)
   }
   const topItems: MenuProps['items'] = [
@@ -35,6 +41,40 @@ function MenuFilter({ setFilter, filter }) {
     },
   ]
 
+  const departmentItems: MenuProps['items'] = [
+    {
+      key: 'computing',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('computing')}>
+          Computing
+        </Text>
+      ),
+    },
+    {
+      key: 'desgin',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('desgin')}>
+          Desgin
+        </Text>
+      ),
+    },
+    {
+      key: 'bussiness',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('bussiness')}>
+          Bussiess
+        </Text>
+      ),
+    },
+    {
+      key: 'ABC',
+      label: (
+        <Text style={{ fontSize: 15, margin: 0 }} onClick={() => onClickFilter('ABC')}>
+          ABC
+        </Text>
+      ),
+    },
+  ]
   // const departmentItems: MenuProps['items'] = [
   //   {
   //     key: 'computing',
@@ -98,10 +138,7 @@ function MenuFilter({ setFilter, filter }) {
         </Text>
       ),
     },
-
   ]
-
-
 
   const moreItems: MenuProps['items'] = [
     {
@@ -140,15 +177,18 @@ function MenuFilter({ setFilter, filter }) {
           <StyledRadioButton value="worst">
             <FrownFilled /> Worst
           </StyledRadioButton>
+          <StyledRadioButton value="oldest">
+            <FrownFilled /> Oldest
+          </StyledRadioButton>
         </Radio.Group >
         <Col />
         <Col>
           <Space wrap style={{ float: "right" }}>
-            {/* <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+            <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
               <Button>
                 <GroupOutlined /> Department
               </Button>
-            </Dropdown> */}
+            </Dropdown>
             <Dropdown menu={{ items: categoryItems }} placement="bottom" arrow trigger={['click']}>
               <Button>
                 <PicRightOutlined />Category
@@ -175,7 +215,7 @@ function MenuFilter({ setFilter, filter }) {
 const StyledRadioButton = styled(Radio.Button)`
   :visited {
     background-color: #ccc;
-  };
+  }
 `
 
 export default MenuFilter

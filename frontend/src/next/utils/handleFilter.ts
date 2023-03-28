@@ -30,9 +30,9 @@ export const handleFilter = (sortType: any, key?: any) => {
     case 'best':
       return 'tab=best';
     case 'oldest':
-      return 'sort=oldest';
-    // case 'popular':
-    //   return (a, b) => b.posts_count - a.posts_count;
+      return 'tab=oldest';
+    case 'worst':
+      return 'tab=worst';
     // case 'Name':
     //   return (a, b) => a.tagname.localeCompare(b.tagname);
     // case 'Username':

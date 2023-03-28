@@ -1,16 +1,17 @@
-import React from 'react';
-import { ScheduleOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
+import type { MenuProps } from 'antd'
+import { Menu } from 'antd'
+import { Http } from 'next/api/http'
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>['items'][number]
 
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group',
+  type?: 'group'
 ): MenuItem {
   return {
     key,
@@ -18,28 +19,31 @@ function getItem(
     children,
     label,
     type,
-  } as MenuItem;
+  } as MenuItem
 }
 
-const items: MenuProps['items'] = [
+function EventCard() {
+  const [events, setEvents] = useState<any>([])
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await Http.get('/api/v1/event/')
+        .then(res => setEvents(res.data.data))
+        .catch(err => console.log(err, 'error to fetch events'))
+    }
+    fetchEvents()
+  }, [])
 
-  getItem('Special Event', 'menu', <ScheduleOutlined />, [
-    getItem('Event 1', '1'),
-    getItem('Event 2', '2'),
-    getItem('Event 3', '3'),
-    getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
-  ]),
+  const onClick: MenuProps['onClick'] = e => {
+    console.log('click ', e)
+  }
 
-
-
-
-];
-
-const EventCard: React.FC = () => {
-  const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
-  };
-
+  console.log('e', events)
+  const items: MenuProps['items'] = [
+    getItem('Special Events Going On', 'menu', <AppstoreOutlined />, [
+      events.map(event => getItem(event.title, event._id)),
+      getItem('More Event', 'sub-menu', null, [getItem('Event 4', '4'), getItem('Event 5', '5')]),
+    ]),
+  ]
   return (
     <Menu
       onClick={onClick}
@@ -49,7 +53,7 @@ const EventCard: React.FC = () => {
       mode="inline"
       items={items}
     />
-  );
-};
+  )
+}
 
-export default EventCard;
+export default EventCard

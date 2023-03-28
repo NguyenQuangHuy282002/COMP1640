@@ -1,5 +1,12 @@
 import express from 'express'
 import SpecialEvent from '../models/SpecialEvent'
+import { io } from '../utils/socket'
+
+export const updateIdeaNumberRealTime = async () => {
+  const now = new Date()
+  const totalEventAvailable = await SpecialEvent.find({ firstCloseDate: { $gt: now } })
+  io.emit('total_event_available', { total: totalEventAvailable.length })
+}
 
 export const specialEventRouter = express.Router()
 
@@ -53,6 +60,7 @@ specialEventRouter.post('/', express.json(), async (req, res) => {
       })
     }
     res.status(200).json({ success: 1 })
+    updateIdeaNumberRealTime()
   } catch (err) {
     res.status(500).json({
       message: err.message,
@@ -64,6 +72,8 @@ specialEventRouter.delete('/:id', express.json(), async (req, res) => {
   try {
     const eventId = req.params.id
     await SpecialEvent.findByIdAndDelete(eventId)
+    updateIdeaNumberRealTime()
+
     res.status(200).json({ success: 1 })
   } catch (err) {
     res.status(500).json({

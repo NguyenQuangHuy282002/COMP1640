@@ -7,9 +7,8 @@ import {
   RocketTwoTone,
 } from '@ant-design/icons'
 import { Badge, Button, Card, Space } from 'antd'
-import { ColumnsType } from 'antd/es/table'
 import Link from 'antd/es/typography/Link'
-import { useNavigate } from 'react-router-dom'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
 interface IEvent {
   _id: string
@@ -21,20 +20,16 @@ interface IEvent {
   ideas: any
 }
 
-const COLOR_LIST = ['#ff494924', '#dbfb3d28', '#49ffb639', '#993dfb46', '#49adff49']
-
 function EventCardItem({
   event,
-  index,
   handleDeleteEvent,
   setEditEvent,
 }: {
   event: IEvent
-  index: number
   handleDeleteEvent: any
   setEditEvent: (event: any) => void
 }) {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
 
   const handleViewEventDetails = (id: string) => {
     navigate(`/event/${id}`)
@@ -55,7 +50,7 @@ function EventCardItem({
           </Link>
         }
         bordered={false}
-        style={{ width: '100%', display: 'block', backgroundColor: COLOR_LIST[index % 5] }}
+        style={{ width: '100%', display: 'block' }}
         extra={
           <Space wrap>
             <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewEventDetails(event._id)} />
@@ -89,8 +84,87 @@ function EventCardItem({
   )
 }
 
+const columns = [
+  {
+    title: 'Title',
+    dataIndex: 'title',
+    render: (text, record) => (
+      <Link
+      // to={`/eventdetail/${record.key}`}
+      >
+        {text}
+      </Link>
+    ), // use Link to wrap title
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+    // key: 'description',
+  },
+  {
+    title: 'Department',
+    dataIndex: 'department',
+  },
+  {
+    title: 'StartDate',
+    dataIndex: 'startDate',
+  },
+  {
+    title: 'FirstClosedDate',
+    dataIndex: 'firstClosedDate',
+  },
+  {
+    title: 'FinalClosedDate',
+    dataIndex: 'finalClosedDate',
+  },
+]
 
+const data = [
+  {
+    key: '1',
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+  {
+    key: '2',
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+  {
+    key: '3',
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+  {
+    key: '4',
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+  {
+    key: '5',
+    title: 'adshkjfgk asdgfhjgjhds',
+    description: 'gdsahkgfkjhasgdf',
+    department: 'Computing',
+    startDate: '2/8/2002',
+    firstClosedDate: '2/8/2002',
+    finalClosedDate: '2/8/2002',
+  },
+]
 
-
-
-export default EventCardItem;
+export default EventCardItem

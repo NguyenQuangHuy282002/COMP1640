@@ -1,9 +1,10 @@
 import { ClockCircleTwoTone, FireTwoTone, RocketTwoTone } from '@ant-design/icons'
 import { Alert, Button, Card, Empty, List, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import IdeaCard from './idea-card'
 
 const { Title } = Typography
@@ -11,7 +12,7 @@ const { Title } = Typography
 export default function EventDetails() {
   const { id } = useParams()
   const { enqueueSnackbar } = useSnackbar()
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const [event, setEvent] = useState(null)
 
   const getEventDetails = async () => {
@@ -25,7 +26,6 @@ export default function EventDetails() {
   useEffect(() => {
     getEventDetails()
   }, [id])
-  console.log(event)
 
   const navigateIdeaForm = (id: string) => {
     navigate(`/submit?event=${id}`)
@@ -77,9 +77,7 @@ export default function EventDetails() {
           itemLayout="vertical"
           size="large"
           pagination={{
-            onChange: page => {
-              console.log(page)
-            },
+            onChange: page => {},
             pageSize: 5,
           }}
           style={{

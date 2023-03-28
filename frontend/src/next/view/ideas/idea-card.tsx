@@ -1,21 +1,21 @@
 import {
   ClockCircleFilled,
   CloudDownloadOutlined,
+  CompassOutlined,
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
+  LockTwoTone,
   MessageTwoTone,
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
-  LockTwoTone,
-  CompassOutlined
-  //>>>>>>> main
+  PaperClipOutlined,
 } from '@ant-design/icons'
 import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
@@ -25,7 +25,7 @@ const { Text, Link } = Typography
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const [loading, setLoading] = useState(true)
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
@@ -40,7 +40,7 @@ function IdeaCard({ idea, isLoading }) {
   const handleViewDetail = id => {
     navigate(`/idea?id=${id}`)
   }
-  // console.log(idea)
+
   return (
     <>
       <StyledCard
@@ -61,22 +61,28 @@ function IdeaCard({ idea, isLoading }) {
               windowWidth > 900
                 ? [
                   <Text strong key="list-vertical-star-o">
-                    <FireTwoTone style={{ padding: '5px' }} />
-                    {idea?.likes?.length - idea?.dislikes?.length || 0} points
+                    <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
+                    {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
                   </Text>,
                   <Text key="list-vertical-like-o">
                     <Tag color="cyan" style={{ margin: 0 }}>
                       <MessageTwoTone /> {idea.comments.length} comments
                     </Tag>
                   </Text>,
-                  <Text>
+                  <Text key="list-vertical-lock">
                     <Tag color="volcano" style={{ margin: 0 }}>
                       <LockTwoTone /> cannot comments
                     </Tag>
                   </Text>,
                   <Text type="secondary" key="list-vertical-message">
                     <EyeOutlined style={{ padding: '5px' }} />
-                    {idea.views} views
+                    {idea.meta.views} views
+                  </Text>,
+                  <Text key="list-vertical-files">
+                    <Tag color="#828DAB" style={{ margin: 0 }}>
+                      <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                      {idea?.files?.length || 0} attachments
+                    </Tag>
                   </Text>,
                 ]
                 : [
@@ -116,7 +122,9 @@ function IdeaCard({ idea, isLoading }) {
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">
                       {/* 373B44 004853 */}
-                      <strong>{idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}</strong>
+                      <strong>
+                        {idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}
+                      </strong>
                     </Tag>
                     <Tag icon={<CompassOutlined />} color="#FA6900">
                       <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
@@ -156,9 +164,7 @@ function IdeaCard({ idea, isLoading }) {
                 </>
               }
             ></List.Item.Meta>
-
           </List.Item>
-
         </Skeleton>
         <Typography.Text type="danger" style={{ marginLeft: "30px", fontSize: "18px", fontFamily: "Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text>
       </StyledCard>

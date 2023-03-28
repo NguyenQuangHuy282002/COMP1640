@@ -1,13 +1,19 @@
-import User from '../models/User'
+import { bcryptCompare, bcryptHash } from '../helpers/bcrypt.helper'
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
-import { bcryptHash, bcryptCompare } from '../helpers/bcrypt.helper'
+import User from '../models/User'
 import ApiErrorResponse from '../utils/ApiErrorResponse'
 import { senVerification } from '../utils/mailer'
+import { io } from '../utils/socket'
+
+export const updateAccountNumberRealTime = async () => {
+  const totalAccount = await User.find({ $ne: { role: 'admin' } }).select('-password')
+  io.emit('total_account', { total: totalAccount.length })
+}
 
 // @route POST /api/v1/auth/create -- create user account
 export const createAccount = async (req: any, res: any, next: any) => {
   try {
-    const { username, firstName, lastName, password, role, phone, birthday } = req.body
+    const { username, name, password, role, phone, birthday, department } = req.body
 
     const isUserExists = await User.findOne({ username: username.toLowerCase() })
     if (isUserExists) {
@@ -15,7 +21,6 @@ export const createAccount = async (req: any, res: any, next: any) => {
     }
 
     const passwordHash = await bcryptHash(password)
-    const name = firstName + ' ' + lastName
     const newAccount = await new User({
       username,
       name,
@@ -23,9 +28,12 @@ export const createAccount = async (req: any, res: any, next: any) => {
       role,
       phone,
       birthday,
+      department,
       isActivate: true,
       isBanned: false,
     }).save()
+
+    updateAccountNumberRealTime()
 
     res.status(200).json({ success: true, savedUser: newAccount })
   } catch (err) {
@@ -44,7 +52,7 @@ export const login = async (req: any, res: any, next: any) => {
     if (user.department) {
       user = await user.populate({
         path: 'department',
-        select: ['name']
+        select: ['name'],
       })
     }
     const checkPassword = await bcryptCompare(password, user!.password)
@@ -96,7 +104,7 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
         description: userData.description || '',
         interests: userData.interests || [],
         isBanned: userData.isBanned || false,
-        department: userData.department?.name || 'None'
+        department: userData.department?.name || 'None',
       },
       message,
       accessToken: accessToken,
@@ -113,8 +121,8 @@ const setRefreshToken = async (token: string, userData: any, next: any) => {
 
 export const verifyAccessToken = async (req: any, res: any, next: any) => {
   try {
-    const { token } = req.body;
-    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET);
+    const { token } = req.body
+    const verify = verifyJWTToken(token, process.env.JWT_ACCESS_SECRET)
     if (verify) {
       return res.status(200).json({
         success: true,
@@ -158,7 +166,6 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     if (isActivate) {
       return next(new ApiErrorResponse(`User ${id} is already activated`, 400))
     }
-
     const verificationToken = generateJWToken(
       {
         id: id,
@@ -168,12 +175,10 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     )
     const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
     const isSent = await senVerification(email, username, verificationUrl)
-    if (isSent == true) {
-      res.status(200).json({
-        success: isSent,
-        message: `send email successfully`,
-      })
+    if (isSent.status === 400) {
+      return next(new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500))
     }
+    res.status(200).json({success: true, isSent})
   } catch (error) {
     next(new ApiErrorResponse(error))
   }

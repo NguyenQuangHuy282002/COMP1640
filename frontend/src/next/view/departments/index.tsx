@@ -51,8 +51,14 @@ function DepartmentManager() {
   }
 
   useEffect(() => {
-    getDepartmentList()
-  }, [openModal])
+    setLoading(true)
+    const getAllDepartment = async () =>
+      await Http.get('/api/v1/department')
+        .then(res => setDeparments(res.data.data))
+        .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
+        .finally(() => setLoading(false))
+    getAllDepartment()
+  }, [])
 
   const handleDeleteDepartment = async (id: string) => {
     await Http.delete('/api/v1/department', id)
