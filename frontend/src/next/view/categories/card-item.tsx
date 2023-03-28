@@ -14,6 +14,7 @@ interface ICategory {
   _id: string
   name: string
   ideas: any
+  
 }
 
 function CategoryCardItem({
