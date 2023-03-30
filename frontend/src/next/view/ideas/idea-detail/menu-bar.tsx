@@ -18,7 +18,7 @@ import PointInfoModal from './points-info-modal'
 
 let reactionTimeOut = null
 
-export default function MenuBar({ commentCount, handleShowComment, ideaId, name }) {
+export default function MenuBar({ commentCount, handleShowComment, ideaId, name, files }) {
   const windowWidth = useWindowSize()
   const [likers, setLikers] = useState([])
   const [dislikers, setDisLikers] = useState([])
@@ -191,7 +191,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
             <Button icon={<CommentOutlined />} onClick={() => handleShowComment()} style={{ cursor: 'pointer' }}>
               {commentCount} Comments
             </Button>
-            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, name.slice(0, 24))}>
+            <Button icon={<DownloadOutlined />} onClick={() => handleDownloadFiles(ideaId, name.slice(0, 24), files)}>
               DownLoad
             </Button>
             <Button icon={<ShareAltOutlined />}>Share</Button>
@@ -203,6 +203,7 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name 
           commentCount={commentCount}
           handleShowComment={handleShowComment}
           ideaId={ideaId}
+          files={files}
         />
       )}
       <PointInfoModal
@@ -223,7 +224,7 @@ function str2bytes(str) {
   return bytes
 }
 
-function MobileMenuBar({ vote, commentCount, handleShowComment, ideaId }) {
+function MobileMenuBar({ vote, commentCount, handleShowComment, ideaId, files }) {
   return (
     <Space style={{ justifyContent: 'space-evenly', display: 'flex' }}>
       <Radio.Group>
@@ -240,8 +241,7 @@ function MobileMenuBar({ vote, commentCount, handleShowComment, ideaId }) {
       <Button icon={<CommentOutlined />} onTouchEnd={() => handleShowComment()} style={{ cursor: 'pointer' }}>
         {commentCount}
       </Button>
-      {/* <Button icon={<SaveOutlined />} /> */}
-      <Button icon={<DownloadOutlined />} onTouchEnd={() => handleDownloadFiles(ideaId)} />
+      <Button icon={<DownloadOutlined />} onTouchEnd={() => handleDownloadFiles(ideaId, 'attachment', files)} />
       <Button icon={<ShareAltOutlined />} />
     </Space>
   )

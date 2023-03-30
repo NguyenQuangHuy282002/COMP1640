@@ -32,7 +32,10 @@ export const disLikeHandler = async id => {
 }
 export type ResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
 
-export const handleDownloadFiles = async (id: any, name?: any) => {
+export const handleDownloadFiles = async (id: any, name: any, files?: Array<string>) => {
+  if(!files || files?.length === 0) {
+    return message.warning('No files attachment in this idea or selected ~.~')
+  }
   const token = Http._getHeader()
   const options = {
     headers: {
@@ -42,7 +45,7 @@ export const handleDownloadFiles = async (id: any, name?: any) => {
     params: {},
     responseType: 'arraybuffer' as ResponseType,
   }
-  const fileName = name ? `${name}.zip` : 'attachments.zip'
+  const fileName = name ? `${name + '...'}.zip` : 'attachments.zip'
   await axios
     .get(`${SERVER_ENPOINT}/api/v1/idea/downloadFiles?id=${id}`, options)
     .then(res => {

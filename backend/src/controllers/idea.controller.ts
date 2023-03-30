@@ -7,6 +7,7 @@ import SpecialEvent from '../models/SpecialEvent'
 import Department from '../models/Department'
 import { io } from '../utils/socket'
 import { updateEventNumberRealTime } from '../routers/specialEvent.router'
+import { sendNotification } from '../utils/mailer'
 
 export const updateIdeaNumberRealTime = async () => {
   const totalIdea = await Idea.find({})
@@ -25,9 +26,9 @@ export const createIdea = async (req: any, res: any, next: any) => {
 
     let savedIdea = await Idea.create(newIdea)
 
-    savedIdea = await savedIdea.populate('publisherId')
+    // savedIdea = await savedIdea.populate('publisherId')
 
-    const user = await User.findById(savedIdea.publisherId)
+    const user = await User.findById(savedIdea.publisherId).populate('department')
 
     if (ideaBody.categories) {
       const updatedtags = ideaBody.categories.map(async tag => {
@@ -35,13 +36,21 @@ export const createIdea = async (req: any, res: any, next: any) => {
         updateTag.ideas.push(savedIdea._id)
         await updateTag.save()
       })
-      await Promise.all(updatedtags)
+      Promise.all(updatedtags)
     }
 
     if (ideaBody.specialEvent) {
-      const specialEvent = await SpecialEvent.findById(savedIdea.specialEvent)
-      specialEvent.ideas.push(savedIdea._id)
-      specialEvent.save()
+      // (async function () {
+        const specialEvent = await SpecialEvent.findById(savedIdea.specialEvent)
+        specialEvent.ideas.push(savedIdea._id)
+        specialEvent.save()
+      // })()
+    }
+
+    if (user.department) {
+      activeMailer(user.name, new Date(), savedIdea._id, user.department, savedIdea.title)
+        .then((data) => console.log('isSent', data))
+        .catch((error) => console.log('error', error))
     }
 
     user.ideas.push(savedIdea._id)
@@ -58,10 +67,34 @@ export const createIdea = async (req: any, res: any, next: any) => {
   }
 }
 
+export const activeMailer = async (name: any, date: any, ideaId: any, department: any, ideaTitle: any, email?: any) => {
+  try {
+    console.log('department: ', department)
+    const sendMails = department.qacGmails.map(async (mail: string) => {
+      return (async function () {
+        const title = `Your department has received a new idea`
+        const content = `${name} has posted new idea - "${ideaTitle}". Department: <a href="http://localhost:3000/coordinator/department?id=${department._id}">${department.name}</a>, posted at ${new Date(date).toUTCString()}.  Check now by click the link bellow`
+        const url = `http://localhost:3000/coordinator/idea?id=${ideaId}`
+        const isSent = await sendNotification(mail, content, title, date, url);
+        console.log(isSent)
+        if (isSent.status === 400) {
+          return new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500)
+        }
+        return isSent
+      })()
+    })
+
+    return await Promise.all(sendMails)
+
+  } catch (err) {
+    return new ApiErrorResponse(`${err.message}`, 500)
+  }
+}
+
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
-    
+
     const page = parseInt(reqQuery.page) || 1
     const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
