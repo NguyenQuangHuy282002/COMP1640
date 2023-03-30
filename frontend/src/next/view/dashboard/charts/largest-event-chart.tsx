@@ -41,7 +41,7 @@ export default function LarsestEventIdea() {
   const updateEventRealTime = data => {
     console.log('=>>>>>>>>>>data', data)
     setEventList(
-      data.event
+      data.allEvents
         .sort((a, b) => b.ideas.length - a.ideas.length)
         .slice(0, 10)
         .map(event => ({
