@@ -2,6 +2,7 @@ import express from 'express'
 import ApiErrorResponse from '../utils/ApiErrorResponse'
 import Category from '../models/Category'
 import { io } from '../utils/socket'
+import { authorize, authProtect } from '../middlewares/auth'
 
 
 export const updateIdeaNumberRealTime = async () => {
@@ -12,7 +13,7 @@ export const updateIdeaNumberRealTime = async () => {
 
 export const categoryRouter = express.Router()
 
-categoryRouter.get('/', async (req, res) => {
+categoryRouter.get('/', authProtect, async (req, res) => {
   try {
     const { id } = req.query
     const data = await Category.find(id ? { _id: id } : {})
@@ -25,7 +26,7 @@ categoryRouter.get('/', async (req, res) => {
 })
 
 
-categoryRouter.post('/', express.json(), async (req, res) => {
+categoryRouter.post('/', authProtect, authorize(['manager']), express.json(), async (req, res) => {
   // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
     const { _id, name} = req.body
@@ -51,7 +52,7 @@ categoryRouter.post('/', express.json(), async (req, res) => {
   }
 })
 
-categoryRouter.delete('/:id', express.json(), async (req, res) => {
+categoryRouter.delete('/:id', authProtect, authorize(['manager']), express.json(), async (req, res) => {
   try {
     const eventId = req.params.id
     await Category.findByIdAndDelete(eventId)

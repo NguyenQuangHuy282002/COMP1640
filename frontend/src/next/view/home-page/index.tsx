@@ -9,6 +9,7 @@ import { useSubscription } from '../../libs/global-state-hook'
 import useWindowSize from '../../utils/useWindowSize'
 import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
+import ManagerBar from './manager-homepage-bar'
 import MenuFilter from './menu-filter'
 
 function HomePage() {
@@ -22,7 +23,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalIdea, setTotalIdea] = useState(0)
   const fitPadding = windowWidth < 1000 ? '10px 0' : '10px 100px'
-  const { avatar } = useSubscription(userStore).state
+  const { avatar, role } = useSubscription(userStore).state
   const handleClickTyping = async () => {
     navigate('/submit')
   }
@@ -89,7 +90,8 @@ function HomePage() {
         height: 'auto',
       }}
     >
-      <StyledRow style={{}}>
+      {
+        role === 'staff' ? <StyledRow style={{}}>
         <Col flex="60px">
           <Badge status="success" count={<SmileFilled style={{ color: '#52c41a' }} />}>
             <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src={avatar} />
@@ -104,7 +106,8 @@ function HomePage() {
             }}
           ></Input>
         </Col>
-      </StyledRow>
+      </StyledRow> : <ManagerBar></ManagerBar>
+      }
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea}/>
       </StyledRow>

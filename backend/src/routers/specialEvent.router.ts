@@ -1,6 +1,7 @@
 import express from 'express'
 import SpecialEvent from '../models/SpecialEvent'
 import { io } from '../utils/socket'
+import { authorize, authProtect } from '../middlewares/auth'
 
 export const updateEventNumberRealTime = async () => {
   const now = new Date()
@@ -12,7 +13,7 @@ export const updateEventNumberRealTime = async () => {
 
 export const specialEventRouter = express.Router()
 
-specialEventRouter.get('/', async (req, res) => {
+specialEventRouter.get('/', authProtect, async (req, res) => {
   try {
     const { id } = req.query
     const data = await SpecialEvent.find(id ? { _id: id } : {})
@@ -24,7 +25,7 @@ specialEventRouter.get('/', async (req, res) => {
   }
 })
 
-specialEventRouter.get('/available', async (req, res) => {
+specialEventRouter.get('/available', authProtect,async (req, res) => {
   try {
     const now = new Date()
     const data = await SpecialEvent.find({ firstCloseDate: { $gt: now } })
@@ -36,7 +37,7 @@ specialEventRouter.get('/available', async (req, res) => {
   }
 })
 
-specialEventRouter.post('/', express.json(), async (req, res) => {
+specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
     const { _id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
@@ -71,7 +72,7 @@ specialEventRouter.post('/', express.json(), async (req, res) => {
   }
 })
 
-specialEventRouter.delete('/:id', express.json(), async (req, res) => {
+specialEventRouter.delete('/:id', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
     const eventId = req.params.id
     await SpecialEvent.findByIdAndDelete(eventId)

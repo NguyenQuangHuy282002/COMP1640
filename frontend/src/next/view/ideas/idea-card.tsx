@@ -69,11 +69,11 @@ function IdeaCard({ idea, isLoading }) {
                       <MessageTwoTone /> {idea.comments.length} comments
                     </Tag>
                   </Text>,
-                  <Text key="list-vertical-lock">
-                    <Tag color="volcano" style={{ margin: 0 }}>
-                      <LockTwoTone /> cannot comments
-                    </Tag>
-                  </Text>,
+                  // <Text key="list-vertical-lock">
+                  //   <Tag color="volcano" style={{ margin: 0 }}>
+                  //     <LockTwoTone /> cannot comments
+                  //   </Tag>
+                  // </Text>,
                   <Text type="secondary" key="list-vertical-message">
                     <EyeOutlined style={{ padding: '5px' }} />
                     {idea.meta.views} views
@@ -166,7 +166,7 @@ function IdeaCard({ idea, isLoading }) {
             ></List.Item.Meta>
           </List.Item>
         </Skeleton>
-        <Typography.Text type="danger" style={{ marginLeft: "30px", fontSize: "18px", fontFamily: "Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text>
+        {/* <Typography.Text type="danger" style={{ marginLeft: "30px", fontSize: "18px", fontFamily: "Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
       </StyledCard>
     </>
   )
