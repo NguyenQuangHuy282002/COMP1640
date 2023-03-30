@@ -60,49 +60,48 @@ function IdeaCard({ idea, isLoading }) {
             actions={
               windowWidth > 900
                 ? [
-                    <Text strong key="list-vertical-star-o">
-                      <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
-                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
-                    </Text>,
-                    <Text key="list-vertical-like-o">
-                      <Tag color="cyan" style={{ margin: 0 }}>
-                        <MessageTwoTone /> {idea.comments.length} comments
-                      </Tag>
-                    </Text>,
-                    <Text key="list-vertical-lock">
-                      <Tag color="volcano" style={{ margin: 0 }}>
-                        <LockTwoTone /> cannot comments
-                      </Tag>
-                    </Text>,
-                    <Text type="secondary" key="list-vertical-message">
-                      <EyeOutlined style={{ padding: '5px' }} />
-                      {idea.meta.views} views
-                    </Text>,
-                    <Text key="list-vertical-files">
-                      <Tag color="#828DAB" style={{ margin: 0 }}>
-                        <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
-                        {idea?.files?.length || 0} attachments
-                      </Tag>
-                    </Text>,
-                  ]
+                  <Text strong key="list-vertical-star-o">
+                    <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
+                    {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
+                  </Text>,
+                  <Text key="list-vertical-like-o">
+                    <Tag color="cyan" style={{ margin: 0 }}>
+                      <MessageTwoTone /> {idea.comments.length} comments
+                    </Tag>
+                  </Text>,
+                  // <Text key="list-vertical-lock">
+                  //   <Tag color="volcano" style={{ margin: 0 }}>
+                  //     <LockTwoTone /> cannot comments
+                  //   </Tag>
+                  // </Text>,
+                  <Text type="secondary" key="list-vertical-message">
+                    <EyeOutlined style={{ padding: '5px' }} />
+                    {idea.meta.views} views
+                  </Text>,
+                  <Text key="list-vertical-files">
+                    <Tag color="#828DAB" style={{ margin: 0 }}>
+                      <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                      {idea?.files?.length || 0} attachments
+                    </Tag>
+                  </Text>,
+                ]
                 : [
-                    <Text strong key="list-vertical-star-o">
-                      <FireTwoTone style={{ paddingRight: '2px' }} />
-                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0}
-                    </Text>,
-                    <Text key="list-vertical-like-o">
-                      <Tag color="volcano" style={{ margin: 0 }}>
-                        <MessageTwoTone /> cannot comments
-                      </Tag>
-                      <Tag color="cyan">
-                        <MessageTwoTone /> {idea.comments.length}
-                      </Tag>
-                    </Text>,
-                    <Text type="secondary" key="list-vertical-message">
-                      <EyeOutlined style={{ paddingRight: '2px' }} />
-                      {idea.meta.views}
-                    </Text>,
-                  ]
+                  <Text strong key="list-vertical-star-o">
+                    <FireTwoTone style={{ paddingRight: '2px' }} />
+                    {idea.like - idea.dislike}
+                  </Text>,
+                  <Text key="list-vertical-like-o">
+
+                    <Tag color="cyan">
+                      <MessageTwoTone /> {idea.comments.length}
+
+                    </Tag>
+                  </Text>,
+                  <Text type="secondary" key="list-vertical-message">
+                    <EyeOutlined style={{ paddingRight: '2px' }} />
+                    {idea.views}
+                  </Text>,
+                ]
             }
           >
             <List.Item.Meta
@@ -167,7 +166,7 @@ function IdeaCard({ idea, isLoading }) {
             ></List.Item.Meta>
           </List.Item>
         </Skeleton>
-        {/* <Typography.Text type="danger" style={{ marginLeft:"30px", fontSize:"18px", fontFamily:"Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
+        {/* <Typography.Text type="danger" style={{ marginLeft: "30px", fontSize: "18px", fontFamily: "Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
       </StyledCard>
     </>
   )

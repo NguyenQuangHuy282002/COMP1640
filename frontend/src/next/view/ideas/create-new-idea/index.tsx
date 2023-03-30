@@ -14,6 +14,10 @@ import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
 import Tags from './tag'
+// import AddHastag from './add-hastag';
+// import Hastags from './hastag';
+import FormItem from 'antd/es/form/FormItem'
+import HashtagInput from './HastagInput';
 
 const { Title } = Typography
 
@@ -54,6 +58,7 @@ export default function CreateIdea() {
   const initialState = () => EditorState.createEmpty()
   const [editorState, setEditorState] = useState(initialState)
   const [openModal, setOpenModal] = useState(false)
+  const [openModal1, setOpenModal1] = useState(false)
   const [files, setFiles] = useState([])
   const [categories, setCategories] = useState([])
   const [isAnonymous, setAnonymous] = useState(false)
@@ -61,6 +66,25 @@ export default function CreateIdea() {
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
+
+
+  const [hastags, setHastags] = useState([])
+  const [currentHastag, setCurrentHastag] = useState({ name: '' })
+  const [allHastag, setAllHastag] = useState([])
+
+  const getHastagList = async () => {
+    await Http.get('/api/v1/hastag')
+      .then(res => {
+        setAllHastag(res.data.data)
+      })
+      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+  }
+
+  useEffect(() => {
+    getHastagList()
+  }, [openModal1])
+
+
 
   useEffect(() => {
     if (defaultEventId) {
@@ -128,6 +152,8 @@ export default function CreateIdea() {
   const windowWidth = useWindowSize()
   const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
 
+  useEffect(() => { }, [])
+
   return (
     <Card
       title={
@@ -193,7 +219,48 @@ export default function CreateIdea() {
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
           <Tags setCategories={setCategories} />
+
         </Form.Item>
+        {/* <Form.Item label="Tags (max: 5)">
+          <Hastags setCategories={setCategories} />
+
+        </Form.Item> */}
+        {/* <AddHastag
+          isOpen={openModal}
+          onCloseModal={() => setOpenModal(false)}
+          setHastags={setHastags}
+          hastags={hastags}
+          currentHastag={currentHastag}
+        /> */}
+        {/* <Form.Item>
+          {openModal1 ? (
+            <AddHastag
+              isOpen={openModal1}
+              onCloseModal={() => setOpenModal1(false)}
+              setHastags={setHastags}
+              hastags={hastags}
+              currentHastag={currentHastag}
+            />
+          ) : (
+            <div style={{ padding: '10px 20px 10px 10px', margin: 0, marginTop: "20px" }}>
+              <Button
+                style={{ marginLeft: '10px' }}
+                onClick={() => {
+                  setOpenModal1(true)
+                }}
+              >
+                Add hastag
+              </Button>
+
+            </div>
+          )}
+
+        </Form.Item> */}
+
+        <FormItem>
+          <HashtagInput />
+        </FormItem>
+
         <Form.Item
           name="agreement"
           valuePropName="checked"

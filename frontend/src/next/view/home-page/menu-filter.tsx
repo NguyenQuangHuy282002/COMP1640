@@ -41,6 +41,7 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
     },
   ]
 
+
   // const departmentItems: MenuProps['items'] = [
   //   {
   //     key: 'computing',
@@ -75,6 +76,7 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
   //     ),
   //   },
   // ]
+
   // const categoryItems: MenuProps['items'] = [
   //   {
   //     key: 'teaching',
@@ -143,10 +145,11 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
             <FrownFilled /> Oldest
           </StyledRadioButton>
         </Radio.Group >
-        </Col>
+        <Col />
         <Col>
         <Space wrap style={{ float: "right" }}>
             {/* <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
+
               <Button>
                 <GroupOutlined /> Department
               </Button>
@@ -168,6 +171,8 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
             </Dropdown>
           </Space>
         </Col>
+
+      </Col>
     </>
   )
 }

@@ -69,7 +69,7 @@ function IdeaDetail() {
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">
-              
+
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
