@@ -9,8 +9,8 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
   const onFinish = async () => {
     if (form.getFieldValue('name') || currentCategory.name !== form.getFieldValue('name')) {
       const categoryForm = {
+        _id: currentCategory._id,
         name: form.getFieldValue('name'),
-        oldName: currentCategory.name,
       }
       await Http.post('/api/v1/category', categoryForm)
         .then(() => {
@@ -32,7 +32,7 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
         onCloseModal()
         form.resetFields()
       }}
-      title="Create new category"
+      title={currentCategory.name ? `Edit ${currentCategory.name}` : 'Add new category'}
       onOk={onFinish}
       destroyOnClose
     >

@@ -19,7 +19,7 @@ function CategoryManager() {
   const { enqueueSnackbar } = useSnackbar()
   const [openModal, setOpenModal] = useState(false)
   const [allCategoryList, setAllCategoryList] = useState([])
-  const [currentCategory, setCurrentCategory] = useState({ name: '' })
+  const [currentCategory, setCurrentCategory] = useState({ })
   const [editCategory, setEditCategory] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -27,6 +27,7 @@ function CategoryManager() {
     setLoading(true)
     await Http.get('/api/v1/category')
       .then(res => {
+        console.log(res.data.data)
         setAllCategoryList(res.data.data)
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
@@ -44,7 +45,6 @@ function CategoryManager() {
   }
 
   return (
-    <>
     <Row gutter={16} style={{ padding: '10px', margin: 0 }}>
       <Card
         title="All categories"
@@ -52,7 +52,7 @@ function CategoryManager() {
           <AddCategory
             openModal={() => {
               setOpenModal(true)
-              setCurrentCategory({ name: '' })
+              setCurrentCategory({})
             }}
           />
         }
@@ -68,6 +68,7 @@ function CategoryManager() {
                   key={index}
                   setEditCategory={category => {
                     setEditCategory(category)
+                    setCurrentCategory({ _id: category._id, name: category.name})
                     setOpenModal(true)
                   }}
                   handleDeleteCategory={handleDeleteCategory}
@@ -84,7 +85,6 @@ function CategoryManager() {
         currentCategory={currentCategory}
       />
     </Row>
-    </>
   )
 }
 
