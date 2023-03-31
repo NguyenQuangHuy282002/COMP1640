@@ -1,9 +1,10 @@
 import { Col, Row } from 'antd'
 import Title from 'antd/es/typography/Title'
-import EventPieChart from './charts/eventPieChart'
+import CategoryClassifyPieChart from './charts/eventPieChart'
 import LarsestEventIdea from './charts/largest-event-chart'
 import LatestIdeaList from './charts/latest-ideas'
 import SmallStatistic from './charts/smallstatistic'
+import MostViewedIdeasChart from './charts/most-view-ideas-chart'
 
 function DashboardAdmin() {
   return (
@@ -18,6 +19,7 @@ function DashboardAdmin() {
           <SmallStatistic />
         </Col>
       </Row>
+
       <Row
         gutter={{ xs: 8, sm: 16, md: 24 }}
         style={{
@@ -34,7 +36,7 @@ function DashboardAdmin() {
             borderRadius: '5px',
           }}
         >
-          <EventPieChart />
+          <CategoryClassifyPieChart />
         </Col>
         <Col
           className="gutter-row"
@@ -56,7 +58,18 @@ function DashboardAdmin() {
           padding: '10px',
         }}
       >
-        <LarsestEventIdea />
+        <Col
+          className="gutter-row"
+          xs={24}
+          sm={24}
+          md={24}
+          xxl={24}
+          style={{
+            borderRadius: '5px',
+          }}
+        >
+          <MostViewedIdeasChart />
+        </Col>
       </Row>
 
       <Row
