@@ -11,7 +11,8 @@ import { sendNotification } from '../utils/mailer'
 
 export const updateIdeaNumberRealTime = async () => {
   const totalIdea = await Idea.find({})
-  io.emit('total_idea', { total: totalIdea.length })
+  const totalCategories = await Category.find({})
+  io.emit('total_idea', { total: totalIdea.length, allCategories: totalCategories })
 }
 
 export const createIdea = async (req: any, res: any, next: any) => {
