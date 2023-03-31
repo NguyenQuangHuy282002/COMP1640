@@ -8,13 +8,6 @@ import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts'
 
 const colors = ['#69b1ff', '#00C49F', '#FFBB28', '#FF8042']
 
-const getPath = (x, y, width, height) => {
-  return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
-  ${x + width / 2}, ${y}
-  C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${x + width}, ${y + height}
-  Z`
-}
-
 export default function LarsestEventIdea() {
   const { appSocket } = useSocket()
   const { enqueueSnackbar } = useSnackbar()
@@ -39,7 +32,6 @@ export default function LarsestEventIdea() {
   }
 
   const updateEventRealTime = data => {
-    console.log('=>>>>>>>>>>data', data)
     setEventList(
       data.allEvents
         .sort((a, b) => b.ideas.length - a.ideas.length)
@@ -84,7 +76,7 @@ export default function LarsestEventIdea() {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" display={'none'} />
-          <YAxis minTickGap={1} />
+          <YAxis minTickGap={1} label={{ value: 'Ideas ', angle: -90, position: 'insideLeft' }} />
           <Bar dataKey="totalIdea" fill="#8884d8" label={{ position: 'top' }}>
             {eventList.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % 5]} />

@@ -10,7 +10,8 @@ import { updateEventNumberRealTime } from '../routers/specialEvent.router'
 
 export const updateIdeaNumberRealTime = async () => {
   const totalIdea = await Idea.find({})
-  io.emit('total_idea', { total: totalIdea.length })
+  const totalCategories = await Category.find({})
+  io.emit('total_idea', { total: totalIdea.length, allCategories: totalCategories })
 }
 
 export const createIdea = async (req: any, res: any, next: any) => {
@@ -61,7 +62,7 @@ export const createIdea = async (req: any, res: any, next: any) => {
 export const getIdeas = async (req: any, res: any, next: any) => {
   try {
     const reqQuery = req.query
-    
+
     const page = parseInt(reqQuery.page) || 1
     const limit = parseInt(reqQuery.limit) || 5
     const offset = (page - 1) * limit
