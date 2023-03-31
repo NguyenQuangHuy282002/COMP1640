@@ -20,9 +20,9 @@ const validFileType = [
   'image/webp',
   'image/x-icon',
   '.docx',
-  '.csv', 
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-  '.xlsx', 
+  '.csv',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xlsx',
   '.xls',
   'application/vnd.ms-excel'
 ]
@@ -111,7 +111,7 @@ application/vnd.ms-excel, .xlsx, .xls"
         maxCount={3}
       >
         <Button icon={<UploadOutlined />}>Click to Upload</Button>
-        <Typography.Text disabled style = {{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
+        <Typography.Text disabled style={{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
       </Upload>
     </Form.Item>
   )
@@ -142,7 +142,7 @@ text/plain, application/pdf, image/*, .csv, application/vnd.openxmlformats-offic
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
           <p className="ant-upload-hint">Maximum Size: 50MB</p>
-          <Typography.Text disabled style = {{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
+          <Typography.Text disabled style={{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
         </Upload.Dragger>
       </Form.Item>
     </Form.Item>

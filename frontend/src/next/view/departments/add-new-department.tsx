@@ -25,6 +25,9 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
     }
   }
 
+
+
+
   return (
     <Modal
       open={isOpen}

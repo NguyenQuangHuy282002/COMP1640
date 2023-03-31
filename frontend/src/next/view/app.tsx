@@ -23,6 +23,7 @@ import LayoutCoordinator from './layout/coordinator'
 import LayoutManager from './layout/manager'
 import LayoutStaff from './layout/staff'
 import UserProfile from './user-profile'
+import DepartmentDetail from './departments/department-detail'
 
 export default function App() {
   const navigate = useNavigate()
@@ -103,6 +104,7 @@ export default function App() {
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
           <Route path="departments" element={<DepartmentManager />} />
+          <Route path="department/:id" element={<DepartmentDetail />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
@@ -126,6 +128,7 @@ export default function App() {
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
           <Route path="departments" element={<DepartmentManager />} />
+          <Route path="department/:id" element={<DepartmentDetail />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
@@ -153,6 +156,7 @@ export default function App() {
           <Route path="idea" element={<IdeaDetail />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
+          <Route path="department/:id" element={<DepartmentDetail />} />
         </Route>
 
         <Route

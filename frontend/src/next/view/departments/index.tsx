@@ -42,23 +42,19 @@ function DepartmentManager() {
   }, [deparments, searchKey])
 
 
-  const getDepartmentList = async () => {
+  const getAllDepartment = async () => {
+    setLoading(true)
     await Http.get('/api/v1/department')
       .then(res => {
         setAllDepartment(res.data.data)
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
-    setLoading(true)
-    const getAllDepartment = async () =>
-      await Http.get('/api/v1/department')
-        .then(res => setDeparments(res.data.data))
-        .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
-        .finally(() => setLoading(false))
     getAllDepartment()
-  }, [])
+  }, [openModal])
 
   const handleDeleteDepartment = async (id: string) => {
     await Http.delete('/api/v1/department', id)
@@ -186,19 +182,6 @@ function DepartmentManager() {
         </div>
       )}
     </>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // </Row>
   )

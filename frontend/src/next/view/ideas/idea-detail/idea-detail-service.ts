@@ -1,5 +1,5 @@
 import { Http } from 'next/api/http'
-import { saveAs } from 'file-saver'
+import { saveAs } from 'file-saver';
 import { message } from 'antd'
 import axios from 'axios'
 import { SERVER_ENPOINT } from '../../../api/server-url'

@@ -30,13 +30,8 @@ async function main() {
   server.listen(Number(config.server.port), '0.0.0.0', () => {
     const err = arguments[0]
     if (err) {
-<<<<<<< HEAD
-      console.log(err)
-    } 
-=======
       console.error(err)
     }
->>>>>>> 3f6322b94be92e4ee8e2ad994f8dc207de747511
   })
 }
 main().catch(err => console.error(`Cannot init server!, log: `, err))

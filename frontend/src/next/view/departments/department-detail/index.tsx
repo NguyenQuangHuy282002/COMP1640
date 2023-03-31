@@ -13,7 +13,7 @@ export default function DepartmentDetail() {
     const navigate = useNavigate()
     const [department, setDepartment] = useState(null)
 
-    const getDepartmentDetail = async () => {
+    const getDepartmentDetails = async () => {
         await Http.get(`/api/v1/department?id=${id}`)
             .then(res => {
                 setDepartment(res.data?.data[0] || null)
@@ -22,9 +22,8 @@ export default function DepartmentDetail() {
     }
 
     useEffect(() => {
-        getDepartmentDetail()
+        getDepartmentDetails()
     }, [id])
-    console.log(department)
 
 
     return (
