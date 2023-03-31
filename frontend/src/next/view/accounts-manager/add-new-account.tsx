@@ -52,7 +52,22 @@ export default function AddAccountModal({ isOpen, onCloseModal, setAccounts, acc
           <Form.Item name="name" label="Full name" labelAlign="left" required>
             <Input placeholder="Nguyen Van A" allowClear />
           </Form.Item>
-          <Form.Item name="email" label="Email" labelAlign="left" required>
+          <Form.Item
+            name="email"
+            label="Email"
+            labelAlign="left"
+            required
+            rules={[
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail!',
+              },
+              {
+                required: true,
+                message: 'Please input your E-mail!',
+              },
+            ]}
+          >
             <Input placeholder="user@gmail.com" allowClear />
           </Form.Item>
           <Form.Item name="role" label="Role" labelAlign="left" required>

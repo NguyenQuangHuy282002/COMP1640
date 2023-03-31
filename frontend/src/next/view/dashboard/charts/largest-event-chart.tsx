@@ -4,12 +4,14 @@ import { Http } from 'next/api/http'
 import { useSocket } from 'next/socket.io'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts'
 
 const colors = ['#69b1ff', '#00C49F', '#FFBB28', '#FF8042']
 
 export default function LarsestEventIdea() {
   const { appSocket } = useSocket()
+  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const [eventList, setEventList] = useState([])
   const [loading, setLoading] = useState(false)
@@ -29,6 +31,10 @@ export default function LarsestEventIdea() {
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
       .finally(() => setLoading(false))
+  }
+
+  const handleViewEventDetails = (id: string) => {
+    navigate(`/event/${id}`)
   }
 
   const updateEventRealTime = data => {
@@ -85,10 +91,15 @@ export default function LarsestEventIdea() {
         </BarChart>
         <Space size={[0, 8]} style={{ display: 'block' }} wrap>
           {eventList.map((event, index) => (
-            <Space key={index}>
+            <div key={index} className="d-flex" style={{ alignItems: 'center' }}>
               <Tag color={colors[index % 5]} style={{ height: '20px', width: '20px' }} />
-              <Typography.Text>{event.name}</Typography.Text>
-            </Space>
+              <Typography.Link
+                style={{ fontSize: '16px', fontWeight: 600, color: 'black' }}
+                onClick={() => handleViewEventDetails(event._id)}
+              >
+                {event.name}
+              </Typography.Link>
+            </div>
           ))}
         </Space>
       </Card>

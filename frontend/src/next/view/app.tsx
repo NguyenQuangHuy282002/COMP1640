@@ -23,6 +23,7 @@ import LayoutCoordinator from './layout/coordinator'
 import LayoutManager from './layout/manager'
 import LayoutStaff from './layout/staff'
 import UserProfile from './user-profile'
+import OtherProfile from './user-profile/otherProfile'
 
 export default function App() {
   const navigate = useNavigate()
@@ -105,6 +106,7 @@ export default function App() {
           <Route path="departments" element={<DepartmentManager />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
+          <Route path="profile" element={<OtherProfile />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
         </Route>
@@ -129,6 +131,7 @@ export default function App() {
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
+          <Route path="profile" element={<OtherProfile />} />
         </Route>
 
         <Route
@@ -151,6 +154,7 @@ export default function App() {
           <Route path="idea" element={<IdeaDetail />} />
           <Route path="event" element={<EventsPage role="admin" />} />
           <Route path="event/:id" element={<EventDetails />} />
+          <Route path="profile" element={<OtherProfile />} />
         </Route>
 
         <Route
@@ -176,6 +180,7 @@ export default function App() {
           <Route path="idea" element={<IdeaDetail />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
+          <Route path="profile" element={<OtherProfile />} />
         </Route>
         <Route path="*" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
         <Route path="/unauthorize" element={<UnAuthorize></UnAuthorize>}></Route>
@@ -200,8 +205,21 @@ export default function App() {
 }
 
 const GlobalStyle = createGlobalStyle`
-  /* .ant-layout-sider { 
-   height: 100vh;
-   position: sticky;
-  } */
+  & {
+    .d-flex{
+      display: flex;
+    }
+    .center{
+      display: flex;
+      align-items: center;
+      justify-content:center;
+    }
+    .w-100{
+      width:100%;
+    }
+    .ellipsis{
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
 `
