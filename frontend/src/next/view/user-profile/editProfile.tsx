@@ -1,9 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Col, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
-import TextEditor from '../../components/text-editor'
-import { IUserInfo } from '../../../types/user'
-import RichTextEditor from '../../components/text-editor'
+import { Button, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
 import { useState } from 'react'
+import { IUserInfo } from '../../../types/user'
 
 const { Title } = Typography
 
@@ -48,7 +46,22 @@ function EditProfileForm(props: any) {
       <Form.Item name="phone" label="Phone number" labelAlign="left" required>
         <Input defaultValue={userInfo.phone} />
       </Form.Item>
-      <Form.Item name="email" label="Email" labelAlign="left" required>
+      <Form.Item
+        name="email"
+        label="Email"
+        labelAlign="left"
+        required
+        rules={[
+          {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          },
+          {
+            required: true,
+            message: 'Please input your E-mail!',
+          },
+        ]}
+      >
         <Input defaultValue={userInfo.email} />
       </Form.Item>
       <Form.Item name="birthday" label="Date of birth" labelAlign="left" required>
@@ -62,19 +75,6 @@ function EditProfileForm(props: any) {
             <div style={{ marginTop: 8 }}>Upload</div>
           </div>
         </Upload>
-      </Form.Item>
-
-      <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
-        <Title level={3} style={{ margin: '0px 10px 16px' }}>
-          Additional
-        </Title>
-      </Row>
-
-      <Form.Item name="description" label="Description" labelAlign="left">
-        {/* <RichTextEditor setEditorState={setDescription} editorState={description} /> */}
-      </Form.Item>
-      <Form.Item name="interests" label="Interests" labelAlign="left">
-        <Input />
       </Form.Item>
 
       <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: '0px 16px' }}>

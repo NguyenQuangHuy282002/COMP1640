@@ -5,12 +5,11 @@ import {
   EyeOutlined,
   FireTwoTone,
   LinkedinOutlined,
-  LockTwoTone,
   MessageTwoTone,
+  PaperClipOutlined,
   ShareAltOutlined,
   StarOutlined,
   TagsTwoTone,
-  PaperClipOutlined,
 } from '@ant-design/icons'
 import { Avatar, Card, List, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
@@ -41,6 +40,12 @@ function IdeaCard({ idea, isLoading }) {
     navigate(`/idea?id=${id}`)
   }
 
+  const handleViewProfile = id => {
+    if (id !== 'Anonymous' && id !== 'Unknown') {
+      navigate(`/profile?id=${id}`)
+    }
+  }
+
   return (
     <>
       <StyledCard
@@ -60,52 +65,50 @@ function IdeaCard({ idea, isLoading }) {
             actions={
               windowWidth > 900
                 ? [
-                  <Text strong key="list-vertical-star-o">
-                    <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
-                    {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
-                  </Text>,
-                  <Text key="list-vertical-like-o">
-                    <Tag color="cyan" style={{ margin: 0 }}>
-                      <MessageTwoTone /> {idea.comments.length} comments
-                    </Tag>
-                  </Text>,
-                  // <Text key="list-vertical-lock">
-                  //   <Tag color="volcano" style={{ margin: 0 }}>
-                  //     <LockTwoTone /> cannot comments
-                  //   </Tag>
-                  // </Text>,
-                  <Text type="secondary" key="list-vertical-message">
-                    <EyeOutlined style={{ padding: '5px' }} />
-                    {idea.meta.views} views
-                  </Text>,
-                  <Text key="list-vertical-files">
-                    <Tag color="#828DAB" style={{ margin: 0 }}>
-                      <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
-                      {idea?.files?.length || 0} attachments
-                    </Tag>
-                  </Text>,
-                ]
+                    <Text strong key="list-vertical-star-o">
+                      <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
+                    </Text>,
+                    <Text key="list-vertical-like-o">
+                      <Tag color="cyan" style={{ margin: 0 }}>
+                        <MessageTwoTone /> {idea.comments.length} comments
+                      </Tag>
+                    </Text>,
+                    // <Text key="list-vertical-lock">
+                    //   <Tag color="volcano" style={{ margin: 0 }}>
+                    //     <LockTwoTone /> cannot comments
+                    //   </Tag>
+                    // </Text>,
+                    <Text type="secondary" key="list-vertical-message">
+                      <EyeOutlined style={{ padding: '5px' }} />
+                      {idea.meta.views} views
+                    </Text>,
+                    <Text key="list-vertical-files">
+                      <Tag color="#828DAB" style={{ margin: 0 }}>
+                        <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                        {idea?.files?.length || 0} attachments
+                      </Tag>
+                    </Text>,
+                  ]
                 : [
-                  <Text strong key="list-vertical-star-o">
-                    <FireTwoTone style={{ paddingRight: '2px' }} />
-                    {idea.like - idea.dislike}
-                  </Text>,
-                  <Text key="list-vertical-like-o">
-
-                    <Tag color="cyan">
-                      <MessageTwoTone /> {idea.comments.length}
-
-                    </Tag>
-                  </Text>,
-                  <Text type="secondary" key="list-vertical-message">
-                    <EyeOutlined style={{ paddingRight: '2px' }} />
-                    {idea.views}
-                  </Text>,
-                ]
+                    <Text strong key="list-vertical-star-o">
+                      <FireTwoTone style={{ paddingRight: '2px' }} />
+                      {idea.like - idea.dislike}
+                    </Text>,
+                    <Text key="list-vertical-like-o">
+                      <Tag color="cyan">
+                        <MessageTwoTone /> {idea.comments.length}
+                      </Tag>
+                    </Text>,
+                    <Text type="secondary" key="list-vertical-message">
+                      <EyeOutlined style={{ paddingRight: '2px' }} />
+                      {idea.views}
+                    </Text>,
+                  ]
             }
           >
             <List.Item.Meta
-              key="00"
+              key={idea._id}
               avatar={
                 <>
                   <Avatar
@@ -115,8 +118,13 @@ function IdeaCard({ idea, isLoading }) {
                 </>
               }
               title={
-                <>
-                  <Link href="#" style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}>
+                <Space wrap direction="horizontal" size={'small'}>
+                  <Link
+                    onClick={() =>
+                      handleViewProfile(!idea.isAnonymous ? idea.publisherId?._id ?? 'Unknown' : 'Anonymous')
+                    }
+                    style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}
+                  >
                     {!idea.isAnonymous ? idea.publisherId?.name ?? 'Unknown' : 'Anonymous'}
                   </Link>
                   <Typography.Text type="secondary">
@@ -126,12 +134,21 @@ function IdeaCard({ idea, isLoading }) {
                         {idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}
                       </strong>
                     </Tag>
-                    <Tag icon={<CompassOutlined />} color="#FA6900">
+                  </Typography.Text>
+                  <Typography.Text type="secondary">
+                    <Tag
+                      icon={<CompassOutlined />}
+                      color="#FA6900"
+                      className="ellipsis"
+                      style={{ maxWidth: '-webkit-fill-available' }}
+                    >
                       <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
                     </Tag>
+                  </Typography.Text>
+                  <Typography.Text type="secondary">
                     <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
                   </Typography.Text>
-                </>
+                </Space>
               }
               style={{ margin: '0' }}
             />
