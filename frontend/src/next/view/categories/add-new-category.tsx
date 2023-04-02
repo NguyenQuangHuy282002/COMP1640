@@ -24,7 +24,6 @@ export default function AddCategoryModal({ isOpen, onCloseModal, setCategoriesLi
       message.error('Please type a different name!')
     }
   }
-
   return (
     <Modal
       open={isOpen}
