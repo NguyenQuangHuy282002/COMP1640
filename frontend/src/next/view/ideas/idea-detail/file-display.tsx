@@ -63,10 +63,10 @@ const FileCard = ({ title, item, chilren }) => (
   </List.Item>
 )
 
-export default function FileDisplay(files: any) {
+export default function FileDisplay({files, isFit } : {files: any, isFit?: any}) {
   return (
     <List
-      style={{ margin: '0 24px' }}
+      style={{ margin: isFit ? '0' : '0 24px' }}
       header={
         <>
           <PaperClipOutlined /> <Typography.Text strong>Attachments</Typography.Text>
@@ -74,7 +74,7 @@ export default function FileDisplay(files: any) {
       }
       bordered
       itemLayout="horizontal"
-      dataSource={files.files}
+      dataSource={files}
       renderItem={item => handleFile(item)}
     />
   )

@@ -65,3 +65,14 @@ export const handleDownloadFiles = async (id: any, name: any, files?: Array<stri
     })
     .catch(err => Promise.reject(() => message.error(err)))
 }
+
+
+export const handleDeleteIdea = async id => {
+  try {
+    const result = await Http.delete('/api/v1/idea/delete', id)
+    console.log('idea deleted', result)
+    message.success('Idea deleted')
+  } catch (e) {
+    message.error(e.message)
+  }
+}
