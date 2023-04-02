@@ -32,6 +32,7 @@ const items: MenuProps['items'] = [
     'grp',
     null,
     [
+      getItem('Your Profile', 'account', <WeiboOutlined />),
       getItem('Ideas', 'ideas', <WeiboOutlined />),
       getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),

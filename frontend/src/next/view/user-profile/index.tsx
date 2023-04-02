@@ -1,5 +1,5 @@
 import { Card, Col, Divider, Image, Row, Space, Tag, Typography } from 'antd'
-import { formatDayTime } from 'next/utils/helperFuncs'
+import { formatDay } from 'next/utils/helperFuncs'
 import { useState } from 'react'
 import { useSubscription } from '../../libs/global-state-hook'
 import { userStore } from '../auth/user-store'
@@ -43,7 +43,7 @@ function UserProfile() {
             <Divider style={{ margin: 0 }} />
             <Text>
               <b>DOB: </b>
-              {formatDayTime(state.birthday)}
+              {formatDay(state.birthday)}
             </Text>
             <Text>
               <b>Phone number: </b>
@@ -66,7 +66,7 @@ function UserProfile() {
       </Col>
       <Col className="gutter-row" xs={24} sm={24} md={18} xxl={18}>
         <Card tabList={tabList} activeTabKey={activeTabKey} onTabChange={setActiveTabKey}>
-          {activeTabKey === 'edit' ? <EditProfileForm userInfo={state} /> : <ListIdeas userId={state._id} />}
+          {activeTabKey === 'edit' ? <EditProfileForm /> : <ListIdeas userId={state._id} />}
         </Card>
       </Col>
     </Row>

@@ -1,39 +1,24 @@
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, message, Row, Space, Table, Typography, Divider } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
+import { Button, Divider, Skeleton, Space } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
-import SearchField from '../../components/search-field'
 import AddDepartmentModal from './add-new-department'
 import DepartmentCardItem from './card-department'
-
-const { Text } = Typography
 
 interface DataType {
   id: string
   name: string
 }
 
-const AddAccount = ({ openModal }) => (
-  <Button type="primary" icon={<PlusCircleOutlined />} onClick={openModal}>
-    Add new department
-  </Button>
-)
-
 function DepartmentManager() {
   const { enqueueSnackbar } = useSnackbar()
   const [deparments, setDeparments] = useState([])
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false)
   const [searchKey, setSearchKey] = useState('')
   const [currentDepartment, setCurrentDepartment] = useState({ name: '' })
-
-
-  const [allDepartment, setAllDepartment] = useState([])
   const [editDepartment, setEditDepartment] = useState(null)
-
 
   const filteredDeparments = useMemo(() => {
     return deparments.filter((deparment: DataType) =>
@@ -41,32 +26,21 @@ function DepartmentManager() {
     )
   }, [deparments, searchKey])
 
-
-  const getDepartmentList = async () => {
-    await Http.get('/api/v1/department')
-      .then(res => {
-        setAllDepartment(res.data.data)
-      })
-      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
-  }
-
   useEffect(() => {
     setLoading(true)
-    const getAllDepartment = async () =>
+    const getAllDeparments = async () =>
       await Http.get('/api/v1/department')
         .then(res => setDeparments(res.data.data))
         .catch(error => enqueueSnackbar('Failed to get all departments !', { variant: 'error' }))
         .finally(() => setLoading(false))
-    getAllDepartment()
+    getAllDeparments()
   }, [])
 
   const handleDeleteDepartment = async (id: string) => {
     await Http.delete('/api/v1/department', id)
-      .then(() => setAllDepartment(allDepartment.filter(deparment => deparment._id !== id)))
+      .then(() => setDeparments(deparments.filter(deparment => deparment._id !== id)))
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
   }
-
-
 
   // async function handleDeleteDepartment(name: string) {
   //   await Http.post('/api/v1/department/delete', { name })
@@ -126,51 +100,21 @@ function DepartmentManager() {
   // }
 
   return (
-    // <Row gutter={16} style={{ padding: '10px', margin: 0 }}>
-    //   <Card
-    //     title="All departments"
-    //     extra={
-    //       <AddAccount
-    //         openModal={() => {
-    //           setOpenModal(true)
-    //           setCurrentDepartment({ name: '' })
-    //         }}
-    //       />
-    //     }
-    //     bordered={false}
-    //     style={{ width: '100%' }}
-    //     bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
-    //   >
-    //     <Space align="center" wrap={true} style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
-    //       <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search departments by name" />
-    //       <Text style={{ fontWeight: 600 }}>Number of departments: {filteredDeparments?.length}</Text>
-    //     </Space>
-
-    //   </Card>
     <>
-      {openModal ? (
-        <AddDepartmentModal
-          isOpen={openModal}
-          onCloseModal={() => setOpenModal(false)}
-          setDeparments={setDeparments}
-          deparments={deparments}
-          currentDepartment={currentDepartment}
-        />
-
-      ) : (
-        <div style={{ padding: '10px 20px 10px 10px', margin: 0, marginTop: "20px" }}>
-          <Button
-            style={{ marginLeft: '10px' }}
-            onClick={() => {
-              setOpenModal(true)
-              setEditDepartment(null)
-            }}
-          >
-            Add new Department
-          </Button>
-          <Divider />
-          <Space direction="vertical" size="middle" style={{ display: 'flex', marginTop: '20px' }}>
-            {allDepartment.map((deparment, index) => (
+      <div style={{ padding: '10px 20px 10px 10px', margin: 0, marginTop: '20px' }}>
+        <Button
+          style={{ marginLeft: '10px' }}
+          onClick={() => {
+            setOpenModal(true)
+            setEditDepartment(null)
+          }}
+        >
+          Add new Department
+        </Button>
+        <Divider />
+        <Space direction="vertical" size="middle" style={{ display: 'flex', marginTop: '20px' }}>
+          {deparments.map((deparment, index) => (
+            <Skeleton loading={loading}>
               <DepartmentCardItem
                 department={deparment}
                 key={index}
@@ -181,26 +125,20 @@ function DepartmentManager() {
                 }}
                 handleDeleteDepartment={handleDeleteDepartment}
               />
-            ))}
-          </Space>
-        </div>
+            </Skeleton>
+          ))}
+        </Space>
+      </div>
+      {openModal && (
+        <AddDepartmentModal
+          isOpen={openModal}
+          onCloseModal={() => setOpenModal(false)}
+          setDeparments={setDeparments}
+          deparments={deparments}
+          currentDepartment={currentDepartment}
+        />
       )}
     </>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // </Row>
   )
 }
 
