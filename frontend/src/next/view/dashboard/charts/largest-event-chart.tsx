@@ -1,17 +1,17 @@
 import { Card, Skeleton, Space, Tag, Typography } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSocket } from 'next/socket.io'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts'
 
 const colors = ['#69b1ff', '#00C49F', '#FFBB28', '#FF8042']
 
 export default function LarsestEventIdea() {
   const { appSocket } = useSocket()
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const [eventList, setEventList] = useState([])
   const [loading, setLoading] = useState(false)
@@ -24,6 +24,7 @@ export default function LarsestEventIdea() {
             .sort((a, b) => b.ideas.length - a.ideas.length)
             .slice(0, 10)
             .map(event => ({
+              _id: event._id,
               name: event.title,
               totalIdea: event.ideas.length,
             }))
@@ -43,6 +44,7 @@ export default function LarsestEventIdea() {
         .sort((a, b) => b.ideas.length - a.ideas.length)
         .slice(0, 10)
         .map(event => ({
+          _id: event._id,
           name: event.title,
           totalIdea: event.ideas.length,
         }))
@@ -95,7 +97,7 @@ export default function LarsestEventIdea() {
               <Tag color={colors[index % 5]} style={{ height: '20px', width: '20px' }} />
               <Typography.Link
                 style={{ fontSize: '16px', fontWeight: 600, color: 'black' }}
-                onClick={() => handleViewEventDetails(event._id)}
+                onClick={() => handleViewEventDetails(event?._id)}
               >
                 {event.name}
               </Typography.Link>

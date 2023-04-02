@@ -30,9 +30,7 @@ function IdeaCard({ idea, isLoading }) {
     setLoading(isLoading)
   }
   useEffect(() => {
-    setTimeout(() => {
-      onChange(loading)
-    }, 1000)
+    onChange(loading)
   }, [])
   const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
 

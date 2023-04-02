@@ -12,6 +12,14 @@ export const formatDayTime = date => {
   try {
     return format(new Date(date), "MMM d', ' yy 'at' H':'mm")
   } catch (error) {
+    return null
+  }
+}
+
+export const formatDay = date => {
+  try {
+    return format(new Date(date), "MMM d', 'yyyy'")
+  } catch (error) {
     return 'None'
   }
 }
