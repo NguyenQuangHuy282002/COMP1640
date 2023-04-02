@@ -16,6 +16,14 @@ export const formatDayTime = date => {
   }
 }
 
+export const formatDay = date => {
+  try {
+    return format(new Date(date), "MMM d', 'yyyy'")
+  } catch (error) {
+    return 'None'
+  }
+}
+
 export const getErrorMsg = err => {
   if (err.graphQLErrors[0]?.message) {
     return err.graphQLErrors[0].message

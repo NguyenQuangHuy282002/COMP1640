@@ -23,7 +23,7 @@ const items: MenuProps['items'] = [
     'grp',
     null,
     [
-      getItem('Your Profile', 'ideas', <WeiboOutlined />),
+      getItem('Your Profile', 'account', <WeiboOutlined />),
       getItem('Tags', 'categories', <TagOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
@@ -50,11 +50,7 @@ const LayoutManager = ({ children }) => {
       <Layout>
         <AppSidebar items={items} />
         <Content style={contentStyle}>
-          {
-            <>
-              {children}
-            </>
-          }
+          {<>{children}</>}
           <AppFooter />
         </Content>
       </Layout>

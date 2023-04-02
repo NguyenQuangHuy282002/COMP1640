@@ -1,6 +1,7 @@
 import { Card, Skeleton, Space, Tag, Typography } from 'antd'
 import Title from 'antd/es/typography/Title'
 import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSocket } from 'next/socket.io'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
@@ -10,6 +11,7 @@ const colors = ['#69b1ff', '#00C49F', '#FFBB28', '#FF8042']
 
 export default function LarsestEventIdea() {
   const { appSocket } = useSocket()
+  const navigate = useRoleNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const [eventList, setEventList] = useState([])
   const [loading, setLoading] = useState(false)
@@ -22,6 +24,7 @@ export default function LarsestEventIdea() {
             .sort((a, b) => b.ideas.length - a.ideas.length)
             .slice(0, 10)
             .map(event => ({
+              _id: event._id,
               name: event.title,
               totalIdea: event.ideas.length,
             }))
@@ -31,12 +34,17 @@ export default function LarsestEventIdea() {
       .finally(() => setLoading(false))
   }
 
+  const handleViewEventDetails = (id: string) => {
+    navigate(`/event/${id}`)
+  }
+
   const updateEventRealTime = data => {
     setEventList(
       data.allEvents
         .sort((a, b) => b.ideas.length - a.ideas.length)
         .slice(0, 10)
         .map(event => ({
+          _id: event._id,
           name: event.title,
           totalIdea: event.ideas.length,
         }))
@@ -85,10 +93,15 @@ export default function LarsestEventIdea() {
         </BarChart>
         <Space size={[0, 8]} style={{ display: 'block' }} wrap>
           {eventList.map((event, index) => (
-            <Space key={index}>
+            <div key={index} className="d-flex" style={{ alignItems: 'center' }}>
               <Tag color={colors[index % 5]} style={{ height: '20px', width: '20px' }} />
-              <Typography.Text>{event.name}</Typography.Text>
-            </Space>
+              <Typography.Link
+                style={{ fontSize: '16px', fontWeight: 600, color: 'black' }}
+                onClick={() => handleViewEventDetails(event?._id)}
+              >
+                {event.name}
+              </Typography.Link>
+            </div>
           ))}
         </Space>
       </Card>

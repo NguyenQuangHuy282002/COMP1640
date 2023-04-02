@@ -85,7 +85,6 @@ function IdeaDetail() {
               <Text>
                 Comment as <Text strong>{name}</Text>
               </Text>
-              {/* <RichTextEditor editorState={editorState} setEditorState={setEditorState} /> */}
               <CreateComment user={{avatar, name}} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email}/>
             </Space>
           </StyledContent>

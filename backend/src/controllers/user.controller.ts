@@ -5,7 +5,7 @@ import { updateAccountNumberRealTime } from './auth.controller'
 
 export const find = async (req: any, res: any, next: any) => {
   try {
-    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    const users = await User.find({ role: { $ne: 'admin' } }).select('-password')
     if (!users) {
       return next(new ApiErrorResponse('No account exists.', 404))
     }

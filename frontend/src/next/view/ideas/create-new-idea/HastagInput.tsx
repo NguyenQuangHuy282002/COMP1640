@@ -40,7 +40,7 @@ const HashtagInput = () => {
                 size="large"
                 onChange={(e) => setInputValue(e.target.value)}
                 onSearch={onSearch}
-                style={{ marginBottom: '24px' }}
+                style={{ marginBottom: '12px', width: '95%' }}
             />
             {hashtags.length > 0 && (
                 <div style={{}}>
