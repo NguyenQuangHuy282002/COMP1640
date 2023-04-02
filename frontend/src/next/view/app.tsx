@@ -24,6 +24,7 @@ import LayoutManager from './layout/manager'
 import LayoutStaff from './layout/staff'
 import UserProfile from './user-profile'
 import OtherProfile from './user-profile/otherProfile'
+import EditIdea from './ideas/edit-idea'
 
 export default function App() {
   const navigate = useNavigate()
@@ -109,6 +110,7 @@ export default function App() {
           <Route path="profile" element={<OtherProfile />} />
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
+          <Route path="idea/edit" element={<EditIdea />} />
         </Route>
 
         <Route

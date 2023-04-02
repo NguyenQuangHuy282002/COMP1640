@@ -36,7 +36,7 @@ function Login() {
   }
 
   return (
-    <Row style={{ width: '100%', paddingTop: 70, paddingBottom: 50, justifyContent: 'center', background: '#2e4d68' }}>
+    <Row style={{ width: '100%', height: '100vh', paddingTop: 70, paddingBottom: 50, justifyContent: 'center', background: '#2e4d68' }}>
       <Card>
         <Space align="center" direction="vertical">
           <img src={`${imgDir}logo.png`} height={300} alt="logo" />
