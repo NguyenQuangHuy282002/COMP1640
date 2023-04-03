@@ -5,7 +5,7 @@ import { updateAccountNumberRealTime } from './auth.controller'
 
 export const find = async (req: any, res: any, next: any) => {
   try {
-    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    const users = await User.find({ role: { $ne: 'admin' } }).select('-password')
     if (!users) {
       return next(new ApiErrorResponse('No account exists.', 404))
     }
@@ -104,6 +104,16 @@ export const deactiveUser = async (req: any, res: any, next: any) => {
     const deactiveUser = await User.findByIdAndUpdate(req.body.id, { isActivate: false })
 
     return res.status(200).json({ success: true, message: 'User de-active successfully', user: deactiveUser })
+  } catch (error) {
+    next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const activeUser = async (req: any, res: any, next: any) => {
+  try {
+    const activeUser = await User.findByIdAndUpdate(req.body.id, { isActivate: true })
+
+    return res.status(200).json({ success: true, message: 'User active successfully', user: activeUser })
   } catch (error) {
     next(new ApiErrorResponse(`${error.message}`, 500))
   }

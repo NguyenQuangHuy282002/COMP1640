@@ -36,10 +36,7 @@ function IdeaCard({ idea, isLoading }) {
     setLoading(isLoading)
   }
   useEffect(() => {
-    console.log('idea', idea._id)
-    setTimeout(() => {
-      onChange(loading)
-    }, 1000)
+    onChange(loading)
   }, [isDeleted, setIsDeleted])
 
   const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
@@ -48,9 +45,9 @@ function IdeaCard({ idea, isLoading }) {
   }
 
   const handleOk = () => {
-      setIsDeleted(true)
-      setOpen(false)
-      return handleDeleteIdea(idea?._id)
+    setIsDeleted(true)
+    setOpen(false)
+    return handleDeleteIdea(idea?._id)
   }
 
   const handleCancel = () => {
@@ -80,10 +77,7 @@ function IdeaCard({ idea, isLoading }) {
             onConfirm={handleOk}
             onCancel={handleCancel}
           >
-            <DeleteTwoTone
-              key="delete"
-              onClick={showPopconfirm}
-            />
+            <DeleteTwoTone key="delete" onClick={showPopconfirm} />
           </Popconfirm>,
         ]
       : []
@@ -97,7 +91,11 @@ function IdeaCard({ idea, isLoading }) {
         }}
         bodyStyle={{ padding: '2px' }}
       >
-        <Empty description={<h4 style={{color: '#FA6900'}}>This idea has been deleted, reload and it'll be disappeared</h4>} />
+        <Empty
+          description={
+            <h4 style={{ color: '#FA6900' }}>This idea has been deleted, reload and it'll be disappeared</h4>
+          }
+        />
       </StyledCard>
     </>
   ) : (

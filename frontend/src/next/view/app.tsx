@@ -25,6 +25,8 @@ import LayoutStaff from './layout/staff'
 import UserProfile from './user-profile'
 import OtherProfile from './user-profile/otherProfile'
 import EditIdea from './ideas/edit-idea'
+import DepartmentDetail from './departments/department-detail'
+import BackupDataManager from './backup-data'
 
 export default function App() {
   const navigate = useNavigate()
@@ -104,7 +106,6 @@ export default function App() {
           <Route path="" element={<HomePage />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails role="staff" />} />
-          <Route path="departments" element={<DepartmentManager />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="profile" element={<OtherProfile />} />
@@ -128,7 +129,6 @@ export default function App() {
           <Route path="" element={<HomePage />} />
           <Route path="event" element={<EventsPage />} />
           <Route path="event/:id" element={<EventDetails />} />
-          <Route path="departments" element={<DepartmentManager />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="submit" element={<CreateIdea />} />
@@ -151,12 +151,14 @@ export default function App() {
           <Route path="accounts-manager" element={<AccountManager />} />
           <Route path="account" element={<UserProfile />} />
           <Route path="departments" element={<DepartmentManager />} />
+          <Route path="departments/:id" element={<DepartmentDetail />} />
           <Route path="" element={<HomePage />} />
           <Route path="ideas" element={<HomePage />} />
           <Route path="idea" element={<IdeaDetail />} />
           <Route path="event" element={<EventsPage role="admin" />} />
           <Route path="event/:id" element={<EventDetails />} />
           <Route path="profile" element={<OtherProfile />} />
+          <Route path="backup" element={<BackupDataManager />} />
         </Route>
 
         <Route
@@ -218,6 +220,9 @@ const GlobalStyle = createGlobalStyle`
     }
     .w-100{
       width:100%;
+    }
+    .h-100{
+      height:100%;
     }
     .ellipsis{
       white-space: nowrap;

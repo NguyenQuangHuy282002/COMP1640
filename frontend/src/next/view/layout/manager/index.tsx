@@ -50,7 +50,7 @@ const LayoutManager = ({ children }) => {
       <Layout>
         <AppSidebar items={items} />
         <Content style={contentStyle}>
-          {<>{children}</>}
+          {<div style={{ minHeight: '100vh' }}>{children}</div>}
           <AppFooter />
         </Content>
       </Layout>

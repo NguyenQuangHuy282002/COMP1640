@@ -1,5 +1,5 @@
 import { ClockCircleOutlined, DislikeOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, List, message, Skeleton, Space, Tooltip } from 'antd'
+import { Avatar, List, message, Skeleton, Space, Tooltip, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { formatDayTime } from 'next/utils/helperFuncs'
@@ -45,6 +45,12 @@ export default function IdeaCard({ ideaId, index }) {
     getIdeaDetailsById(ideaId)
   }, [])
 
+  const handleViewProfile = id => {
+    if (id !== 'Anonymous' && id !== 'Unknown') {
+      navigate(`/profile?id=${id}`)
+    }
+  }
+
   return (
     <Skeleton loading={loading} avatar active>
       <List.Item
@@ -63,11 +69,13 @@ export default function IdeaCard({ ideaId, index }) {
               </Tooltip>
             ) : (
               <Tooltip title={ideaDetails?.publisherId?.name} color="#2db7f5" mouseEnterDelay={1}>
-                <Avatar
-                  style={{ backgroundColor: ColorList[index % 4], verticalAlign: 'middle' }}
-                  size="large"
-                  src={ideaDetails?.publisherId?.avatar}
-                />
+                <Typography.Link onClick={() => handleViewProfile(ideaDetails?.publisherId._id)}>
+                  <Avatar
+                    style={{ backgroundColor: ColorList[index % 4], verticalAlign: 'middle' }}
+                    size="large"
+                    src={ideaDetails?.publisherId?.avatar}
+                  />
+                </Typography.Link>
               </Tooltip>
             )
           }

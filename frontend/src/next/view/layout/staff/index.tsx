@@ -10,7 +10,6 @@ import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import useWindowSize from '../../../utils/useWindowSize'
 import { getItem } from '../admin'
-import AppFooter from '../footer'
 import AppHeader from '../header'
 import AppSidebar from '../sidebar'
 import RightSideBar from './right-sidebar'
@@ -22,7 +21,11 @@ const items: MenuProps['items'] = [
     'PUBLIC',
     'grp',
     null,
-    [getItem('Ideas', 'ideas', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />)],
+    [
+      getItem('Your Profile', 'account', <WeiboOutlined />),
+      getItem('Ideas', 'ideas', <WeiboOutlined />),
+      getItem('Events', 'event', <CalendarOutlined />),
+    ],
     'group'
   ),
 ]

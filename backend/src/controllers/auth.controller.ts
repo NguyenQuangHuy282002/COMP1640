@@ -1,3 +1,4 @@
+import Department from '../models/Department'
 import { bcryptCompare, bcryptHash } from '../helpers/bcrypt.helper'
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 import User from '../models/User'
@@ -13,7 +14,7 @@ export const updateAccountNumberRealTime = async () => {
 // @route POST /api/v1/auth/create -- create user account
 export const createAccount = async (req: any, res: any, next: any) => {
   try {
-    const { username, name, password, role, phone, birthday, department } = req.body
+    const { username, name, password, role, phone, birthday, department, email } = req.body
 
     const isUserExists = await User.findOne({ username: username.toLowerCase() })
     if (isUserExists) {
@@ -24,10 +25,9 @@ export const createAccount = async (req: any, res: any, next: any) => {
     const newAccount = await new User({
       username,
       name,
+      email,
       password: passwordHash,
       role,
-      phone,
-      birthday,
       department,
       isActivate: true,
       isBanned: false,
@@ -35,7 +35,58 @@ export const createAccount = async (req: any, res: any, next: any) => {
 
     updateAccountNumberRealTime()
 
+    if (department) {
+      await Department.findByIdAndUpdate({ _id: department }, { $push: { users: newAccount._id } })
+    }
+
     res.status(200).json({ success: true, savedUser: newAccount })
+  } catch (err) {
+    next(new ApiErrorResponse(err))
+  }
+}
+
+export const editAccount = async (req: any, res: any, next: any) => {
+  try {
+    const { _id, username, name, password, role, department, email } = req.body
+
+    const isUserExists = await User.find({ username: username.toLowerCase() })
+
+    if (isUserExists?.length > 1) {
+      next(new ApiErrorResponse('Username is taken', 400))
+    }
+
+    if (password) {
+      const passwordHash = await bcryptHash(password)
+
+      await User.findByIdAndUpdate(
+        { _id },
+        {
+          username,
+          name,
+          password: passwordHash,
+          email,
+          role,
+          department,
+          isActivate: true,
+          isBanned: false,
+        }
+      )
+    } else {
+      await User.findByIdAndUpdate(
+        { _id },
+        {
+          username,
+          name,
+          role,
+          email,
+          department,
+          isActivate: true,
+          isBanned: false,
+        }
+      )
+    }
+
+    res.status(200).json({ success: true })
   } catch (err) {
     next(new ApiErrorResponse(err))
   }
@@ -176,9 +227,11 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
     const isSent = await senVerification(email, username, verificationUrl)
     if (isSent.status === 400) {
-      return next(new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500))
+      return next(
+        new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500)
+      )
     }
-    res.status(200).json({success: true, isSent})
+    res.status(200).json({ success: true, isSent })
   } catch (error) {
     next(new ApiErrorResponse(error))
   }
