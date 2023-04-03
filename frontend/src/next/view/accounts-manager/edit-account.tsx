@@ -1,13 +1,14 @@
-import { Col, Form, Input, Modal, Select } from 'antd'
+import { Col, Form, Input, Modal, Select, Space, Switch, Typography } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Http } from '../../api/http'
 
-export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
+export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }) {
   const { enqueueSnackbar } = useSnackbar()
   const [form] = Form.useForm()
   const [accountRole, setAccountRole] = useState('')
   const [departmentOptions, setDepartmentOptions] = useState([])
+  const [show, setShow] = useState(false)
 
   const getAllDepartment = async () =>
     await Http.get('/api/v1/department')
@@ -16,20 +17,28 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
 
   useEffect(() => {
     getAllDepartment()
-  }, [])
-
-  console.log(departmentOptions)
+    if (userProfile) {
+      form.setFieldsValue({
+        name: userProfile.name,
+        username: userProfile.username,
+        email: userProfile.email,
+        role: userProfile.role,
+        department: userProfile.department,
+      })
+    }
+  }, [userProfile])
 
   const onFinish = async () => {
     const accountForm = {
+      _id: userProfile._id,
       name: form.getFieldValue('name'),
       username: form.getFieldValue('username'),
-      password: form.getFieldValue('password'),
+      password: show ? form.getFieldValue('password') : null,
       email: form.getFieldValue('email'),
       role: form.getFieldValue('role'),
       department: form.getFieldValue('department'),
     }
-    await Http.post('/api/v1/auth/create', accountForm)
+    await Http.post('/api/v1/auth/edit', accountForm)
       .then(() => {
         onSubmit()
         onCloseModal()
@@ -37,14 +46,16 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
   }
 
+  if (!userProfile?._id) return null
+
   return (
     <Modal
-      open={isOpen}
+      open={userProfile}
       onCancel={() => {
         onCloseModal()
         form.resetFields()
       }}
-      title="Register new account"
+      title="Edit account"
       onOk={onFinish}
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>
@@ -97,12 +108,20 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
           <Form.Item name="username" label="Username" labelAlign="left" required>
             <Input placeholder="user" autoComplete="off" allowClear />
           </Form.Item>
-          <Form.Item name="password" label="Password" labelAlign="left" required>
-            <Input.Password autoComplete="off" allowClear />
-          </Form.Item>
-          <Form.Item name="re-password" label="Re-write password" labelAlign="left" required>
-            <Input.Password autoComplete="off" allowClear />
-          </Form.Item>
+          <Space align="center" style={{ justifyContent: 'center', marginBottom: 24 }}>
+            <Typography.Text type="warning">Want to change password?</Typography.Text>
+            <Switch checked={show} onChange={() => setShow(!show)} />
+          </Space>
+          {show && (
+            <>
+              <Form.Item name="password" label="New password" labelAlign="left" required>
+                <Input.Password autoComplete="off" allowClear />
+              </Form.Item>
+              <Form.Item name="re-password" label="Re-write new password" labelAlign="left" required>
+                <Input.Password autoComplete="off" allowClear />
+              </Form.Item>
+            </>
+          )}
         </Col>
       </Form>
     </Modal>

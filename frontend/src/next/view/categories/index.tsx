@@ -70,7 +70,7 @@ function CategoryManager() {
           placeholder="Search categories"
           value={searchKey}
           onChange={e => setSearchKey(e.target.value)}
-        ></Input>
+        />
         <Skeleton loading={loading} avatar active>
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {allCategoryList

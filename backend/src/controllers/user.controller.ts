@@ -109,6 +109,16 @@ export const deactiveUser = async (req: any, res: any, next: any) => {
   }
 }
 
+export const activeUser = async (req: any, res: any, next: any) => {
+  try {
+    const activeUser = await User.findByIdAndUpdate(req.body.id, { isActivate: true })
+
+    return res.status(200).json({ success: true, message: 'User active successfully', user: activeUser })
+  } catch (error) {
+    next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
 export const search = async (req: any, res: any, next: any) => {
   try {
     const searchTerm = req.params.searchTerm
