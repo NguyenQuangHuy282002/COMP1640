@@ -28,18 +28,19 @@ function CommentsList({ id, updateIdea }) {
   const [list, setList] = useState<DataType[]>([])
   const [filter, setFilter] = useState('new')
 
+  const updateComments = info => {
+    return setList([info.comment, ...list])
+  }
+
   useEffect(() => {
     const query = handleFilter(filter)
     Http.get(`/api/v1/comment?ideaId=${id}&${query}`).then(res => {
       setInitLoading(false)
-      console.log(res)
       setList(res.data.data)
     })
   }, [updateIdea, filter])
 
-  const updateComments = info => {
-    return setList([info.comment, ...list])
-  }
+  
   const onClickFilter = (val: any) => {
     setFilter(val)
   }
