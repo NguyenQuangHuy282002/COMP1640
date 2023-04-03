@@ -1,4 +1,11 @@
-import { CalendarOutlined, HomeFilled, TeamOutlined, UngroupOutlined, WeiboOutlined } from '@ant-design/icons'
+import {
+  CalendarOutlined,
+  HomeFilled,
+  SafetyOutlined,
+  TeamOutlined,
+  UngroupOutlined,
+  WeiboOutlined,
+} from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import React from 'react'
@@ -36,6 +43,7 @@ const items: MenuProps['items'] = [
       getItem('Users', 'accounts-manager', <TeamOutlined />),
       getItem('Departments', 'departments', <UngroupOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
+      getItem('Backup data', 'backup', <SafetyOutlined />),
     ],
     'group'
   ),
