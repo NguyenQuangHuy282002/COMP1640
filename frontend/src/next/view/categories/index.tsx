@@ -1,15 +1,17 @@
 import { PlusCircleTwoTone } from '@ant-design/icons'
-import { Divider, Row, Skeleton, Space, Typography } from 'antd'
+import { Col, Divider, Input, Row, Skeleton, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import CategoryCardItem from './card-item'
+import AddCategoryModal from './add-new-category'
 
 const { Title } = Typography
 
 function CategoryManager() {
   const { enqueueSnackbar } = useSnackbar()
+  const [searchKey, setSearchKey] = useState('')
   const [openModal, setOpenModal] = useState(false)
   const [allCategoryList, setAllCategoryList] = useState([])
   const [editCategory, setEditCategory] = useState(null)
@@ -27,7 +29,7 @@ function CategoryManager() {
 
   useEffect(() => {
     getCategoryList()
-  }, [openModal])
+  }, [])
 
   const handleDeleteCategory = async (id: string) => {
     await Http.delete('/api/v1/category', id)
@@ -37,50 +39,60 @@ function CategoryManager() {
 
   return (
     <>
-        <div style={{ padding: 20, margin: 0 }}>
-          <Row justify="space-between">
-            <Title level={3} style={{ margin: 0 }}>
-              Categorys list
-            </Title>
-            <BlueColorButton
-              icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
-              onClick={() => {
-                setOpenModal(true)
-                setEditCategory(null)
-              }}
-              size="large"
-            >
-              Add new category
-            </BlueColorButton>
-          </Row>
-          <Divider />
-          <Skeleton loading={loading} avatar active>
-            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-              {allCategoryList.map((category, index) => (
-                <CategoryCardItem
-                  category={category}
-                  key={index}
-                  setEditCategory={category => {
-                    setEditCategory(category)
-                    setOpenModal(true)
-                  }}
-                  handleDeleteCategory={handleDeleteCategory}
-                />
+      <AddCategoryModal
+        setLoading={setLoading}
+        isOpen={openModal}
+        onCloseModal={() => setOpenModal(false)}
+        setCategoriesList={setAllCategoryList}
+        categoriesList={allCategoryList}
+        currentCategory={editCategory}
+      />
+      <div style={{ padding: 20, margin: 0 }}>
+        <Row justify="space-between">
+          <Title level={3} style={{ margin: 0 }}>
+            Categorys list
+          </Title>
+          <BlueColorButton
+            icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
+            onClick={() => {
+              setOpenModal(true)
+              setEditCategory(null)
+            }}
+            size="large"
+          >
+            Add new category
+          </BlueColorButton>
+        </Row>
+        <Divider />
+        <Input
+          style={{ marginBottom: 16 }}
+          allowClear
+          placeholder="Search categories"
+          value={searchKey}
+          onChange={e => setSearchKey(e.target.value)}
+        ></Input>
+        <Skeleton loading={loading} avatar active>
+          <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            {allCategoryList
+              .filter(c => c.name.toLowerCase().includes(searchKey.toLowerCase()))
+              .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+              .map((category, index) => (
+                <Col className="gutter-row" xs={24} sm={12} md={8} lg={8} key={index} style={{ marginBottom: 16 }}>
+                  <CategoryCardItem
+                    category={category}
+                    setEditCategory={category => {
+                      setEditCategory(category)
+                      setOpenModal(true)
+                    }}
+                    handleDeleteCategory={handleDeleteCategory}
+                  />
+                </Col>
               ))}
-            </Space>
-          </Skeleton>
-        </div>
-
+          </Row>
+        </Skeleton>
+      </div>
     </>
-    //>>>>>>> main
   )
 }
 
 export default CategoryManager
-//<<<<<<< yesvansirCategory
-
-// {data.map((category, index) => (
-//   <CategoryCardItem category={category} key={index} />
-// ))}
-//=======
-//>>>>>>> main

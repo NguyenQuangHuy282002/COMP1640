@@ -25,7 +25,7 @@ specialEventRouter.get('/', authProtect, async (req, res) => {
   }
 })
 
-specialEventRouter.get('/available', authProtect,async (req, res) => {
+specialEventRouter.get('/available', authProtect, async (req, res) => {
   try {
     const now = new Date()
     const data = await SpecialEvent.find({ firstCloseDate: { $gt: now } })
@@ -51,7 +51,7 @@ specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), 
           firstCloseDate: new Date(firstCloseDate),
           finalCloseDate: new Date(finalCloseDate),
         },
-        { upsert: true }
+        { upsert: true, timestamps: true }
       )
     } else {
       await SpecialEvent.collection.insertOne({

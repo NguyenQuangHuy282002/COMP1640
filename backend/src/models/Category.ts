@@ -1,7 +1,7 @@
 import { Document, Schema, model, Model, Types } from 'mongoose'
 import { IIdea } from './Idea'
 
-export interface ICategory extends Document{
+export interface ICategory extends Document {
   name: string
   ideas?: IIdea['_id'][]
 }
@@ -9,9 +9,9 @@ export interface ICategory extends Document{
 const categorySchema = new Schema<ICategory>(
   {
     name: String,
-    ideas: [{ type: Types.ObjectId, ref: 'Idea', default: []}]
+    ideas: [{ type: Types.ObjectId, ref: 'Idea', default: [] }],
   },
-  { timestamps: { createdAt: true, updatedAt: true } }
+  { timestamps: true }
 )
 
 const Category: Model<ICategory> = model<ICategory>('Category', categorySchema)

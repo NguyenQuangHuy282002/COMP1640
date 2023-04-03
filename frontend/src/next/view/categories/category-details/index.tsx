@@ -1,5 +1,4 @@
-import { ClockCircleTwoTone, FireTwoTone, RocketTwoTone } from '@ant-design/icons'
-import { Alert, Button, Card, Empty, List, Space, Typography } from 'antd'
+import { Button, Card, Empty, List, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
@@ -32,7 +31,9 @@ export default function CategoryDetails() {
   }
   return (
     <Card
-      title={<Title style={{ margin: 0, fontSize: 24, textOverflow: 'ellipsis' }}>Name category: {category?.name}</Title>}
+      title={
+        <Title style={{ margin: 0, fontSize: 24, textOverflow: 'ellipsis' }}>Name category: {category?.name}</Title>
+      }
       style={{ borderRadius: 0, height: '100%', marginRight: 16 }}
       headStyle={{ backgroundColor: '#1677ff6d', borderRadius: 0 }}
     >
