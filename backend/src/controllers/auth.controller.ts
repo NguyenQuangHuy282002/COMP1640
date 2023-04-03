@@ -1,4 +1,4 @@
-import Department from 'models/Department'
+import Department from '../models/Department'
 import { bcryptCompare, bcryptHash } from '../helpers/bcrypt.helper'
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 import User from '../models/User'
