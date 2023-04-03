@@ -42,7 +42,7 @@ const items: MenuProps['items'] = [
 ];
 
 
-const RightSideBar: React.FC = () => {
+const Bar: React.FC = () => {
   const windowSize = useWindowSize()
 
   return (
@@ -88,4 +88,4 @@ const StyledCard = styled(Card)`
   box-shadow: 5px 5px 5px 5px #888888;
 `
 
-export default RightSideBar
+export default Bar

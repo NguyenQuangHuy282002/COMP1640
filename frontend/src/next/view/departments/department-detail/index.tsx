@@ -46,7 +46,7 @@ export default function DepartmentDetail() {
           }}
           dataSource={department?.users}
           renderItem={(userId, index) => (
-            <Col className="gutter-row" xs={24} sm={12} md={8} lg={8} key={index} style={{ marginBottom: 16 }}>
+            <Col className="gutter-row"  key={index}>
               <Skeleton loading={loading}>
                 <UserCard userId={userId} />
               </Skeleton>
@@ -57,7 +57,7 @@ export default function DepartmentDetail() {
         <Empty
           image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
           imageStyle={{ height: 60 }}
-          description={<span>There is no any idea yet</span>}
+          description={<span>There is no any member yet</span>}
           style={{ width: '100%', padding: 20 }}
         ></Empty>
       )}
