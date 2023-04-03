@@ -25,12 +25,6 @@ const data = [
     pv: 1398,
     amt: 2210
   },
-  {
-    name: 'Page C',
-    uv: 2000,
-    pv: 9800,
-    amt: 2290
-  }
 ];
 
 export default class Example extends PureComponent {
