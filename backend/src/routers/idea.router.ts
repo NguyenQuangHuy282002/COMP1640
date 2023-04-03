@@ -12,6 +12,7 @@ import {
   getIdeas,
   getPostLikes,
   getTotalIdea,
+  ideaTotalByDuration,
   likeIdea,
   omitVoteIdea,
 } from '../controllers/idea.controller'
@@ -29,10 +30,11 @@ ideaRouter.get('/preSignUrl', authProtect, getPresignedUrl)
 ideaRouter.get('/detail', authProtect, getIdea)
 ideaRouter.get('/ideaLikes', authProtect, getPostLikes)
 ideaRouter.get('/downloadFiles', authProtect, downloadFiles)
+ideaRouter.get('/totalIdea', authProtect, getTotalIdea)
+ideaRouter.get('/ideaTotalByDuration', authProtect, ideaTotalByDuration)
 ideaRouter.post('/create', authProtect, authorize(['staff']), createIdea)
 ideaRouter.put('/dislike', authProtect, disLikeIdea)
 ideaRouter.put('/like', authProtect, likeIdea)
 ideaRouter.put('/omitVote', authProtect, omitVoteIdea)
 ideaRouter.put('/edit/:ideaId', authProtect, editIdea)
 ideaRouter.delete('/delete/:ideaId', authProtect, deleteIdea)
-ideaRouter.get('/totalIdea', authProtect, getTotalIdea)
