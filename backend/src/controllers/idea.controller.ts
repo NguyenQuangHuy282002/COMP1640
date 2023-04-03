@@ -42,9 +42,9 @@ export const createIdea = async (req: any, res: any, next: any) => {
 
     if (ideaBody.specialEvent) {
       // (async function () {
-        const specialEvent = await SpecialEvent.findById(savedIdea.specialEvent)
-        specialEvent.ideas.push(savedIdea._id)
-        specialEvent.save()
+      const specialEvent = await SpecialEvent.findById(savedIdea.specialEvent)
+      specialEvent.ideas.push(savedIdea._id)
+      specialEvent.save()
       // })()
     }
 
@@ -340,7 +340,7 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
 
     const newUserIdeas = user.ideas.filter(userI => userI._id.toString() !== deletedIdea._id)
     const newUserComment = user.comments.filter(userC => userC._id.toString() !== deletedIdea._id)
-    if(deletedIdea.categories.length > 0) {
+    if (deletedIdea.categories.length > 0) {
       const categories = await Category.find({ ideas: { $in: [deletedIdea._id] } })
       categories.forEach(category => {
         const newCategoryIdeas = category.ideas.filter(ideaI => ideaI._id.toString() !== deletedIdea._id)
@@ -348,7 +348,7 @@ export const deleteIdea = async (req: any, res: any, next: any) => {
         category.save()
       })
     }
-    if(deletedIdea.specialEvent) {
+    if (deletedIdea.specialEvent) {
       const specialEvent = await SpecialEvent.findOne({ ideas: { $in: [deletedIdea._id] } })
       const newSpecialEventIdeas = specialEvent.ideas.filter(ideaI => ideaI._id.toString() !== deletedIdea._id)
       specialEvent.ideas = newSpecialEventIdeas
@@ -485,5 +485,23 @@ export const getPostLikes = async (req: any, res: any, next: any) => {
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+
+export const ideaTotalByDuration = async (req: any, res: any, next: any) => {
+  try {
+    const results = await Idea.aggregate(
+      [
+        { $project: { week: { $week: { date: '$createdAt', timezone: 'GMT' } }, date: '$createdAt' } },
+        { $group: { _id: { weeK: '$week' }, count: { $sum: 1 } } }
+      ])
+    res.status(201).json({
+      success: true,
+      data: results
+    })
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
+
   }
 }
