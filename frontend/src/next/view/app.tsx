@@ -26,6 +26,7 @@ import UserProfile from './user-profile'
 import OtherProfile from './user-profile/otherProfile'
 import EditIdea from './ideas/edit-idea'
 import DepartmentDetail from './departments/department-detail'
+import BackupDataManager from './backup-data'
 
 export default function App() {
   const navigate = useNavigate()
@@ -158,6 +159,7 @@ export default function App() {
           <Route path="event" element={<EventsPage role="admin" />} />
           <Route path="event/:id" element={<EventDetails />} />
           <Route path="profile" element={<OtherProfile />} />
+          <Route path="backup" element={<BackupDataManager />} />
         </Route>
 
         <Route

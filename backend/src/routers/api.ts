@@ -7,8 +7,9 @@ import { ideaRouter } from './idea.router'
 import { specialEventRouter } from './specialEvent.router'
 import { departmentRouter } from './department.router'
 import { commentRouter } from './comment.router'
-import { hastagRouter } from './hastag.router';
+import { hastagRouter } from './hastag.router'
 import { dataRouter } from './data.router'
+import { backupRouter } from './backup.router'
 
 const apiRouter = (app: Express) => {
   app.use('/api/v1/users', usersRouter)
@@ -18,8 +19,9 @@ const apiRouter = (app: Express) => {
   app.use('/api/v1/event', specialEventRouter)
   app.use('/api/v1/idea', ideaRouter)
   app.use('/api/v1/comment', commentRouter)
-  app.use('/api/v1/hastag',hastagRouter)
+  app.use('/api/v1/hastag', hastagRouter)
   app.use('/api/v1/data', dataRouter)
+  app.use('/api/v1/backup', backupRouter)
   app.use(serverErrorHandler)
 }
 
