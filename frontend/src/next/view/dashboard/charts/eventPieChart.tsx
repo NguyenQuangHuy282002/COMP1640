@@ -114,15 +114,15 @@ function CategoryClassifyPieChart() {
               Number ideas of each categories
             </Title>
 
-            <PieChart width={500} height={300}>
+            <PieChart width={500} height={500}>
               <Pie
                 data={formattedData}
                 cx="50%"
                 cy="50%"
                 activeIndex={activeIndex}
                 activeShape={renderActiveShape}
-                innerRadius={60}
-                outerRadius={80}
+                innerRadius={90}
+                outerRadius={150}
                 fill="#8884d8"
                 dataKey="value"
                 onMouseEnter={(_, index) => setActiveIndex(index)}
