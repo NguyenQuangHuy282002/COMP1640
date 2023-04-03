@@ -3,7 +3,6 @@ import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import React from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
-import AppFooter from '../footer'
 import AppHeader from '../header'
 import AppSidebar from '../sidebar'
 

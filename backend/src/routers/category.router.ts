@@ -1,9 +1,7 @@
 import express from 'express'
-import ApiErrorResponse from '../utils/ApiErrorResponse'
+import { authorize, authProtect } from '../middlewares/auth'
 import Category from '../models/Category'
 import { io } from '../utils/socket'
-import { authorize, authProtect } from '../middlewares/auth'
-
 
 export const updateIdeaNumberRealTime = async () => {
   const now = new Date()
@@ -25,22 +23,24 @@ categoryRouter.get('/', authProtect, async (req, res) => {
   }
 })
 
-
 categoryRouter.post('/', authProtect, authorize(['manager']), express.json(), async (req, res) => {
   // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
-    const { _id, name} = req.body
+    const { _id, name } = req.body
     if (_id) {
       await Category.findOneAndUpdate(
         { _id },
         {
-          name
+          name,
         },
-        { upsert: true }
+        { upsert: true, timestamps: true }
       )
     } else {
       await Category.collection.insertOne({
-        name
+        users: [],
+        name,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
     }
     res.status(200).json({ success: 1 })

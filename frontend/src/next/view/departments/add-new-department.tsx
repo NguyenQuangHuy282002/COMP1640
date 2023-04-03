@@ -2,7 +2,14 @@ import { Form, Input, message, Modal } from 'antd'
 import { useSnackbar } from 'notistack'
 import { Http } from '../../api/http'
 
-export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments, deparments, currentDepartment }) {
+export default function AddDepartmentModal({
+  isOpen,
+  onCloseModal,
+  setDeparments,
+  deparments,
+  setLoading,
+  currentDepartment,
+}) {
   const { enqueueSnackbar } = useSnackbar()
   const [form] = Form.useForm()
 
@@ -10,11 +17,23 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
     if (form.getFieldValue('name') || currentDepartment.name !== form.getFieldValue('name')) {
       const accountForm = {
         name: form.getFieldValue('name'),
-        oldName: currentDepartment.name,
+        _id: currentDepartment?._id || null,
       }
       await Http.post('/api/v1/department', accountForm)
         .then(() => {
-          setDeparments([accountForm, ...deparments])
+          if (currentDepartment?._id) {
+            setDeparments(
+              deparments.map(category => {
+                if (category._id === currentDepartment._id) {
+                  category.name = form.getFieldValue('name')
+                }
+                return category
+              })
+            )
+          } else {
+            setDeparments([accountForm, ...deparments])
+          }
+
           onCloseModal()
         })
         .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
@@ -23,6 +42,7 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
     } else {
       message.error('Please type a different name!')
     }
+    form.resetFields()
   }
 
   return (
@@ -32,13 +52,13 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
         onCloseModal()
         form.resetFields()
       }}
-      title={currentDepartment.name ? `Edit ${currentDepartment.name}` : 'Add new department'}
+      title={currentDepartment?.name ? `Edit ${currentDepartment.name}` : 'Add new department'}
       onOk={onFinish}
       destroyOnClose
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>
         <Form.Item name="name" label="Department name" labelAlign="left" required>
-          <Input placeholder="Business,..." allowClear defaultValue={currentDepartment.name} />
+          <Input placeholder="Business,..." allowClear defaultValue={currentDepartment?.name} />
         </Form.Item>
       </Form>
     </Modal>

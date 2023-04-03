@@ -1,3 +1,4 @@
+import Department from 'models/Department'
 import { bcryptCompare, bcryptHash } from '../helpers/bcrypt.helper'
 import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
 import User from '../models/User'
@@ -34,6 +35,10 @@ export const createAccount = async (req: any, res: any, next: any) => {
     }).save()
 
     updateAccountNumberRealTime()
+
+    if (department) {
+      await Department.findByIdAndUpdate({ _id: department }, { $push: { users: newAccount._id } })
+    }
 
     res.status(200).json({ success: true, savedUser: newAccount })
   } catch (err) {
@@ -176,9 +181,11 @@ export const sendVerificationEmail = async (req: any, res: any, next: any) => {
     const verificationUrl = `${process.env.BASE_URL}/verification/${verificationToken}`
     const isSent = await senVerification(email, username, verificationUrl)
     if (isSent.status === 400) {
-      return next(new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500))
+      return next(
+        new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500)
+      )
     }
-    res.status(200).json({success: true, isSent})
+    res.status(200).json({ success: true, isSent })
   } catch (error) {
     next(new ApiErrorResponse(error))
   }
