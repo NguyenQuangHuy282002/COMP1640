@@ -1,7 +1,10 @@
+
 import React, { useEffect, useState } from 'react'
-import { UsergroupAddOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, MailOutlined, SettingOutlined, UsergroupAddOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
+import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -21,38 +24,42 @@ function getItem(
   } as MenuItem
 }
 
-const items: MenuProps['items'] = [
-  getItem('Department', 'menu', <UsergroupAddOutlined />, [
-    getItem('Department 1', '1'),
-    getItem('Department 2', '2'),
-    getItem('Department 3', '3'),
-  ]),
-]
-
-const DepartmentCard: React.FC = () => {
-  const onClick: MenuProps['onClick'] = e => {
-    console.log('click ', e)
-  }
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
+function DepartmentCard() {
+  const [departments, setDepartment] = useState<any>([])
+  const navigate = useRoleNavigate()
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    const fetchEvents = async () => {
+      await Http.get('/api/v1/department/')
+        .then(res => setDepartment(res.data.data))
+        .catch(err => console.log(err, 'error to fetch department'))
+    }
+    fetchEvents()
   }, [])
 
+  const onClickDepartmentItem: MenuProps['onClick'] = e => {
+    navigate(`/departments/${e.key}`)
+  }
+
+  const items: MenuProps['items'] = [
+    getItem('Department', 'menu',<UsergroupAddOutlined />, [
+      ...departments.slice(0, 3).map(department => getItem(department.name, department._id)),
+      getItem(
+        'More Department',
+        'sub-menu',
+        null,
+        departments.slice(3).map(department => getItem(department.name, department._id))
+      ),
+    ]),
+  ]
   return (
     <Menu
-      onClick={onClick}
-      style={{ width: 256, marginTop: '10px', color: 'blue' }}
+      onClick={onClickDepartmentItem}
+      style={{ width: 256 }}
       defaultSelectedKeys={['']}
-      defaultOpenKeys={['']}
+      defaultOpenKeys={['menu']}
       mode="inline"
       items={items}
-    >
-      {/* {windowWidth < 1000 ? <AppstoreOutlined /> : null} */}
-    </Menu>
+    />
   )
 }
 

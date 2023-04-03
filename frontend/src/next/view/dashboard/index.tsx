@@ -5,6 +5,7 @@ import LarsestEventIdea from './charts/largest-event-chart'
 import LatestIdeaList from './charts/latest-ideas'
 import SmallStatistic from './charts/smallstatistic'
 import MostViewedIdeasChart from './charts/most-view-ideas-chart'
+import EventLineChart from './charts/eventLineChart'
 
 function DashboardAdmin() {
   return (
@@ -62,13 +63,25 @@ function DashboardAdmin() {
           className="gutter-row"
           xs={24}
           sm={24}
-          md={24}
-          xxl={24}
+          md={12}
+          xxl={6}
           style={{
             borderRadius: '5px',
           }}
         >
-          <MostViewedIdeasChart />
+          <MostViewedIdeasChart/>
+        </Col>
+        <Col
+          className="gutter-row"
+          xs={24}
+          sm={24}
+          md={12}
+          xxl={6}
+          style={{
+            borderRadius: '5px',
+          }}
+        >
+         <EventLineChart/>
         </Col>
       </Row>
 
