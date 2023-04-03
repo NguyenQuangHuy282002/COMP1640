@@ -8,22 +8,23 @@ export default function AddDepartmentModal({ isOpen, onCloseModal, setDeparments
 
   const onFinish = async () => {
     if (form.getFieldValue('name') || currentDepartment.name !== form.getFieldValue('name')) {
-      const accountForm = {
+      const departmentForm = {
+        _id: currentDepartment._id,
         name: form.getFieldValue('name'),
-        oldName: currentDepartment.name,
       }
-      await Http.post('/api/v1/department', accountForm)
+      await Http.post('/api/v1/department', departmentForm)
         .then(() => {
-          setDeparments([accountForm, ...deparments])
+          setDeparments([departmentForm, ...deparments])
           onCloseModal()
         })
         .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
     } else if (!form.getFieldValue('name')) {
       message.error('Name is empty!')
     } else {
-      message.error('Please type a different name!')
+      message.error('Please type a   name!')
     }
   }
+
 
 
 
