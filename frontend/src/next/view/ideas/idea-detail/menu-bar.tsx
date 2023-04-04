@@ -15,10 +15,12 @@ import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
 import { disLikeHandler, handleDownloadFiles, likeHandler, omitHandler } from './idea-detail-service'
 import PointInfoModal from './points-info-modal'
+import { useSocket } from 'next/socket.io'
 
 let reactionTimeOut = null
 
 export default function MenuBar({ commentCount, handleShowComment, ideaId, name, files }) {
+  const { appSocket } = useSocket()
   const windowWidth = useWindowSize()
   const [likers, setLikers] = useState([])
   const [dislikers, setDisLikers] = useState([])
@@ -45,6 +47,63 @@ export default function MenuBar({ commentCount, handleShowComment, ideaId, name,
         return message.error(error.message)
       })
   }
+
+  const updateVoteRealTime = info => {
+    if (info.user._id === state._id) return
+    if (info.action === 'like') {
+      if (dislikers.map(liker => liker._id).indexOf(info.user._id) >= 0) {
+        setDisLikers(dislikers => {
+          dislikers = dislikers.filter(l => l._id !== info.user._id)
+          return dislikers
+        })
+        setDisLikes(prev => prev - 1)
+        setVotes(votesCount => votesCount + 1)
+      }
+      setLikers(prev => [...prev, info.user])
+      setVotes(votesCount => votesCount + 1)
+      return setLikes(prev => prev + 1)
+    } else if (info.action === 'dislike') {
+      if (likers.map(liker => liker._id).indexOf(info.user._id) >= 0) {
+        setLikers(likers => {
+          likers = likers.filter(l => l._id !== info.user._id)
+          return likers
+        })
+        setLikes(prev => prev - 1)
+        setVotes(votesCount => votesCount - 1)
+      }
+      setDisLikers(prev => [...prev, info.user])
+      setVotes(votesCount => votesCount - 1)
+      return setDisLikes(prev => prev + 1)
+    } else if (info.action === 'omit') {
+      if (dislikers.map(liker => liker._id).indexOf(info.user._id) >= 0) {
+        setDisLikers(dislikers => {
+          dislikers = dislikers.filter(l => l._id !== info.user._id)
+          return dislikers
+        })
+        setDisLikes(prev => prev - 1)
+        setVotes(votesCount => votesCount + 1)
+      } else if (likers.map(liker => liker._id).indexOf(info.user._id) >= 0) {
+        setLikers(likers => {
+          likers = likers.filter(l => l._id !== info.user._id)
+          return likers
+        })
+        setLikes(prev => prev - 1)
+        setVotes(votesCount => votesCount - 1)
+      }
+    }
+  }
+
+  useEffect(() => {
+    appSocket.on('votes', data => {
+      if (data.ideaId === ideaId) {
+        updateVoteRealTime(data)
+      }
+    })
+    return () => {
+      appSocket.off('votes')
+    }
+  }, [updateVoteRealTime])
+
   useEffect(() => {
     return () => {
       if (isLiked) {
