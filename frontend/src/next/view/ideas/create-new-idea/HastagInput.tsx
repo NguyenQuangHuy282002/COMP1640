@@ -5,7 +5,7 @@ import { Http } from '../../../api/http'
 
 const { Search } = Input;
 
-const HashtagInput = () => {
+function HashtagInput({ setHashTags }: { setHashTags?}) {
     const [inputValue, setInputValue] = useState('');
     const [hashtags, setHashtags] = useState([]);
 
@@ -21,7 +21,8 @@ const HashtagInput = () => {
             if (!hashtags) return;
             for (let hashtag of hashtags) {
                 hashtag = hashtag.substring(1);
-                await Http.post('/api/v1/hastag', { name: hashtag });
+                const result = await Http.post('/api/v1/hastag', { name: hashtag });
+                setHashTags(prev => [...prev, (result?.data?.data?._id)])
             }
             // setInputValue('');
         } catch (err) {

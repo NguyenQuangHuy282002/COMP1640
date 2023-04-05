@@ -1,4 +1,4 @@
-import { Layout, message, Space, Typography } from 'antd'
+import { Layout, message, Space, Typography, Tag, } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
@@ -13,6 +13,7 @@ import CommentsList from '../../../view/comments/comments-list'
 import FileDisplay from './file-display'
 import IdeaDetailInfo from './idea-detail-info'
 import MenuBar from './menu-bar'
+import { TagsTwoTone } from '@ant-design/icons'
 
 const { Text, Link } = Typography
 
@@ -45,7 +46,7 @@ function IdeaDetail() {
   }, [updateIdea])
 
   const updateCommentLength = (info) => {
-    if(info.action === 'create') {
+    if (info.action === 'create') {
       return setCommentCount(commentCount + 1)
     } else {
       return setCommentCount(commentCount - 1)
@@ -73,19 +74,37 @@ function IdeaDetail() {
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
+
+
+
+                <Space>
+                  {data[0]?.hashtags.length !== 0 ? (
+                    data[0]?.hashtags?.map(tag => (
+                      <div style={{ backgroundColor: '#f4f4f5', color: '#9ba1af', padding: '5px', borderRadius: '5px', border: '2px' }}>
+                        @{tag.name}
+                      </div>
+                    ))
+                  ) : (
+                    null
+                  )}
+                </Space>
+
+
+
                 <br></br>
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={commentCount } ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} files={data[0]?.files}/>
+            <MenuBar commentCount={commentCount} ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} files={data[0]?.files} />
           </StyledContent>
+
 
           <StyledContent>
             <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
               <Text>
                 Comment as <Text strong>{name}</Text>
               </Text>
-              <CreateComment user={{avatar, name}} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email}/>
+              <CreateComment user={{ avatar, name }} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email} />
             </Space>
           </StyledContent>
           <StyledContent>
@@ -93,10 +112,11 @@ function IdeaDetail() {
               {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}
             </div>
           </StyledContent>
-        </Layout>
+        </Layout >
       ) : (
         <></>
-      )}
+      )
+      }
     </>
   )
 }
