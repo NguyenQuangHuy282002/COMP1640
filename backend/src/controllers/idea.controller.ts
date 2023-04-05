@@ -402,6 +402,7 @@ export const likeIdea = async (req: any, res: any, next: any) => {
     const { ideaId } = req.body
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId)
+                        .select('createdAt dislikes likes')
     if (idea.likes.indexOf(userId) >= 0) {
       return res.status(200).json({ success: true, message: 'already like!' })
     }
@@ -412,6 +413,11 @@ export const likeIdea = async (req: any, res: any, next: any) => {
       idea.likes.push(userId)
     }
     await idea.save()
+    User.findById(userId)
+    .select('comments name email avatar role')
+    .then((user) => {
+      io.emit('votes', { action: 'like', ideaId: ideaId, user: user })
+    })
     res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -423,6 +429,7 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
     const { ideaId } = req.body
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId)
+                        .select('createdAt dislikes likes')
     if (idea.dislikes.indexOf(userId) >= 0) {
       return res.status(200).json({ success: true, message: 'already dislike!' })
     }
@@ -434,6 +441,11 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
     }
 
     await idea.save()
+    User.findById(userId)
+    .select('comments name email avatar role')
+    .then((user) => {
+      io.emit('votes', { action: 'dislike', ideaId: ideaId, user: user })
+    })
     res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -445,7 +457,7 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
     const { ideaId } = req.body
     const userId = req.payload.user.id
     let idea = await Idea.findById(ideaId)
-    console.log(userId)
+                        .select('createdAt dislikes likes')
     if (idea.dislikes.indexOf(userId) === -1 && idea.likes.indexOf(userId) === -1) {
       return res.status(200).json({ success: true, message: 'already omit!' })
     }
@@ -457,6 +469,11 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
     }
 
     await idea.save()
+    User.findById(userId)
+    .select('comments name email avatar role')
+    .then((user) => {
+      io.emit('votes', { action: 'omit', ideaId: ideaId, user: user })
+    })
     res.status(200).json({ success: true, message: 'omit oke!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
