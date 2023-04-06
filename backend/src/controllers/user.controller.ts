@@ -1,12 +1,11 @@
-import { bcryptHash } from "../helpers/bcrypt.helper";
-import User from "../models/User";
-import ApiErrorResponse from "../utils/ApiErrorResponse";
-
-import { generateJWToken, verifyJWTToken } from '../helpers/token.helper'
+import { bcryptHash } from '../helpers/bcrypt.helper'
+import User from '../models/User'
+import ApiErrorResponse from '../utils/ApiErrorResponse'
+import { updateAccountNumberRealTime } from './auth.controller'
 
 export const find = async (req: any, res: any, next: any) => {
   try {
-    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    const users = await User.find({ role: { $ne: 'admin' } }).select('-password')
     if (!users) {
       return next(new ApiErrorResponse('No account exists.', 404))
     }
@@ -21,15 +20,22 @@ export const find = async (req: any, res: any, next: any) => {
 }
 
 export const findUser = async (req: any, res: any, next: any) => {
+  const { id } = req.params
   try {
-    const { username } = req.params.username
-    const user = await User.findOne({ username }).select('-password')
+    const user = await User.findById(id)
+      .select('-password')
+      .populate({
+        path: 'department',
+        select: ['name'],
+      })
+
     if (!user) {
       return next(new ApiErrorResponse('Account does not exists.', 404))
     }
     return res.status(200).json({
       email: user.email,
       picture: user.avatar,
+      userInfo: user,
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -86,7 +92,28 @@ export const deleteUser = async (req: any, res: any, next: any) => {
     if (!deletedUser) {
       return next(new ApiErrorResponse(`Could not update user`, 400))
     }
+    updateAccountNumberRealTime()
     return res.status(200).json({ success: true, message: 'User deleted successfully', user: deletedUser })
+  } catch (error) {
+    next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const deactiveUser = async (req: any, res: any, next: any) => {
+  try {
+    const deactiveUser = await User.findByIdAndUpdate(req.body.id, { isActivate: false })
+
+    return res.status(200).json({ success: true, message: 'User de-active successfully', user: deactiveUser })
+  } catch (error) {
+    next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const activeUser = async (req: any, res: any, next: any) => {
+  try {
+    const activeUser = await User.findByIdAndUpdate(req.body.id, { isActivate: true })
+
+    return res.status(200).json({ success: true, message: 'User active successfully', user: activeUser })
   } catch (error) {
     next(new ApiErrorResponse(`${error.message}`, 500))
   }
@@ -102,5 +129,20 @@ export const search = async (req: any, res: any, next: any) => {
     })
   } catch (error) {
     next(new ApiErrorResponse(`${error.message}`, 500))
+  }
+}
+
+export const getTotalAccounts = async (req: any, res: any, next: any) => {
+  try {
+    const users = await User.find({ $ne: { role: 'admin' } }).select('-password')
+    if (!users) {
+      return next(new ApiErrorResponse('No account exists.', 404))
+    }
+    return res.status(200).json({
+      success: true,
+      total: users.length,
+    })
+  } catch (error) {
+    return next(new ApiErrorResponse(`${error.message}`, 500))
   }
 }

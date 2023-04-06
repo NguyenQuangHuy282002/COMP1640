@@ -1,73 +1,35 @@
-import { LOCALSTORAGE } from '../../api/http'
-import {
-  CarryOutOutlined,
-  DashboardOutlined,
-  HomeOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  ProfileOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
-import { Avatar, Button, Col, Dropdown, Layout, Menu, MenuProps, Row, Typography } from 'antd'
+import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons'
+import { Avatar, Button, Dropdown, Layout, MenuProps, Row, Typography } from 'antd'
+import useRoleNavigate from 'next/libs/use-role-navigate'
+import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { imgDir } from '../../constants/img-dir'
-import useWindowSize from '../../utils/useWindowSize'
-import { useSnackbar } from 'notistack'
-import { useSubscription } from '../../libs/global-state-hook'
-import { userStore } from '../auth/user-store'
 import AutoSearch from '../../components/search-field/autocomplete-search'
+import { imgDir } from '../../constants/img-dir'
+import { createSubscription, useSubscription } from '../../libs/global-state-hook'
+import useWindowSize from '../../utils/useWindowSize'
+import { userCredential, userStore } from '../auth/user-store'
 
 const { Text } = Typography
 
+export const ideaCount = createSubscription({ number: 0 })
+
 function AppHeader() {
-  const navigate = useNavigate()
+  const navigate = useRoleNavigate()
+  const navigator = useNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const [tabKey, setTabKey] = useState(['home'])
-  const { avatar } = useSubscription(userStore).state
-
-  const menuItems: MenuProps['items'] = [
-    // {
-    //   key: 'home',
-    //   label: <Text style={{ fontSize: 20, margin: 0 }}>Home</Text>,
-    //   icon: windowWidth < 768 && <HomeOutlined style={{ fontSize: 20 }} />,
-    // },
-    {
-      key: 'dashboard',
-      label: <Text style={{ fontSize: 20, margin: 0 }}>Dashboard</Text>,
-      icon: windowWidth < 768 && <DashboardOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: 'event',
-      label: <Text style={{ fontSize: 20, margin: 0 }}>Events</Text>,
-      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: 'departments',
-      label: <Text style={{ fontSize: 20, margin: 0 }}>Departments</Text>,
-      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: 'categories',
-      label: <Text style={{ fontSize: 20, margin: 0 }}>Categories</Text>,
-      icon: windowWidth < 768 && <CarryOutOutlined style={{ fontSize: 20 }} />,
-    },
-    {
-      key: 'accounts-manager',
-      label: <Text style={{ fontSize: 20, margin: 0 }}>Accounts</Text>,
-      icon: windowWidth < 768 && <TeamOutlined style={{ fontSize: 20 }} />,
-    },
-  ]
+  const {
+    state: { avatar },
+  } = useSubscription(userStore, ['avatar'])
 
   const userMenu: MenuProps['items'] = [
     {
       key: 'account',
       label: (
         <Text style={{ fontSize: 20, margin: 0 }} onClick={() => handleClickMenu({ key: 'account' })}>
-          Account
+          Profile
         </Text>
       ),
       icon: <UserOutlined style={{ fontSize: 20 }} />,
@@ -84,10 +46,10 @@ function AppHeader() {
   ]
 
   const handleLogout = () => {
-    localStorage.setItem(LOCALSTORAGE.TOKEN, '')
-    console.log(localStorage.getItem(LOCALSTORAGE.TOKEN))
-    navigate('/login')
-    enqueueSnackbar("You're fxking logout! man")
+    userCredential.state.logout()
+    navigator('/login')
+    // window.location.reload();
+    return enqueueSnackbar("You're logout! man")
   }
 
   const handleClickMenu = async (val: any) => {
@@ -126,44 +88,29 @@ function AppHeader() {
           </a>
           <AutoSearch />
         </>
-        {windowWidth < 1000 ? (
-          <Dropdown
-            menu={{ items: [...menuItems, ...userMenu] }}
-            trigger={['click']}
-            overlayStyle={{ width: 200 }}
-            placement="bottom"
-          >
+        {windowWidth < 1300 ? (
+          <Dropdown menu={{ items: userMenu }} trigger={['click']} overlayStyle={{ width: 200 }} placement="bottom">
             <Button icon={<MenuOutlined style={{}} />} type="text" />
           </Dropdown>
         ) : (
-          <>
-            <StyledMenu mode="horizontal" defaultSelectedKeys={tabKey} items={menuItems} onClick={handleClickMenu} />
-            <Dropdown menu={{ items: userMenu }} trigger={['click']} arrow overlayStyle={{ width: 150 }}>
-              <a>
-                <Avatar
-                  style={{
-                    backgroundColor: 'rgb(246 247 248)',
-                    verticalAlign: 'middle',
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px',
-                  }}
-                  size={40}
-                  gap={0}
-                  src={avatar}
-                ></Avatar>
-              </a>
-            </Dropdown>
-          </>
+          <Dropdown menu={{ items: userMenu }} trigger={['click']} arrow overlayStyle={{ width: 150 }}>
+            <a>
+              <Avatar
+                style={{
+                  backgroundColor: 'rgb(246 247 248)',
+                  verticalAlign: 'middle',
+                  boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px',
+                }}
+                size={40}
+                gap={0}
+                src={avatar}
+              ></Avatar>
+            </a>
+          </Dropdown>
         )}
       </Row>
     </Layout.Header>
   )
 }
-
-const StyledMenu = styled(Menu)`
-  padding: 10px;
-  background: white;
-  font-size: 20px;
-  width: 420px;
-`
 
 export default AppHeader

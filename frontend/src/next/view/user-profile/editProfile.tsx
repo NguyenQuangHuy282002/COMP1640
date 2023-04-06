@@ -1,17 +1,27 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Col, DatePicker, Form, Input, Row, Space, Typography, Upload } from 'antd'
-import TextEditor from '../../components/text-editor'
-import { IUserInfo } from '../../../types/user'
+import { Button, DatePicker, Form, Input, Row, Space, Typography, Upload, message } from 'antd'
+import dayjs from 'dayjs'
+import { Http } from 'next/api/http'
+import { useSubscription } from 'next/libs/global-state-hook'
+import { userStore } from '../auth/user-store'
 
 const { Title } = Typography
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm'
 
-interface IEditProfileForm {
-  userInfo: IUserInfo
-}
-
-function EditProfileForm(props: IEditProfileForm) {
-  const { userInfo } = props
+function EditProfileForm() {
+  const { state, setState } = useSubscription(userStore)
   const [form] = Form.useForm()
+
+  userStore.subscribe(newState => {
+    form.setFieldsValue({
+      name: newState?.name,
+      username: newState?.username,
+      phone: newState.phone,
+      email: !newState.email || newState.email === 'None' ? '' : newState.email,
+      birthday:
+        typeof newState?.birthday === 'string' && newState?.birthday ? dayjs(newState?.birthday, DATE_FORMAT) : null,
+    })
+  })
 
   const onFinish = (values: any) => {
     console.log(values)
@@ -20,6 +30,30 @@ function EditProfileForm(props: IEditProfileForm) {
   const onReset = () => {
     form.resetFields()
   }
+
+  const handleUpdateProfile = async () => {
+    const userform = {
+      name: form.getFieldValue('name'),
+      username: form.getFieldValue('username'),
+      phone: form.getFieldValue('phone'),
+      email: form.getFieldValue('email'),
+      birthday: form.getFieldValue('birthday')?.$d,
+    }
+
+    await Http.put(`/api/v1/users/updateProfile/${state._id}`, userform)
+      .then(() => {
+        message.success('Updated profile successfully!')
+        setState({
+          name: form.getFieldValue('name'),
+          username: form.getFieldValue('username'),
+          phone: form.getFieldValue('phone'),
+          email: form.getFieldValue('email'),
+          birthday: form.getFieldValue('birthday')?.$d,
+        })
+      })
+      .catch(err => message.error('Failed to update profile!'))
+  }
+
   return (
     <Form
       onFinish={onFinish}
@@ -30,53 +64,73 @@ function EditProfileForm(props: IEditProfileForm) {
       form={form}
     >
       <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
-        <Col xs={24} sm={24} md={12} xxl={12} style={{ padding: '0px 16px' }}>
-          <Title level={3} style={{ margin: 0, marginBottom: 16 }}>
-            General
-          </Title>
-          <Form.Item name="name" label="Full name" labelAlign="left" required>
-            <Input defaultValue={userInfo.name} />
-          </Form.Item>
-          <Form.Item name="username" label="Username" labelAlign="left" required>
-            <Input defaultValue={userInfo.username} />
-          </Form.Item>
-          <Form.Item name="phone" label="Phone number" labelAlign="left" required>
-            <Input defaultValue={userInfo.phone} />
-          </Form.Item>
-          <Form.Item name="email" label="Email" labelAlign="left" required>
-            <Input defaultValue={userInfo.email} />
-          </Form.Item>
-          <Form.Item name="birthday" label="Date of birth" labelAlign="left" required>
-            <DatePicker />
-          </Form.Item>
-
-          <Form.Item name="image" label="Upload image" valuePropName="fileList" labelAlign="left">
-            <Upload action="/upload.do" listType="picture-card">
-              <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} sm={24} md={12} xxl={12} style={{ padding: '0px 16px' }}>
-          <Title level={3} style={{ margin: 0, marginBottom: 16 }}>
-            Additional
-          </Title>
-          <Form.Item name="description" label="Description" labelAlign="left">
-            <Input defaultValue={userInfo.description} />
-            <TextEditor />
-          </Form.Item>
-          <Form.Item name="interests" label="Interests" labelAlign="left">
-            <Input />
-          </Form.Item>
-        </Col>
+        <Title level={3} style={{ margin: '0px 10px 16px' }}>
+          General
+        </Title>
       </Row>
+
+      <Form.Item name="name" label="Full name" labelAlign="left" required initialValue={state.name}>
+        <Input />
+      </Form.Item>
+      <Form.Item name="username" label="Username" labelAlign="left" required initialValue={state.username}>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="phone"
+        label="Phone number"
+        labelAlign="left"
+        initialValue={state.phone}
+        rules={[
+          {
+            pattern: new RegExp(/^[0-9]{10}$/),
+            message: 'The input is not valid phone number!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="email"
+        label="Email"
+        labelAlign="left"
+        initialValue={!state.email || state.email === 'None' ? '' : state.email}
+        rules={[
+          {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="birthday"
+        label="Date of birth"
+        labelAlign="left"
+        initialValue={
+          typeof state?.birthday === 'string' && state?.birthday ? dayjs(state?.birthday, DATE_FORMAT) : null
+        }
+      >
+        <DatePicker
+          disabledDate={current => {
+            return current && current > dayjs().endOf('day')
+          }}
+        />
+      </Form.Item>
+
+      <Form.Item name="image" label="Upload image" valuePropName="fileList" labelAlign="left">
+        <Upload action="/upload.do" listType="picture-card">
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+          </div>
+        </Upload>
+      </Form.Item>
+
       <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: '0px 16px' }}>
         <Form.Item>
           <Space direction="horizontal" align="end">
-            <Button type="primary" htmlType="submit" disabled>
+            <Button type="primary" htmlType="submit" onClick={handleUpdateProfile}>
               Submit
             </Button>
             <Button htmlType="button" onClick={onReset} danger>

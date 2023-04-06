@@ -1,11 +1,12 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Row, Space, Table, Tag } from 'antd'
+import { Button, Card, Row, Space, Switch, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useSnackbar } from 'notistack'
 import { useEffect, useMemo, useState } from 'react'
 import { Http } from '../../api/http'
 import AddAccountModal from './add-new-account'
 import SearchField from '../../components/search-field'
+import EditAccountModal from './edit-account'
 
 interface DataType {
   id: string
@@ -27,7 +28,9 @@ function AccountManager() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
   const [loading, setLoading] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [editModal, setEditModal] = useState(false)
   const [searchKey, setSearchKey] = useState('')
+
   const filteredAccounts = useMemo(() => {
     return accounts?.filter((acc: DataType) => acc.username.toLowerCase().includes(searchKey.toLowerCase().trim()))
   }, [accounts, searchKey])
@@ -36,6 +39,21 @@ function AccountManager() {
     await await Http.delete('/api/v1/users/deleteUser', id)
       .then(res => setAccounts(accounts.filter(acc => acc._id !== id)))
       .catch(error => enqueueSnackbar('Failed to delete account !', { variant: 'error' }))
+  }
+
+  const handleChangeActiveAccount = async (id, active) => {
+    await await Http.post(`/api/v1/users/${active ? 'activeUser' : 'deactiveUser'}`, { id })
+      .then(res =>
+        setAccounts(
+          accounts.map(acc => {
+            if (acc._id === id) {
+              acc.isActivate = active
+            }
+            return acc
+          })
+        )
+      )
+      .catch(error => enqueueSnackbar('Failed to update account !', { variant: 'error' }))
   }
 
   const columns: ColumnsType<DataType> = [
@@ -92,7 +110,11 @@ function AccountManager() {
       title: 'Actions',
       render: (_, record: any) => (
         <Space wrap>
-          <Button type="text" icon={<EditOutlined />} />
+          <Switch
+            checked={record.isActivate}
+            onChange={() => handleChangeActiveAccount(record._id, !record.isActivate)}
+          />
+          <Button type="text" icon={<EditOutlined />} onClick={() => setEditModal(record)} />
           <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteAccount(record._id)} />
         </Space>
       ),
@@ -102,17 +124,16 @@ function AccountManager() {
     },
   ]
 
+  const getAllUser = async () =>
+    await Http.get('/api/v1/users')
+      .then(res => setAccounts(res.data.data))
+      .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
+      .finally(() => setLoading(false))
+
   useEffect(() => {
-    if (!openModal) {
-      setLoading(true)
-      const getAllUser = async () =>
-        await Http.get('/api/v1/users')
-          .then(res => setAccounts(res.data.data))
-          .catch(error => enqueueSnackbar('Failed to get all accounts !', { variant: 'error' }))
-          .finally(() => setLoading(false))
-      getAllUser()
-    }
-  }, [openModal])
+    setLoading(true)
+    getAllUser()
+  }, [])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys)
@@ -132,27 +153,33 @@ function AccountManager() {
         bodyStyle={{ overflow: 'scroll', height: loading ? '500px' : 'auto', minHeight: '500px' }}
       >
         <SearchField setSearchKey={setSearchKey} searchKey={searchKey} placeholder="Search accounts by name" />
-        <Table rowSelection={rowSelection} columns={columns} dataSource={filteredAccounts} loading={loading} />
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={filteredAccounts.sort(
+            (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          )}
+          loading={loading}
+        />
       </Card>
+      <EditAccountModal
+        userProfile={editModal}
+        onCloseModal={() => setEditModal(null)}
+        onSubmit={() => {
+          setLoading(true)
+          getAllUser()
+        }}
+      />
       <AddAccountModal
         isOpen={openModal}
         onCloseModal={() => setOpenModal(false)}
-        setAccounts={setAccounts}
-        accounts={accounts}
+        onSubmit={() => {
+          setLoading(true)
+          getAllUser()
+        }}
       />
     </Row>
   )
 }
 
 export default AccountManager
-
-const accountc = [
-  {
-    key: '1',
-    id: '238456776345',
-    name: 'huy',
-    email: 'huy1234@gmail.com',
-    role: 'admin',
-    active: true,
-  },
-]

@@ -1,33 +1,42 @@
 import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
-import { useSnackbar } from 'notistack'
-import { useLocation, useNavigate } from 'react-router-dom'
+import useRoleNavigate from 'next/libs/use-role-navigate'
+import { useEffect } from 'react'
 import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
-import { userStore } from '../user-store'
-
+import { userCredential, userStore } from '../user-store'
 const { Title } = Typography
 
 function Login() {
-  const { enqueueSnackbar } = useSnackbar()
-  const navigate = useNavigate()
-  const { state } = useLocation()
   const [form] = Form.useForm()
+  const navigate = useRoleNavigate()
+  useEffect(() => {
+    const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
+    if (credential && credential.tokenVerified) {
+      message.info('You already logged in!')
+    }
+  }, [])
 
   const handleSubmit = async (val: any) => {
     await Http.post('/api/v1/auth/login', val)
-      .then(res => {
-        if (res.data?.success) {
-          message.success('Login successful')
-          localStorage.setItem(LOCALSTORAGE.TOKEN, res.data.accessToken)
+      .then(async res => {
+        if (res?.data?.success) {
           userStore.updateState(res.data.userMetaData)
-          return navigate(state?.from || '/dashboard')
+          userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
+          navigate(`/${res.data.userMetaData.role}`)
+          window.location.reload()
+          message.success('Login successful')
         }
+        return res.data.userMetaData.role
       })
-      .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .then(enpoint => navigate(`/${enpoint}`))
+      .catch(error => {
+        console.error(error)
+        message.error(`Login failed, ${error?.message}`)
+      })
   }
 
   return (
-    <Row style={{ width: '100%', marginTop: 100, justifyContent: 'center' }}>
+    <Row style={{ width: '100%', height: '100vh', paddingTop: 70, paddingBottom: 50, justifyContent: 'center', background: '#2e4d68' }}>
       <Card>
         <Space align="center" direction="vertical">
           <img src={`${imgDir}logo.png`} height={300} alt="logo" />

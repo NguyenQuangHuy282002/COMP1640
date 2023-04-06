@@ -1,32 +1,41 @@
-import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, List, Space } from 'antd';
-import React from 'react';
-import IdeaCard from './idea-card';
+import { Button, Divider, List } from 'antd'
+import { useSubscription } from 'next/libs/global-state-hook'
+import { ideaCount } from '../layout/header'
 
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
-);
+import IdeaCard from './idea-card'
 
-function IdeasList ({ideas, isLoading}) {
-  return(
-  <List
-    itemLayout="vertical"
-    size="large"
-    pagination={{
-      onChange: (page) => {
-        console.log(page);
-      },
-      pageSize: 5,
-    }}
-    dataSource={ideas}
-    renderItem={(idea) => (
-      <IdeaCard key={`${idea}`} idea={idea} isLoading={isLoading}></IdeaCard>
-    )}
-  />
-)
-      };
+function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
+  const {
+    state: { number },
+  } = useSubscription(ideaCount)
+  const loadMore =
+    !isEnd && !loading && ideas?.length <= number ? (
+      <div
+        style={{
+          textAlign: 'center',
+          marginTop: 12,
+          height: 32,
+          lineHeight: '32px',
+        }}
+      >
+        <Button onClick={loadMoreData}>loading more</Button>
+      </div>
+    ) : (
+      <Divider plain>It is all, nothing more 🤐</Divider>
+    )
 
-export default IdeasList;
+  return (
+    <List
+      loadMore={loadMore}
+      itemLayout="vertical"
+      size="large"
+      dataSource={ideas}
+      style={{
+        marginBottom: '50px',
+      }}
+      renderItem={idea => <IdeaCard key={`${idea}`} idea={idea} isLoading={loading}></IdeaCard>}
+    />
+  )
+}
+
+export default IdeasList

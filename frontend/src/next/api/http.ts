@@ -2,15 +2,17 @@ import { SERVER_ENPOINT } from './server-url'
 import axios from 'axios'
 
 export const LOCALSTORAGE = {
-  TOKEN: 'access_token',
   USER: 'user',
+  CREDENTIALS: 'credentials',
 }
 export class Http {
   // constructor() { }
 
   static _getHeader() {
+    const credentails = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS));
+
     return {
-      Authorization: `Bearer ${localStorage.getItem(LOCALSTORAGE.TOKEN) || ''}`,
+      Authorization: `Bearer ${credentails?.token || ''}`,
     }
   }
   static get = (endPoint: any, params?: any) => {

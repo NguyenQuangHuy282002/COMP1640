@@ -1,35 +1,65 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { Card as AntCard, Divider } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
+import type { MenuProps } from 'antd'
+import { Menu } from 'antd'
+import { Http } from 'next/api/http'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
-const Card = styled(AntCard)`
-  margin: 10px 0;
-  width: '100%';
-`
+type MenuItem = Required<MenuProps>['items'][number]
 
-const EventCard = () => {
-  const [state, setState] = useState(false)
-
-  return (
-    <>
-      <StyledCard
-        title="Special events going on"
-        extra={<a href="#">More</a>}
-        style={{ width: '100%', backgroundColor: '#F6FFFD' }}
-        // hoverable={true}
-      >
-        <p>Card content</p>
-        <p>Card content</p>
-        <p>Card content</p>
-        <Divider style={{ width: '100%' }}></Divider>
-      </StyledCard>
-    </>
-  )
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: 'group'
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem
 }
 
-const StyledCard = styled(Card)`
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
-  padding: 0 !important;
-`
+function EventCard() {
+  const [events, setEvents] = useState<any>([])
+  const navigate = useRoleNavigate()
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await Http.get('/api/v1/event/')
+        .then(res => setEvents(res.data.data))
+        .catch(err => console.log(err, 'error to fetch events'))
+    }
+    fetchEvents()
+  }, [])
+
+  const onClickEventItem: MenuProps['onClick'] = e => {
+    navigate(`/event/${e.key}`)
+  }
+
+  const items: MenuProps['items'] = [
+    getItem('Special Events Going On', 'menu', <AppstoreOutlined />, [
+      ...events.slice(0, 3).map(event => getItem(event.title, event._id)),
+      getItem(
+        'More Event',
+        'sub-menu',
+        null,
+        events.slice(3).map(event => getItem(event.title, event._id))
+      ),
+    ]),
+  ]
+  return (
+    <Menu
+      onClick={onClickEventItem}
+      style={{ width: 256 }}
+      defaultSelectedKeys={['']}
+      defaultOpenKeys={['menu']}
+      mode="inline"
+      items={items}
+    />
+  )
+}
 
 export default EventCard

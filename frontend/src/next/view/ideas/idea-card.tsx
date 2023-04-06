@@ -1,39 +1,88 @@
-import React, { useEffect, useState } from 'react'
 import {
-  StarOutlined,
-  ShareAltOutlined,
-  CloudDownloadOutlined,
-  TagsTwoTone,
-  MessageTwoTone,
-  FireTwoTone,
-  EyeOutlined,
   ClockCircleFilled,
-  LinkedinOutlined,
   CompassOutlined,
+  DeleteTwoTone,
+  EditTwoTone,
+  EyeOutlined,
+  FireTwoTone,
+  LinkedinOutlined,
+  MessageTwoTone,
+  PaperClipOutlined,
+  TagsTwoTone,
 } from '@ant-design/icons'
-import { Avatar, Card, Skeleton, Switch, Typography, Col, Row, Space, Tag, Divider, List } from 'antd'
+import { Avatar, Card, Empty, List, Popconfirm, Skeleton, Space, Tag, Typography } from 'antd'
+import { imgDir } from 'next/constants/img-dir'
+import { useSubscription } from 'next/libs/global-state-hook'
+import useRoleNavigate from 'next/libs/use-role-navigate'
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { formatDayTime } from '../../utils/helperFuncs'
 import useWindowSize from '../../utils/useWindowSize'
-import styled from 'styled-components'
+import { userStore } from '../auth/user-store'
+import { handleDeleteIdea } from './idea-detail/idea-detail-service'
 
-const { Meta } = Card
 const { Text, Link } = Typography
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 function IdeaCard({ idea, isLoading }) {
   const windowWidth = useWindowSize()
-  const orientation = windowWidth < 768 ? 'horizontal' : 'vertical'
+  const [open, setOpen] = useState(false)
+  const { _id } = useSubscription(userStore).state
+  const navigate = useRoleNavigate()
   const [loading, setLoading] = useState(true)
+  const [isDeleted, setIsDeleted] = useState(false)
+
   const onChange = (checked: boolean) => {
     setLoading(isLoading)
   }
   useEffect(() => {
-    setTimeout(() => {
-      onChange(loading)
-    }, 1000)
-  }, [])
+    onChange(loading)
+  }, [isDeleted, setIsDeleted])
+
   const description = idea.content?.replace(/(<([^>]+)>)/gi, '').slice(0, 70) + '...'
-  return (
+  const showPopconfirm = () => {
+    setOpen(true)
+  }
+
+  const handleOk = () => {
+    setIsDeleted(true)
+    setOpen(false)
+    return handleDeleteIdea(idea?._id)
+  }
+
+  const handleCancel = () => {
+    console.log('Clicked cancel button')
+    setOpen(false)
+  }
+
+  const handleViewDetail = id => {
+    navigate(`/idea?id=${id}`)
+  }
+
+  const handleViewProfile = id => {
+    if (id !== 'Anonymous' && id !== 'Unknown') {
+      navigate(`/profile?id=${id}`)
+    }
+  }
+
+  const actions =
+    idea?.publisherId?._id === _id
+      ? [
+          <EditTwoTone key="edit" onClick={() => navigate(`/idea/edit?id=${idea?._id}`)} />,
+
+          <Popconfirm
+            title="Warning"
+            description="Are you sure you wanna delete it??"
+            open={open}
+            onConfirm={handleOk}
+            onCancel={handleCancel}
+          >
+            <DeleteTwoTone key="delete" onClick={showPopconfirm} />
+          </Popconfirm>,
+        ]
+      : []
+
+  return isDeleted ? (
     <>
       <StyledCard
         style={{
@@ -41,11 +90,23 @@ function IdeaCard({ idea, isLoading }) {
           marginTop: 16,
         }}
         bodyStyle={{ padding: '2px' }}
-        actions={[
-          <CloudDownloadOutlined key="download" />,
-          <StarOutlined key="favourite" />,
-          <ShareAltOutlined key="share" />,
-        ]}
+      >
+        <Empty
+          description={
+            <h4 style={{ color: '#FA6900' }}>This idea has been deleted, reload and it'll be disappeared</h4>
+          }
+        />
+      </StyledCard>
+    </>
+  ) : (
+    <>
+      <StyledCard
+        style={{
+          width: '100%',
+          marginTop: 16,
+        }}
+        bodyStyle={{ padding: '2px' }}
+        actions={actions}
       >
         <Skeleton loading={loading} avatar active>
           <List.Item
@@ -53,17 +114,28 @@ function IdeaCard({ idea, isLoading }) {
               windowWidth > 900
                 ? [
                     <Text strong key="list-vertical-star-o">
-                      <FireTwoTone style={{ padding: '5px' }} />
-                      {idea.like - idea.dislike} points
+                      <FireTwoTone twoToneColor={'#FE4365'} style={{ padding: '5px' }} />
+                      {idea?.meta?.likesCount - idea?.meta?.dislikesCount || 0} points
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan" style={{ margin: 0 }}>
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0} comments
+                        <MessageTwoTone /> {idea.comments.length} comments
                       </Tag>
                     </Text>,
+                    // <Text key="list-vertical-lock">
+                    //   <Tag color="volcano" style={{ margin: 0 }}>
+                    //     <LockTwoTone /> cannot comments
+                    //   </Tag>
+                    // </Text>,
                     <Text type="secondary" key="list-vertical-message">
                       <EyeOutlined style={{ padding: '5px' }} />
-                      {idea.views} views
+                      {idea.meta.views} views
+                    </Text>,
+                    <Text key="list-vertical-files">
+                      <Tag color="#828DAB" style={{ margin: 0 }}>
+                        <PaperClipOutlined style={{ padding: '5px 5px 5px 0' }} />
+                        {idea?.files?.length || 0} attachments
+                      </Tag>
                     </Text>,
                   ]
                 : [
@@ -73,7 +145,7 @@ function IdeaCard({ idea, isLoading }) {
                     </Text>,
                     <Text key="list-vertical-like-o">
                       <Tag color="cyan">
-                        <MessageTwoTone /> {idea.comment ? idea.comment.length : 0}
+                        <MessageTwoTone /> {idea.comments.length}
                       </Tag>
                     </Text>,
                     <Text type="secondary" key="list-vertical-message">
@@ -84,47 +156,59 @@ function IdeaCard({ idea, isLoading }) {
             }
           >
             <List.Item.Meta
-              key="00"
+              key={idea._id}
               avatar={
                 <>
                   <Avatar
-                    src={
-                      !idea.isAnonymous
-                        ? idea.publisherId?.avatar ?? 'Unknown'
-                        : 'https://www.pngarea.com/pngm/10/5215656_crying-emoji-png-transparent-background-smirk-emoji-transparent.png'
-                    }
+                    src={!idea.isAnonymous ? idea.publisherId?.avatar ?? 'Unknown' : imgDir + 'anonymous.jpg'}
                     style={{ background: '#f6f7f8' }}
                   />
                 </>
               }
               title={
-                <>
-                  <Link href="#" style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}>
+                <Space wrap direction="horizontal" size={'small'}>
+                  <Link
+                    onClick={() =>
+                      handleViewProfile(!idea.isAnonymous ? idea.publisherId?._id ?? 'Unknown' : 'Anonymous')
+                    }
+                    style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}
+                  >
                     {!idea.isAnonymous ? idea.publisherId?.name ?? 'Unknown' : 'Anonymous'}
                   </Link>
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">
                       {/* 373B44 004853 */}
-                      <strong>{idea.departmentName ? idea.departmentName : 'No department'}</strong>
+                      <strong>
+                        {idea?.publisherId?.department?.name ? idea?.publisherId?.department?.name : 'No department'}
+                      </strong>
                     </Tag>
-                    <Tag icon={<CompassOutlined />} color="#FA6900">
-                      <strong>{idea.specialEvent ? idea.specialEvent : 'No Event'}</strong>
+                  </Typography.Text>
+                  <Typography.Text type="secondary">
+                    <Tag
+                      icon={<CompassOutlined />}
+                      color="#FA6900"
+                      className="ellipsis"
+                      style={{ maxWidth: '-webkit-fill-available' }}
+                    >
+                      <strong>{idea.specialEvent?.title ? idea.specialEvent?.title : 'No Event'}</strong>
                     </Tag>
+                  </Typography.Text>
+                  <Typography.Text type="secondary">
                     <ClockCircleFilled /> Posted {formatDayTime(idea.createdAt)}
                   </Typography.Text>
-                </>
+                </Space>
               }
               style={{ margin: '0' }}
             />
 
             <List.Item.Meta
-              style={{ margin: '0',  }}
+              style={{ margin: '0' }}
               key="01"
               title={
-                <Link href="" style={{ margin: 0 }}>
-                  <Typography.Title level={4} style={{ margin: 0 }}>
+                <Link>
+                  <StyleTitle level={4} style={{ margin: 0 }} onClick={() => handleViewDetail(idea._id)}>
                     {idea.title}
-                  </Typography.Title>
+                  </StyleTitle>
                 </Link>
               }
               description={
@@ -147,6 +231,7 @@ function IdeaCard({ idea, isLoading }) {
             ></List.Item.Meta>
           </List.Item>
         </Skeleton>
+        {/* <Typography.Text type="danger" style={{ marginLeft: "30px", fontSize: "18px", fontFamily: "Palatino Linotype" }}>Time has exceeded Finalclosededdate</Typography.Text> */}
       </StyledCard>
     </>
   )
@@ -154,6 +239,12 @@ function IdeaCard({ idea, isLoading }) {
 
 const StyledCard = styled(Card)`
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
+const StyleTitle = styled(Typography.Title)`
+  margin: 0px;
+  &:hover {
+    color: #007e80;
+  }
 `
 
 export default IdeaCard

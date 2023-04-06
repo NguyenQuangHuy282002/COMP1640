@@ -1,40 +1,87 @@
 import express from 'express'
 import SpecialEvent from '../models/SpecialEvent'
+import { io } from '../utils/socket'
+import { authorize, authProtect } from '../middlewares/auth'
+
+export const updateEventNumberRealTime = async () => {
+  const now = new Date()
+  const totalEventAvailable = await SpecialEvent.find({ firstCloseDate: { $gt: now } })
+  const data = await SpecialEvent.find({})
+
+  io.emit('all_events', { totalAvailable: totalEventAvailable.length, allEvents: data })
+}
 
 export const specialEventRouter = express.Router()
 
-specialEventRouter.get('/', async (req, res) => {
+specialEventRouter.get('/', authProtect, async (req, res) => {
   try {
-    const data = await SpecialEvent.find({})
+    const { id } = req.query
+    const data = await SpecialEvent.find(id ? { _id: id } : {})
     res.status(200).json({ success: 1, data })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
-specialEventRouter.post('/', express.json(), async (req, res) => {
+specialEventRouter.get('/available', authProtect, async (req, res) => {
   try {
-    await SpecialEvent.collection.insertOne(req.body)
-    res.status(200).json({ success: 1 })
+    const now = new Date()
+    const data = await SpecialEvent.find({ firstCloseDate: { $gt: now } })
+    res.status(200).json({ success: 1, data })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
-specialEventRouter.put('/', express.json(), async (req, res) => {
+specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
+  // specialEventRouter.post('/', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
-    await SpecialEvent.findByIdAndUpdate({ _id: req.body.id }, req.body)
+    const { _id, title, description, startDate, firstCloseDate, finalCloseDate } = req.body
+    if (_id) {
+      await SpecialEvent.findOneAndUpdate(
+        { _id },
+        {
+          title,
+          description,
+          startDate: new Date(startDate),
+          firstCloseDate: new Date(firstCloseDate),
+          finalCloseDate: new Date(finalCloseDate),
+        },
+        { upsert: true, timestamps: true }
+      )
+    } else {
+      await SpecialEvent.collection.insertOne({
+        title,
+        description,
+        startDate: new Date(startDate),
+        firstCloseDate: new Date(firstCloseDate),
+        finalCloseDate: new Date(finalCloseDate),
+      })
+    }
+    updateEventNumberRealTime()
+
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
 
-specialEventRouter.delete('/', express.json(), async (req, res) => {
+specialEventRouter.delete('/:id', authProtect, authorize(['admin']), express.json(), async (req, res) => {
   try {
-    await SpecialEvent.collection.insertOne(req.body)
+    const eventId = req.params.id
+    await SpecialEvent.findByIdAndDelete(eventId)
+    updateEventNumberRealTime()
+
     res.status(200).json({ success: 1 })
   } catch (err) {
-    res.json({ success: 0, err })
+    res.status(500).json({
+      message: err.message,
+    })
   }
 })
