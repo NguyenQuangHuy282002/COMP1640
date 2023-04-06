@@ -17,6 +17,7 @@ export const IconText = ({ icon, text }) => (
 export default function IdeaCard({ ideaId, index }) {
   const navigate = useRoleNavigate()
   const [loading, setLoading] = useState(false)
+  const [isIdeaDeleted, setIsIdeaDeleted] = useState(false)
   const [ideaDetails, setIdeaDetails] = useState({
     publisherId: null,
     title: '',
@@ -39,7 +40,7 @@ export default function IdeaCard({ ideaId, index }) {
         .then(res => {
           setIdeaDetails(res.data.data)
         })
-        .catch(error => message.error('Failed to fetch idea !'))
+        .catch(error => setIsIdeaDeleted(true))
         .finally(() => setLoading(false))
     }
     getIdeaDetailsById(ideaId)
@@ -50,6 +51,8 @@ export default function IdeaCard({ ideaId, index }) {
       navigate(`/profile?id=${id}`)
     }
   }
+
+  if (isIdeaDeleted) return null
 
   return (
     <Skeleton loading={loading} avatar active>

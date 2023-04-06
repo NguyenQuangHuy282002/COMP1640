@@ -1,6 +1,7 @@
 import {
   CalendarOutlined,
   HomeFilled,
+  RedditOutlined,
   TagOutlined,
   TeamOutlined,
   UngroupOutlined,
@@ -23,7 +24,7 @@ const items: MenuProps['items'] = [
     null,
     [
       getItem('Your Profile', 'account', <WeiboOutlined />),
-      getItem('Ideas', 'ideas', <WeiboOutlined />),
+      getItem('Ideas', 'ideas', <RedditOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
