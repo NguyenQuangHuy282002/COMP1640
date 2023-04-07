@@ -1,74 +1,24 @@
 import Hastag from "../models/Hastag";
 import express from 'express'
-// import { v4 as uuidv4 } from 'uuid';
+import { io } from '../utils/socket'
+import { authorize, authProtect } from '../middlewares/auth'
+
+
+export const updateIdeaNumberRealTime = async () => {
+  const now = new Date()
+  const totalEventAvailable = await Hastag.find({ firstCloseDate: { $gt: now } })
+  io.emit('total_event_available', { total: totalEventAvailable.length })
+}
 
 export const hastagRouter = express.Router()
 
 
-// hastagRouter.post('/hashtags', async (req, res) => {
-//     const hashtagName = req.body.name;
-//     const existingHashtag = await Hashtag.findOne({ name: hashtagName });
-//     if (existingHashtag) {
-//       res.send(existingHashtag);
-//     } else {
-//       const newHashtag = new Hashtag({
-//         name: hashtagName,
-//       });
-//       await newHashtag.save();
-//       res.send(newHashtag);
-//     }
-//   });
-
-//   hastagRouter.post('/', express.json(),async (req,res) => {
-//     try{
-//       const{_id , name} = req.body;
-//       if (_id) {
-//         await Hashtag.findByIdAndUpdate(
-//           {_id},
-//           {name},
-//           {upsert: true},
-//         )
-//       } else {
-//         await Hashtag.collection.insertOne({name})
-//       }
-//       res.status(200).json({success : 1})
-//     } catch (err){
-//       res.status(500).json({
-//         message: err.message,
-//       })
-//     }
-//   })
-
-
-
-
-// departmentRouter.get('/', async (req, res) => {
-//   try {
-//     const data = await Department.find({})
-//     res.status(200).json({ success: 1, data: data })
-//   } catch (err) {
-//     res.status(500).json({
-//       message: err.message,
-//     })
-//   }
-// })
-
-// departmentRouter.post('/', express.json(), async (req, res) => {
-//   try {
-//     const { name, oldName } = req.body
-//     await Department.findOneAndUpdate({ oldName }, { name }, { upsert: true })
-//     res.status(200).json({ success: 1 })
-//   } catch (err) {
-//     res.status(500).json({
-//       message: err.message,
-//     })
-//   }
-// })
-
-hastagRouter.post('/delete', express.json(), async (req, res) => {
+hastagRouter.post('/:id', authProtect, express.json(), async (req, res) => {
   try {
-    const { name } = req.body
-    await Hastag.findOneAndDelete({ name })
+    const HastagId = req.params.id
+    await Hastag.findByIdAndDelete(HastagId)
+    updateIdeaNumberRealTime()
+
     res.status(200).json({ success: 1 })
   } catch (err) {
     res.status(500).json({
@@ -77,20 +27,27 @@ hastagRouter.post('/delete', express.json(), async (req, res) => {
   }
 })
 
-hastagRouter.post('/', express.json(),async (req,res) => {
-  try{
-    const{_id , name} = req.body;
+hastagRouter.post('/', authProtect, express.json(), async (req, res) => {
+  try {
+    const { _id, name } = req.body
+    let result
     if (_id) {
-      await Hastag.findByIdAndUpdate(
-        {_id},
-        {name},
-        {upsert: true},
+      result = await Hastag.findOneAndUpdate(
+        { _id },
+        {
+          name,
+        },
+        { upsert: true, timestamps: true }
       )
     } else {
-      await Hastag.collection.insertOne({name})
+      result = await Hastag.create({
+        ideas: [],
+        name,
+      })
     }
-    res.status(200).json({success : 1})
-  } catch (err){
+    res.status(200).json({ success: 1, data: result })
+    updateIdeaNumberRealTime()
+  } catch (err) {
     res.status(500).json({
       message: err.message,
     })

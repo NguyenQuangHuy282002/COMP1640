@@ -3,6 +3,7 @@ import { ICategory } from './Category'
 import { IComment } from './Comment'
 import { ISpecialEvent } from './SpecialEvent'
 import { IUser } from './User'
+import { IHastag } from './Hastag'
 
 export interface IIdeaMeta extends Document {
   likesCount: number
@@ -23,6 +24,7 @@ export interface IIdea extends Document {
   createdAt?: Date
   specialEvent: ISpecialEvent['_id']
   isAnonymous?: boolean
+  hashtags?: IHastag['_id'][]
 }
 
 const ideaSchema = new Schema<IIdea>(
@@ -43,6 +45,7 @@ const ideaSchema = new Schema<IIdea>(
     createdAt: { type: Date, default: Date.now },
     specialEvent: { type: Types.ObjectId, ref: 'SpecialEvent', required: false },
     isAnonymous: { type: Boolean, default: false, required: false },
+    hashtags: [{type: Types.ObjectId, ref: 'Hastag', required: false, default:[]}] 
   },
   { timestamps: { updatedAt: true } }
 )

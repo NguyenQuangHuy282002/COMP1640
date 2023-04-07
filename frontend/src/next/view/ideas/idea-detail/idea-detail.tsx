@@ -1,4 +1,4 @@
-import { Layout, message, Space, Spin, Typography } from 'antd'
+import { Layout, message, Space, Typography, Tag, Spin} from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
@@ -13,6 +13,7 @@ import CommentsList from '../../../view/comments/comments-list'
 import FileDisplay from './file-display'
 import IdeaDetailInfo from './idea-detail-info'
 import MenuBar from './menu-bar'
+import { TagsTwoTone } from '@ant-design/icons'
 import Title from 'antd/es/typography/Title'
 
 const { Text, Link } = Typography
@@ -80,6 +81,23 @@ function IdeaDetail() {
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
+
+
+
+                <Space>
+                  {data[0]?.hashtags.length !== 0 ? (
+                    data[0]?.hashtags?.map(tag => (
+                      <div style={{ backgroundColor: '#f4f4f5', color: '#9ba1af', padding: '5px', borderRadius: '5px', border: '2px' }}>
+                        @{tag.name}
+                      </div>
+                    ))
+                  ) : (
+                    null
+                  )}
+                </Space>
+
+
+
                 <br></br>
               </Space>
             </Space>
@@ -125,7 +143,7 @@ function IdeaDetail() {
               {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}{' '}
             </div>
           </StyledContent>
-        </Layout>
+        </Layout >
       ) : (
         <>
           <Spin tip="Loading, wait a few" size="large" style={{marginTop: 80}}>

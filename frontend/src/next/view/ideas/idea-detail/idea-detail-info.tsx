@@ -21,20 +21,20 @@ export default function IdeaDetailInfo({ item }) {
             </Text>
           </span>
           <Space direction="horizontal">
-          <Text type="secondary" keyboard style={{ opacity: 0.7 }}>
-            <EyeOutlined /> {item?.meta?.views} views
-          </Text>
-          <Typography.Text type="secondary">
-            <Tag icon={<LinkedinOutlined />} color="#007E80">
-              {/* 373B44 004853 */}
-              <strong>
-                {item?.publisherId?.department?.name ? item?.publisherId?.department?.name : 'No department'}
-              </strong>
-            </Tag>
-            <Tag icon={<CompassOutlined />} color="#FA6900">
-              <strong>{item?.specialEvent?.title ? item?.specialEvent?.title : 'No Event'}</strong>
-            </Tag>
-          </Typography.Text>
+            <Text type="secondary" keyboard style={{ opacity: 0.7 }}>
+              <EyeOutlined /> {item?.meta?.views} views
+            </Text>
+            <Typography.Text type="secondary">
+              <Tag icon={<LinkedinOutlined />} color="#007E80">
+                {/* 373B44 004853 */}
+                <strong>
+                  {item?.publisherId?.department?.name ? item?.publisherId?.department?.name : 'No department'}
+                </strong>
+              </Tag>
+              <Tag icon={<CompassOutlined />} color="#FA6900">
+                <strong>{item?.specialEvent?.title ? item?.specialEvent?.title : 'No Event'}</strong>
+              </Tag>
+            </Typography.Text>
           </Space>
         </Space>
       </Space>

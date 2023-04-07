@@ -283,6 +283,7 @@ export const getIdea = async (req: any, res: any, next: any) => {
       })
       .populate('categories')
       .populate('specialEvent')
+      .populate('hashtags')
     idea.meta.views = idea.meta.views + 1
     await idea.save()
     res.status(200).json({
