@@ -1,1 +1,1 @@
-export const SERVER_ENPOINT = process.env.BASE_API_URL
+export const SERVER_ENPOINT = 'https://main--leaks-app-server.netlify.app'
