@@ -1,4 +1,4 @@
-import { Layout, message, Space, Typography, Tag, } from 'antd'
+import { Layout, message, Space, Typography, Tag, Spin} from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
@@ -14,6 +14,7 @@ import FileDisplay from './file-display'
 import IdeaDetailInfo from './idea-detail-info'
 import MenuBar from './menu-bar'
 import { TagsTwoTone } from '@ant-design/icons'
+import Title from 'antd/es/typography/Title'
 
 const { Text, Link } = Typography
 
@@ -23,17 +24,23 @@ function IdeaDetail() {
   const [showComment, setShowComment] = useState(false)
   const [updateIdea, setUpdateIdea] = useState(0)
   const [commentCount, setCommentCount] = useState(0)
-
+  const [isShown, setIsShown] = useState(false)
   const query = useQuery()
   const id = query.get('id')
   const { name, avatar } = useSubscription(userStore).state
   const windowWidth = useWindowSize()
   const padding = windowWidth < 969 ? '10px 0' : '15px 60px 50px'
 
-
   const handleShowComment = () => {
     setShowComment(!showComment)
   }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsShown(true)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [])
+
   useEffect(() => {
     const getIdea = async () =>
       await Http.get(`/api/v1/idea/detail?id=${id}`)
@@ -45,7 +52,7 @@ function IdeaDetail() {
     getIdea()
   }, [updateIdea])
 
-  const updateCommentLength = (info) => {
+  const updateCommentLength = info => {
     if (info.action === 'create') {
       return setCommentCount(commentCount + 1)
     } else {
@@ -66,11 +73,11 @@ function IdeaDetail() {
 
   return (
     <>
-      {data ? (
+      {' '}
+      {isShown ? (
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">
-
               <Space style={{ padding: '16px 28px 0' }} direction="vertical">
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
@@ -95,28 +102,58 @@ function IdeaDetail() {
               </Space>
             </Space>
             {data[0]?.files.length > 0 && <FileDisplay files={data[0]?.files}></FileDisplay>}
-            <MenuBar commentCount={commentCount} ideaId={id} handleShowComment={handleShowComment} name={data[0]?.title} files={data[0]?.files} />
+            <MenuBar
+              commentCount={commentCount}
+              ideaId={id}
+              handleShowComment={handleShowComment}
+              name={data[0]?.title}
+              files={data[0]?.files}
+            />
           </StyledContent>
-
-
-          <StyledContent>
-            <Space style={{ padding: '10px 24px', width: '100%' }} direction="vertical">
-              <Text>
-                Comment as <Text strong>{name}</Text>
-              </Text>
-              <CreateComment user={{ avatar, name }} setUpdateIdea={setUpdateIdea} ideaId={id} email={data[0]?.publisherId?.email} />
-            </Space>
-          </StyledContent>
+          {new Date(data[0]?.specialEvent.finalCloseDate) > new Date() ? (
+            <StyledContent>
+              <Space
+                style={{
+                  padding: '10px 24px',
+                  width: '100%',
+                }}
+                direction="vertical"
+              >
+                <Text>
+                  Comment as 
+                  <Text strong> {name}</Text>
+                </Text>
+                <CreateComment
+                  user={{ avatar, name }}
+                  setUpdateIdea={setUpdateIdea}
+                  ideaId={id}
+                  email={data[0]?.publisherId?.email}
+                />
+              </Space>
+            </StyledContent>
+          ) : (
+            <StyledContent style={{ textAlign: 'center' }}>
+              <Typography.Text type="danger" style={{ fontSize: '18px', fontFamily: 'Palatino Linotype' }}>
+                This Idea Has Reach The Final Closure Date, You Are Not Allow To Comment Anymore
+              </Typography.Text>
+            </StyledContent>
+          )}
           <StyledContent>
             <div style={{ width: '100%' }}>
-              {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}
+              {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}{' '}
             </div>
           </StyledContent>
         </Layout >
       ) : (
-        <></>
-      )
-      }
+        <>
+          <Spin tip="Loading, wait a few" size="large" style={{marginTop: 80}}>
+            <div className="content" style={{ width: '200px', textAlign: 'center' }}>
+              {' '}
+              ...{' '}
+            </div>
+          </Spin>
+        </>
+      )}{' '}
     </>
   )
 }
@@ -134,7 +171,7 @@ function ReadMore({ children }) {
     <>
       <RenderHtml text={textDisplay}></RenderHtml>
       <Link onClick={toggleReadMore} className="read-or-hide">
-        {isReadMore ? '...read more' : ' show less'}
+        {isReadMore ? '...read more' : ' show less'}{' '}
       </Link>
     </>
   )

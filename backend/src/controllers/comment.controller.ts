@@ -18,7 +18,9 @@ export const createComment = async (req: any, res: any, next: any) => {
     ) {
       return next(new ApiErrorResponse('Lack of required information.', 400))
     }
+
     let idea = await Idea.findById(commentBody.ideaId)
+                      .select('createdAt comments specialEvent')
     if (idea?.specialEvent) {
       idea = await idea.populate({
         path: 'specialEvent',
@@ -32,17 +34,19 @@ export const createComment = async (req: any, res: any, next: any) => {
     const data = { content: commentBody.content, ideaId: commentBody.ideaId, isAnonymous: commentBody.isAnonymous }
     const newComment = { ...data, userId: req.payload?.user?.id }
     let savedComment = await Comment.create(newComment)
+
     const user = await User.findById(req.payload?.user?.id)
+                          .select('comments name email avatar role')
     user.comments.push(savedComment._id)
     idea.comments.push(savedComment._id)
     user.save()
     idea.save()
-    // savedComment = await savedComment.populate({
-    //   path: 'userId',
-    //   select: ["name", "avatar", "email", "role"]
-    // })
+    savedComment.userId = user
+
+    console.log(savedComment)
+
     io.emit('comments', { action: 'create', ideaId: commentBody.ideaId, comment: savedComment })
-    if (commentBody.publisherEmail) {
+    if (commentBody.publisherEmail != 'None') {
       activeMailer(user.name, commentBody.publisherEmail, new Date(), idea._id)
         .then(data => console.log('isSent', data))
         .catch(error => console.log('error', error))
