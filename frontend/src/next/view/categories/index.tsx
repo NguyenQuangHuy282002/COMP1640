@@ -1,11 +1,11 @@
 import { PlusCircleTwoTone } from '@ant-design/icons'
-import { Col, Divider, Input, Row, Skeleton, Space, Typography } from 'antd'
+import { Col, Divider, Input, Row, Skeleton, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import CategoryCardItem from './card-item'
 import AddCategoryModal from './add-new-category'
+import CategoryCardItem from './card-item'
 
 const { Title } = Typography
 

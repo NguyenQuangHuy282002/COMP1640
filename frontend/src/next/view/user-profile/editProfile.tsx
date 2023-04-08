@@ -4,6 +4,9 @@ import dayjs from 'dayjs'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
 import { userStore } from '../auth/user-store'
+import { handleValidateFile, onChangeUpload, previewFile } from 'next/components/upload/upload'
+import { useState } from 'react'
+import { fetchAllToS3 } from '../ideas/create-new-idea'
 
 const { Title } = Typography
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm'
@@ -11,6 +14,7 @@ const DATE_FORMAT = 'YYYY-MM-DD HH:mm'
 function EditProfileForm() {
   const { state, setState } = useSubscription(userStore)
   const [form] = Form.useForm()
+  const [files, setFiles] = useState(null)
 
   userStore.subscribe(newState => {
     form.setFieldsValue({
@@ -40,6 +44,15 @@ function EditProfileForm() {
       birthday: form.getFieldValue('birthday')?.$d,
     }
 
+    if (files) {
+      try {
+        let fileNameList = await fetchAllToS3(files)
+        userform['avatar'] = fileNameList[0]
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    console.log(userform)
     await Http.put(`/api/v1/users/updateProfile/${state._id}`, userform)
       .then(() => {
         message.success('Updated profile successfully!')
@@ -118,8 +131,24 @@ function EditProfileForm() {
         />
       </Form.Item>
 
-      <Form.Item name="image" label="Upload image" valuePropName="fileList" labelAlign="left">
-        <Upload action="/upload.do" listType="picture-card">
+      <Form.Item
+        name="image"
+        label="Upload image"
+        valuePropName="fileList"
+        labelAlign="left"
+        getValueFromEvent={e => {
+          const validFiles = handleValidateFile(e)
+          setFiles(validFiles)
+        }}
+      >
+        <Upload
+          name="logo"
+          listType="picture"
+          onPreview={previewFile}
+          accept="image/*"
+          beforeUpload={file => onChangeUpload(file)}
+          maxCount={1}
+        >
           <div>
             <PlusOutlined />
             <div style={{ marginTop: 8 }}>Upload</div>

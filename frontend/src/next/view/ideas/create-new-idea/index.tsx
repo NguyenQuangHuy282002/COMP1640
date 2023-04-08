@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Switch, Typography } from 'antd'
-import axios from 'axios'
-import { convertToRaw, EditorState } from 'draft-js'
+import { Button, Card, Checkbox, Divider, Form, Input, Select, Space, Switch, Typography, message } from 'antd'
+import FormItem from 'antd/es/form/FormItem'
+import { EditorState, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
@@ -10,12 +10,10 @@ import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useQuery } from 'next/utils/use-query'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
+import HashtagInput from './HastagInput'
 import Tags from './tag'
-import FormItem from 'antd/es/form/FormItem'
-import HashtagInput from './HastagInput';
 
 const { Title } = Typography
 
@@ -25,11 +23,6 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     const type = file.type
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
-      headers: {
-        'Content-Type': type,
-      },
-    })
 
     return `https://yessir-bucket-tqt.s3.ap-northeast-1.amazonaws.com/${uploadConfig.data.key}`
   } catch (error) {
@@ -37,7 +30,7 @@ const fetchPresignedUrl = async (url: any, file: any) => {
   }
 }
 
-const fetchAllToS3 = async (files: any) => {
+export const fetchAllToS3 = async (files: any) => {
   const url = '/api/v1/idea/preSignUrl'
   const requests = files.map(async (file: any) => {
     return await fetchPresignedUrl(url, file).then(result => result)
@@ -64,7 +57,6 @@ export default function CreateIdea() {
   const setFileState = async (value: never[]) => {
     setFiles(value)
   }
-
 
   useEffect(() => {
     if (defaultEventId) {
@@ -134,9 +126,6 @@ export default function CreateIdea() {
   }
 
   const windowWidth = useWindowSize()
-  const paddingForm = windowWidth < 1000 ? '10px 5px' : '5% 5%'
-
-  useEffect(() => { }, [])
 
   return (
     <Card
@@ -184,7 +173,7 @@ export default function CreateIdea() {
         <Form.Item name="title" required label="Title">
           <Input
             style={{ lineHeight: 2.15 }}
-            placeholder="Title (at least 50 characters to summary your idea)"
+            placeholder="Title (at least 30 characters to summary your idea)"
             maxLength={200}
             showCount
             autoComplete="off"
@@ -203,7 +192,6 @@ export default function CreateIdea() {
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
           <Tags setCategories={setCategories} />
-
         </Form.Item>
         <FormItem label="HashTags (Optional)" style={{ width: '100%' }}>
           <HashtagInput setHashTags={setHashTag} />
@@ -242,9 +230,3 @@ export default function CreateIdea() {
     </Card>
   )
 }
-
-const StyledFormItem = styled(Form.Item)`
-  margin-bottom: 15px;
-  border-radius: 5px;
-  background-color: #f6f7f8;
-`

@@ -1,4 +1,4 @@
-import { Layout, message, Space, Typography, Tag, Spin} from 'antd'
+import { Layout, Space, Spin, Typography, message, Alert } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
@@ -9,12 +9,10 @@ import CreateComment from 'next/view/comments/create-comment'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useWindowSize from '../../../utils/useWindowSize'
-import CommentsList from '../../../view/comments/comments-list'
+import CommentsList from '../../comments/comments-list'
 import FileDisplay from './file-display'
 import IdeaDetailInfo from './idea-detail-info'
 import MenuBar from './menu-bar'
-import { TagsTwoTone } from '@ant-design/icons'
-import Title from 'antd/es/typography/Title'
 
 const { Text, Link } = Typography
 
@@ -73,7 +71,6 @@ function IdeaDetail() {
 
   return (
     <>
-      {' '}
       {isShown ? (
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
@@ -82,21 +79,23 @@ function IdeaDetail() {
                 <IdeaDetailInfo item={data[0]}></IdeaDetailInfo>
                 <ReadMore>{data[0]?.content}</ReadMore>
 
-
-
                 <Space>
-                  {data[0]?.hashtags.length !== 0 ? (
-                    data[0]?.hashtags?.map(tag => (
-                      <div style={{ backgroundColor: '#f4f4f5', color: '#9ba1af', padding: '5px', borderRadius: '5px', border: '2px' }}>
-                        @{tag.name}
-                      </div>
-                    ))
-                  ) : (
-                    null
-                  )}
+                  {data[0]?.hashtags.length !== 0
+                    ? data[0]?.hashtags?.map(tag => (
+                        <div
+                          style={{
+                            backgroundColor: '#f4f4f5',
+                            color: '#9ba1af',
+                            padding: '5px',
+                            borderRadius: '5px',
+                            border: '2px',
+                          }}
+                        >
+                          @{tag.name}
+                        </div>
+                      ))
+                    : null}
                 </Space>
-
-
 
                 <br></br>
               </Space>
@@ -110,7 +109,7 @@ function IdeaDetail() {
               files={data[0]?.files}
             />
           </StyledContent>
-          {new Date(data[0]?.specialEvent.finalCloseDate) > new Date() ? (
+          {new Date(data[0]?.specialEvent?.finalCloseDate) > new Date() ? (
             <StyledContent>
               <Space
                 style={{
@@ -120,7 +119,7 @@ function IdeaDetail() {
                 direction="vertical"
               >
                 <Text>
-                  Comment as 
+                  Comment as
                   <Text strong> {name}</Text>
                 </Text>
                 <CreateComment
@@ -132,21 +131,27 @@ function IdeaDetail() {
               </Space>
             </StyledContent>
           ) : (
-            <StyledContent style={{ textAlign: 'center' }}>
-              <Typography.Text type="danger" style={{ fontSize: '18px', fontFamily: 'Palatino Linotype' }}>
-                This Idea Has Reach The Final Closure Date, You Are Not Allow To Comment Anymore
-              </Typography.Text>
-            </StyledContent>
+            <Alert
+              showIcon
+              message={
+                <Typography.Text type="danger" style={{ fontSize: '18px' }}>
+                  This Idea Has Reach The Final Closure Date, You Are Not Allow To Comment Anymore
+                </Typography.Text>
+              }
+              type="error"
+            />
           )}
-          <StyledContent>
-            <div style={{ width: '100%' }}>
-              {showComment ? <CommentsList id={id} updateIdea={updateIdea}></CommentsList> : <></>}{' '}
-            </div>
-          </StyledContent>
-        </Layout >
+          {showComment ? (
+            <StyledContent>
+              <div style={{ width: '100%' }}>
+                <CommentsList id={id} updateIdea={updateIdea} />
+              </div>
+            </StyledContent>
+          ) : null}
+        </Layout>
       ) : (
         <>
-          <Spin tip="Loading, wait a few" size="large" style={{marginTop: 80}}>
+          <Spin tip="Loading, wait a few" size="large" style={{ marginTop: 80 }}>
             <div className="content" style={{ width: '200px', textAlign: 'center' }}>
               {' '}
               ...{' '}

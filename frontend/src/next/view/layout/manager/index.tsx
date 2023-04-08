@@ -1,11 +1,4 @@
-import {
-  CalendarOutlined,
-  DashboardFilled,
-  HomeFilled,
-  TagOutlined,
-  UngroupOutlined,
-  WeiboOutlined,
-} from '@ant-design/icons'
+import { CalendarOutlined, DashboardFilled, HomeFilled, TagOutlined, WeiboOutlined } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import useWindowSize from '../../../utils/useWindowSize'

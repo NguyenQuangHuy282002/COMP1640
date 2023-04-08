@@ -1,12 +1,4 @@
-import {
-  CalendarOutlined,
-  HomeFilled,
-  RedditOutlined,
-  TagOutlined,
-  TeamOutlined,
-  UngroupOutlined,
-  WeiboOutlined,
-} from '@ant-design/icons'
+import { CalendarOutlined, HomeFilled, RedditOutlined, WeiboOutlined } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import useWindowSize from '../../../utils/useWindowSize'

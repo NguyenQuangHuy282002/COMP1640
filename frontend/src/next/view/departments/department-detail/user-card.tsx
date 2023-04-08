@@ -1,10 +1,8 @@
-import { Avatar, Card, Divider, Image, Space, Tag, Typography, message } from 'antd'
+import { Avatar, Card } from 'antd'
+import Meta from 'antd/es/card/Meta'
 import { useEffect, useState } from 'react'
 import { Http } from '../../../../next/api/http'
 import { formatDayTime } from '../../../../next/utils/helperFuncs'
-import Meta from 'antd/es/card/Meta'
-
-const { Text } = Typography
 
 function UserCard({ userId }) {
   const [userProfile, setUserProfile] = useState<any>(null)
@@ -24,37 +22,37 @@ function UserCard({ userId }) {
 
   return (
     <>
-    <Card style={{ width: '100%', marginTop: 16 }}>
-      <Meta
-        avatar={<Avatar
-          src={userProfile?.avatar}
-        />}
-        title={userProfile?.name}
-        description={
-          <>
-          <div>
-            <b>DOB: </b>
-            {formatDayTime(userProfile?.birthday)}
-          </div>
-          <div>
-              <b>Phone number: </b>
-              {userProfile?.phone || 'None'}
-            </div>
-            <div>
-              <b>Email: </b>
-              {userProfile?.email}
-            </div>
-            <div>
-              <b>Role: </b>
-              {userProfile?.role}
-            </div>
-            <div>
-              <b>Department: </b>
-              {userProfile?.department?.name || 'None'}
-            </div>
+      <Card style={{ width: '100%', marginTop: 16 }}>
+        <Meta
+          avatar={<Avatar src={userProfile?.avatar} />}
+          title={userProfile?.name}
+          description={
+            <>
+              <div>
+                <b>DOB: </b>
+                {formatDayTime(userProfile?.birthday)}
+              </div>
+              <div>
+                <b>Phone number: </b>
+                {userProfile?.phone || 'None'}
+              </div>
+              <div>
+                <b>Email: </b>
+                {userProfile?.email}
+              </div>
+              <div>
+                <b>Role: </b>
+                {userProfile?.role}
+              </div>
+              <div>
+                <b>Department: </b>
+                {userProfile?.department?.name || 'None'}
+              </div>
             </>
-        } />
-    </Card></>
+          }
+        />
+      </Card>
+    </>
   )
 }
 

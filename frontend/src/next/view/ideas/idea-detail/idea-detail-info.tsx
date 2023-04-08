@@ -2,7 +2,7 @@ import { CompassOutlined, EyeOutlined, LinkedinOutlined, TagsTwoTone } from '@an
 import { Avatar, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
 import { formatDayTime } from 'next/utils/helperFuncs'
-const { Text, Link } = Typography
+const { Text } = Typography
 
 export default function IdeaDetailInfo({ item }) {
   return (

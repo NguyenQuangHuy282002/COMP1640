@@ -2,7 +2,6 @@ import { LogoutOutlined, MenuOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Dropdown, Layout, MenuProps, Row, Typography } from 'antd'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AutoSearch from '../../components/search-field/autocomplete-search'
 import { imgDir } from '../../constants/img-dir'
@@ -10,7 +9,7 @@ import { createSubscription, useSubscription } from '../../libs/global-state-hoo
 import useWindowSize from '../../utils/useWindowSize'
 import { userCredential, userStore } from '../auth/user-store'
 
-const { Text } = Typography
+const { Text, Link } = Typography
 
 export const ideaCount = createSubscription({ number: 0 })
 
@@ -19,7 +18,6 @@ function AppHeader() {
   const navigator = useNavigate()
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
-  const [tabKey, setTabKey] = useState(['home'])
   const {
     state: { avatar },
   } = useSubscription(userStore, ['avatar'])
@@ -53,11 +51,7 @@ function AppHeader() {
   }
 
   const handleClickMenu = async (val: any) => {
-    if (tabKey === val.key || tabKey.includes('courses')) return
     switch (val.key) {
-      case 'home':
-        navigate('/')
-        break
       case 'logout':
         handleLogout()
         break
@@ -94,7 +88,7 @@ function AppHeader() {
           </Dropdown>
         ) : (
           <Dropdown menu={{ items: userMenu }} trigger={['click']} arrow overlayStyle={{ width: 150 }}>
-            <a>
+            <Link>
               <Avatar
                 style={{
                   backgroundColor: 'rgb(246 247 248)',
@@ -104,8 +98,8 @@ function AppHeader() {
                 size={40}
                 gap={0}
                 src={avatar}
-              ></Avatar>
-            </a>
+              />
+            </Link>
           </Dropdown>
         )}
       </Row>

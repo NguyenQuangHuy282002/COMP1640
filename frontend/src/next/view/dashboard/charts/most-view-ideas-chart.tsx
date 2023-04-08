@@ -7,7 +7,7 @@ import { Bar, CartesianGrid, ComposedChart, Legend, Line, Tooltip, XAxis, YAxis 
 const { Text } = Typography
 
 const CustomTooltip = props => {
-  const { active, payload, label } = props
+  const { active, payload } = props
 
   if (active && payload && payload.length) {
     return (

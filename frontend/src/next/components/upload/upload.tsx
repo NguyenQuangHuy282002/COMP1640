@@ -1,6 +1,5 @@
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Form, message, Typography, Upload, UploadProps } from 'antd'
-import { useMemo } from 'react'
+import { Button, Form, Typography, Upload, message } from 'antd'
 
 const validFileType = [
   'application/msword',
@@ -20,11 +19,11 @@ const validFileType = [
   'image/webp',
   'image/x-icon',
   '.docx',
-  '.csv', 
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-  '.xlsx', 
+  '.csv',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xlsx',
   '.xls',
-  'application/vnd.ms-excel'
+  'application/vnd.ms-excel',
 ]
 
 const checkFileFunc = (file: any) => {
@@ -39,7 +38,7 @@ const checkFileFunc = (file: any) => {
   }
 }
 
-const handleValidateFile = (e: any) => {
+export const handleValidateFile = (e: any) => {
   const filelist = e?.fileList
   const validFile = filelist.flatMap((file: any) => {
     const checkFile = checkFileFunc(file)
@@ -53,7 +52,7 @@ const handleValidateFile = (e: any) => {
   return validFile
 }
 
-const onChangeUpload = file => {
+export const onChangeUpload = file => {
   const checkFile = checkFileFunc(file)
   if (!checkFile) {
     message.error('Your file is invalid, over 50Mb or invalid type')
@@ -66,24 +65,12 @@ const onChangeUpload = file => {
   return false
 }
 
-const previewFile = file => {
+export const previewFile = file => {
   const checkFile = checkFileFunc(file)
   if (!checkFile) {
     file.url = 'https://freeiconshop.com/wp-content/uploads/edd/document-error-flat.png'
   }
   return file?.thumbUrl ?? ''
-}
-
-const uploadProps: UploadProps = {
-  onPreview(file) {
-    previewFile(file)
-  },
-  accept: `application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
-text/plain, application/pdf, image/*`,
-  beforeUpload(file) {
-    onChangeUpload(file)
-  },
-  maxCount: 3,
 }
 
 export function DefaultUpload({ normFile, files }) {
@@ -111,7 +98,9 @@ application/vnd.ms-excel, .xlsx, .xls"
         maxCount={3}
       >
         <Button icon={<UploadOutlined />}>Click to Upload</Button>
-        <Typography.Text disabled style = {{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
+        <Typography.Text disabled style={{ marginLeft: '10px' }}>
+          Maximum Files: 3
+        </Typography.Text>
       </Upload>
     </Form.Item>
   )
@@ -142,7 +131,9 @@ text/plain, application/pdf, image/*, .csv, application/vnd.openxmlformats-offic
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
           <p className="ant-upload-hint">Maximum Size: 50MB</p>
-          <Typography.Text disabled style = {{ marginLeft: '10px' }}>Maximum Files: 3</Typography.Text>
+          <Typography.Text disabled style={{ marginLeft: '10px' }}>
+            Maximum Files: 3
+          </Typography.Text>
         </Upload.Dragger>
       </Form.Item>
     </Form.Item>

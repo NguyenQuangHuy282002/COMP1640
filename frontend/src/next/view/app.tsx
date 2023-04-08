@@ -17,7 +17,7 @@ import EventDetails from './events/event-details'
 import CategoryDetails from './categories/category-details'
 import HomePage from './home-page'
 import CreateIdea from './ideas/create-new-idea'
-import IdeaDetail from './ideas/idea-detail/idea-detail'
+import IdeaDetail from './ideas/idea-detail'
 import LayoutAdmin from './layout/admin'
 import LayoutCoordinator from './layout/coordinator'
 import LayoutManager from './layout/manager'
@@ -32,7 +32,7 @@ export default function App() {
   const navigate = useNavigate()
   const { login, logout, token, tokenVerified, userId, role } = useAuth()
   const [verify, setVerify] = useState(false)
-  // const [role, setRole] = useState(null)
+
   useEffect(() => {
     userCredential.updateState({
       userId: userId,

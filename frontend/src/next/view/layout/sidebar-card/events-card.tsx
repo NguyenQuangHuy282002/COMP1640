@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
+import { AppstoreOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
+import React, { useEffect, useState } from 'react'
 
 type MenuItem = Required<MenuProps>['items'][number]
 

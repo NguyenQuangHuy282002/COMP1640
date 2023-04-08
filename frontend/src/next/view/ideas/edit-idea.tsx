@@ -1,20 +1,18 @@
 import { ArrowLeftOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Checkbox, Divider, Form, Input, message, Select, Space, Spin, Switch, Typography } from 'antd'
-import axios from 'axios'
-import { ContentState, convertFromHTML, convertToRaw, EditorState } from 'draft-js'
+import { Button, Card, Checkbox, Form, Input, Space, Spin, Switch, Typography, message } from 'antd'
+import FormItem from 'antd/es/form/FormItem'
+import { ContentState, EditorState, convertFromHTML, convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import RichTextEditor from 'next/components/text-editor'
 import TermCondition from 'next/components/upload/term-conditions'
-import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
+import { DefaultUpload } from 'next/components/upload/upload'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useQuery } from 'next/utils/use-query'
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { Http } from '../../api/http'
 import useWindowSize from '../../utils/useWindowSize'
-import Tags from './create-new-idea/tag'
-import FormItem from 'antd/es/form/FormItem'
 import HashtagInput from './create-new-idea/HastagInput'
+import Tags from './create-new-idea/tag'
 import FileDisplay from './idea-detail/file-display'
 
 const { Title } = Typography
@@ -25,11 +23,11 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     const type = file.type
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
-      headers: {
-        'Content-Type': type,
-      },
-    })
+    // const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
+    //   headers: {
+    //     'Content-Type': type,
+    //   },
+    // })
 
     return `https://yessir-bucket-tqt.s3.ap-northeast-1.amazonaws.com/${uploadConfig.data.key}`
   } catch (error) {
@@ -182,7 +180,12 @@ export default function EditIdea() {
         )}
 
         <Form.Item label="Anonymous Mode">
-          <Switch defaultChecked={data[0]?.isAnonymous ? true : false} onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
+          <Switch
+            defaultChecked={data[0]?.isAnonymous ? true : false}
+            onChange={() => setAnonymous(!isAnonymous)}
+            checkedChildren="On"
+            unCheckedChildren="Off"
+          />
         </Form.Item>
         <Form.Item label="Tags (max: 5)">
           <Tags setCategories={setCategories} selectedKeys={data[0]?.categories?.map(cate => cate._id)} />
@@ -243,4 +246,3 @@ export default function EditIdea() {
     </Space>
   )
 }
-

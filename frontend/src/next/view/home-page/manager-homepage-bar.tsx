@@ -1,6 +1,5 @@
 import { Badge, Button, DatePicker, Descriptions, Select } from 'antd'
 import { Http } from 'next/api/http'
-import { formatDayTime } from 'next/utils/helperFuncs'
 import { useEffect, useState } from 'react'
 import { exportExcel } from './home-page-services'
 
@@ -21,8 +20,8 @@ export default function ManagerBar() {
   const handleDateChange = (value, dateString) => {
     console.log(dateString)
     setDates({
-      from: dateString[0], 
-      to: dateString[1]
+      from: dateString[0],
+      to: dateString[1],
     })
   }
 
@@ -31,10 +30,9 @@ export default function ManagerBar() {
   }
 
   const handleExportExcel = async () => {
-    if(!selectedItems && !dates) {
+    if (!selectedItems && !dates) {
       return exportExcel()
-    }
-    else {
+    } else {
       exportExcel({ cate: selectedItems, dates: dates })
       // setDates({})
       // setSelectedItems(null)
@@ -57,14 +55,16 @@ export default function ManagerBar() {
       }}
     >
       <Descriptions title="Ideas Management" bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}>
-        <Descriptions.Item label="Export data from" span={3}><Badge status="processing" text="Leaks Database" /></Descriptions.Item>
+        <Descriptions.Item label="Export data from" span={3}>
+          <Badge status="processing" text="Leaks Database" />
+        </Descriptions.Item>
         <Descriptions.Item label="By Categories">
           <Select
             showSearch
             style={{ width: 200 }}
             placeholder="Search to Select"
             optionFilterProp="children"
-            onChange={(e)=>{
+            onChange={e => {
               handleOnChangeCate(e)
             }}
             filterOption={(input, option) => (option?.label ?? '').includes(input)}
@@ -97,7 +97,9 @@ export default function ManagerBar() {
           />
         </Descriptions.Item>
         <Descriptions.Item label="Action">
-          <Button type="primary" onClick={() => handleExportExcel()}>Export to CSV</Button>
+          <Button type="primary" onClick={() => handleExportExcel()}>
+            Export to CSV
+          </Button>
         </Descriptions.Item>
       </Descriptions>
     </div>
