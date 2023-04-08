@@ -9,7 +9,6 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "strict": true, 
      "lib": [
       "esnext"
     ],
