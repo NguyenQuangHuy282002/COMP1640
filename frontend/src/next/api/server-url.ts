@@ -1,1 +1,1 @@
-export const SERVER_ENPOINT = 'https://leaks-app-server.onrender.com'
+export const SERVER_ENPOINT = process.env.BASE_API_URL || 'http://localhost:6969'
