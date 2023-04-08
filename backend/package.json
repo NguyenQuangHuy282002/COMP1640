@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.ts",
-  "module":"amd",
+  "module": "amd",
   "scripts": {
     "start": "ts-node-dev src/index.ts",
-    "build": "npm install && tsc && node dist/server.js"
+    "build": "npm -f install && tsc -p ."
   },
   "keywords": [],
   "author": "",
