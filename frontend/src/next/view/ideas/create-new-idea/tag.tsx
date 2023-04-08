@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Form, message, Switch, Transfer, Typography } from 'antd'
+import { Form, Switch, Transfer, message } from 'antd'
 import type { TransferDirection } from 'antd/es/transfer'
+import { useEffect, useState } from 'react'
 import { Http } from '../../../api/http'
 
 interface RecordType {
@@ -10,7 +10,7 @@ interface RecordType {
   chosen: boolean
 }
 
-function Tags({ setCategories, selectedKeys } : {setCategories: any, selectedKeys?: any}) {
+function Tags({ setCategories, selectedKeys }: { setCategories: any; selectedKeys?: any }) {
   const [targetKeys, setTargetKeys] = useState<string[]>(selectedKeys || [])
   const [categoryList, setCategoryList] = useState([])
   const [disabled, setDisabled] = useState(false)

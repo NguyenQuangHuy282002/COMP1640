@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { Avatar, Button, ConfigProvider, Divider, List, Modal } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
+import { Avatar, ConfigProvider, List, Modal } from 'antd'
 
 function PointInfoModal({ isOpen, onCloseModal, likers, dislikers }) {
   const customizeRenderEmpty = () => (
     <div style={{ textAlign: 'center', padding: 0, margin: 0, display: 'flex' }}>
-      <p style={{display: 'contents'}}><SmileOutlined style={{ fontSize: 20, marginRight: 8 }} />No one :)))</p>
+      <p style={{ display: 'contents' }}>
+        <SmileOutlined style={{ fontSize: 20, marginRight: 8 }} />
+        No one :)))
+      </p>
     </div>
   )
   return (

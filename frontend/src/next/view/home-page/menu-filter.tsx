@@ -1,16 +1,12 @@
-import React from 'react'
 import {
   CrownFilled,
   DingtalkCircleFilled,
   FireFilled,
+  FrownFilled,
   RocketFilled,
   SlidersFilled,
-  GroupOutlined,
-  EllipsisOutlined,
-  PicRightOutlined,
-  FrownFilled
 } from '@ant-design/icons'
-import { Col, MenuProps, Radio, Dropdown, Button, Space, Typography } from 'antd'
+import { Button, Col, Dropdown, MenuProps, Radio, Space, Typography } from 'antd'
 import styled from 'styled-components'
 import useWindowSize from '../../utils/useWindowSize'
 
@@ -40,7 +36,6 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
       ),
     },
   ]
-
 
   // const departmentItems: MenuProps['items'] = [
   //   {
@@ -127,7 +122,7 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
       <Col>
         <p style={{ fontSize: '19px', fontWeight: '400', marginBottom: '3px 0' }}>{totalIdea} Ideas</p>
       </Col>
-      <Col style={{ float: "right", width: '100%', justifyContent: 'end', fontSize: '15px', display: display }}>
+      <Col style={{ float: 'right', width: '100%', justifyContent: 'end', fontSize: '15px', display: display }}>
         <Radio.Group defaultValue={filter} buttonStyle="solid" style={{}} onChange={e => onClickFilter(e.target.value)}>
           <StyledRadioButton value="new">
             <DingtalkCircleFilled /> Newest
@@ -144,10 +139,10 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
           <StyledRadioButton value="oldest">
             <FrownFilled /> Oldest
           </StyledRadioButton>
-        </Radio.Group >
+        </Radio.Group>
         <Col />
         <Col>
-        <Space wrap style={{ float: "right" }}>
+          <Space wrap style={{ float: 'right' }}>
             {/* <Dropdown menu={{ items: departmentItems }} placement="bottom" arrow trigger={['click']}>
 
               <Button>
@@ -171,7 +166,6 @@ function MenuFilter({ setFilter, filter, totalIdea }) {
             </Dropdown>
           </Space>
         </Col>
-
       </Col>
     </>
   )

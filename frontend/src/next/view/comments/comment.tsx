@@ -1,29 +1,33 @@
-import { formatDayTime } from '../../utils/helperFuncs'
-import { DeleteOutlined, DislikeOutlined, EditOutlined, ExclamationCircleOutlined, LikeOutlined } from '@ant-design/icons'
-import { Avatar, Card, List, Skeleton, Space, Switch, Typography } from 'antd'
-import React, { useState } from 'react'
+import {
+  DeleteOutlined,
+  DislikeOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  LikeOutlined,
+} from '@ant-design/icons'
+import { Avatar, List, Skeleton, Space, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
 import { useSubscription } from 'next/libs/global-state-hook'
+import React from 'react'
+import { formatDayTime } from '../../utils/helperFuncs'
 import { userStore } from '../auth/user-store'
 import { deleteComment, editComment } from './comment-services'
-
 
 const handleMenuClick = (text: unknown, id: unknown) => {
   switch (text) {
     case 'Edit':
       editComment(id)
-      break;
+      break
     case 'Delete':
       deleteComment(id)
-      break;
+      break
     default:
-      return;
+      return
   }
 }
 
-
-const IconText = ({ icon, text, id }: { icon: React.FC; text: string, id: string }) => (
-  <Space style={{cursor: 'pointer'}} onClick={() => handleMenuClick(text, id)}>
+const IconText = ({ icon, text, id }: { icon: React.FC; text: string; id: string }) => (
+  <Space style={{ cursor: 'pointer' }} onClick={() => handleMenuClick(text, id)}>
     {React.createElement(icon)}
     {text}
   </Space>
@@ -31,36 +35,41 @@ const IconText = ({ icon, text, id }: { icon: React.FC; text: string, id: string
 
 function Comment({ item, loading }) {
   const { _id } = useSubscription(userStore).state
-  
-  
-  
+
   let action = [
     <IconText id={item._id} icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
     <IconText id={item._id} icon={DislikeOutlined} text="0" key="list-vertical-star-o" />,
     <IconText id={item._id} icon={ExclamationCircleOutlined} text="0" key="list-vertical-message" />,
   ]
-  if(item.userId._id === _id) {
-    action = [...action, 
-    <IconText id={item._id} icon={EditOutlined} text="Edit" key="list-vertical-edit" ></IconText>, 
-    <IconText id={item._id} icon={DeleteOutlined} text="Delete" key="list-vertical-delete" ></IconText>]
+  if (item.userId._id === _id) {
+    action = [
+      ...action,
+      <IconText id={item._id} icon={EditOutlined} text="Edit" key="list-vertical-edit"></IconText>,
+      <IconText id={item._id} icon={DeleteOutlined} text="Delete" key="list-vertical-delete"></IconText>,
+    ]
   }
 
-  
   return (
     <>
       {item?.date && (
-        <List.Item
-          actions={action}
-          style={{ margin: 0}}
-        >
+        <List.Item actions={action} style={{ margin: 0 }}>
           <Skeleton avatar title={false} loading={loading} active>
             <List.Item.Meta
               style={{ margin: 0 }}
-              avatar={<Avatar size={45} src={!item.isAnonymous ? item.userId?.avatar : imgDir + 'anonymous.jpg'} style={{ background: '#ccc' }} />}
+              avatar={
+                <Avatar
+                  size={45}
+                  src={!item.isAnonymous ? item.userId?.avatar : imgDir + 'anonymous.jpg'}
+                  style={{ background: '#ccc' }}
+                />
+              }
               title={
                 <>
-                  <Typography.Link>{!item.isAnonymous ? item.userId?.name : 'Anonymous'}</Typography.Link>{'  '}
-                  <Typography.Text italic disabled type="secondary" style={{ fontSize: 13}}>{item.userId._id === _id ? 'Your Comment' : ''}</Typography.Text>  
+                  <Typography.Link>{!item.isAnonymous ? item.userId?.name : 'Anonymous'}</Typography.Link>
+                  {'  '}
+                  <Typography.Text italic disabled type="secondary" style={{ fontSize: 13 }}>
+                    {item.userId._id === _id ? 'Your Comment' : ''}
+                  </Typography.Text>
                   <Typography.Paragraph
                     type="secondary"
                     style={{

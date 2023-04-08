@@ -1,10 +1,9 @@
-
-import React, { useEffect, useState } from 'react'
-import { AppstoreOutlined, MailOutlined, SettingOutlined, UsergroupAddOutlined } from '@ant-design/icons'
+import { UsergroupAddOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
+import React, { useEffect, useState } from 'react'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -41,7 +40,7 @@ function DepartmentCard() {
   }
 
   const items: MenuProps['items'] = [
-    getItem('Department', 'menu',<UsergroupAddOutlined />, [
+    getItem('Department', 'menu', <UsergroupAddOutlined />, [
       ...departments.slice(0, 3).map(department => getItem(department.name, department._id)),
       getItem(
         'More Department',

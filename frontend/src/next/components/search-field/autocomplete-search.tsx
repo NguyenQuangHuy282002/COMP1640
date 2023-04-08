@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { AutoComplete, Input, message } from 'antd'
+import { AutoComplete, message } from 'antd'
 import type { SelectProps } from 'antd/es/select'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
@@ -36,9 +36,9 @@ function AutoSearch() {
   }, [numberOfIdea])
 
   const handleClickSearch = (id: string, refresh?) => {
-    if(refresh === true) {
+    if (refresh === true) {
       window.location.reload()
-    } 
+    }
     navigate(`/idea?id=${id}`)
   }
 
@@ -61,7 +61,7 @@ function AutoSearch() {
             }}
             key={sug['_id']}
           >
-            <span >
+            <span>
               <a href="" onClick={() => handleClickSearch(sug['_id'])} target="_blank" rel="noopener noreferrer">
                 {data.slice(0, check + 20)}...
               </a>

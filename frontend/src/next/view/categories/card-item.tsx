@@ -1,14 +1,6 @@
-import {
-  ClockCircleTwoTone,
-  DeleteOutlined,
-  EditOutlined,
-  EyeTwoTone,
-  FireTwoTone,
-  RocketTwoTone,
-} from '@ant-design/icons'
-import { Badge, Button, Card, Space } from 'antd'
+import { DeleteOutlined, EditOutlined, EyeTwoTone } from '@ant-design/icons'
+import { Badge, Button, Card } from 'antd'
 import Link from 'antd/es/typography/Link'
-import { imgDir } from 'next/constants/img-dir'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 
 interface ICategory {
@@ -76,19 +68,5 @@ function CategoryCardItem({
     </Badge.Ribbon>
   )
 }
-
-const columns = [
-  {
-    title: 'Title',
-    dataIndex: 'title',
-    render: (text, record) => (
-      <Link
-      // to={`/Categorydetail/${record.key}`}
-      >
-        {text}
-      </Link>
-    ), // use Link to wrap title
-  },
-]
 
 export default CategoryCardItem

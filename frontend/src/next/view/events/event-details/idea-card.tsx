@@ -1,5 +1,5 @@
 import { ClockCircleOutlined, DislikeOutlined, LikeOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, List, message, Skeleton, Space, Tooltip, Typography } from 'antd'
+import { Avatar, List, Skeleton, Space, Tooltip, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { formatDayTime } from 'next/utils/helperFuncs'
