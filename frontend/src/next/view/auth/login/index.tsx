@@ -22,7 +22,6 @@ function Login() {
         if (res?.data?.success) {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
-          navigate(`/${res.data.userMetaData.role}`)
           window.location.reload()
           message.success('Login successful')
         }
@@ -36,7 +35,16 @@ function Login() {
   }
 
   return (
-    <Row style={{ width: '100%', height: '100vh', paddingTop: 70, paddingBottom: 50, justifyContent: 'center', background: '#2e4d68' }}>
+    <Row
+      style={{
+        width: '100%',
+        height: '100vh',
+        paddingTop: 70,
+        paddingBottom: 50,
+        justifyContent: 'center',
+        background: '#2e4d68',
+      }}
+    >
       <Card>
         <Space align="center" direction="vertical">
           <img src={`${imgDir}logo.png`} height={300} alt="logo" />
