@@ -5,7 +5,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "start": "ts-node-dev src/index.ts",
-    "build": "tsc",
+    "build": "npm install && tsc",
     "prod": "node dist"
   },
   "keywords": [],
