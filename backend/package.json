@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "ts-node-dev src/index.ts",
-    "build": "npm install && tsc",
-    "prod": "node dist"
+    "build": "npm install && tsc && node dist"
   },
   "keywords": [],
   "author": "",
