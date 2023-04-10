@@ -2,7 +2,7 @@ import { SocketProvider } from 'next/socket.io'
 import { SnackbarProvider } from 'notistack'
 import ReactDOM from 'react-dom/client'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './next/view/app'
 import reportWebVitals from './reportWebVitals'
@@ -12,9 +12,9 @@ root.render(
   // <React.StrictMode>
   <SocketProvider>
     <SnackbarProvider maxSnack={1} preventDuplicate>
-      <Router>
-        <App></App>
-      </Router>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </SnackbarProvider>
   </SocketProvider>
   // </React.StrictMode>

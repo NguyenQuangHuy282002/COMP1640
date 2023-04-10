@@ -1,6 +1,6 @@
 import { Layout, message } from 'antd'
 import UnAuthorize from 'next/components/fobidden/unauthorize'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import { Http, LOCALSTORAGE } from '../api/http'
@@ -9,14 +9,17 @@ import AccountManager from './accounts-manager'
 import Login from './auth/login'
 import RoleAccess from './auth/role-access'
 import { userCredential, userStore } from './auth/user-store'
+import BackupDataManager from './backup-data'
 import CategoryManager from './categories'
+import CategoryDetails from './categories/category-details'
 import DashboardAdmin from './dashboard'
 import DepartmentManager from './departments'
+import DepartmentDetail from './departments/department-detail'
 import EventsPage from './events'
 import EventDetails from './events/event-details'
-import CategoryDetails from './categories/category-details'
 import HomePage from './home-page'
 import CreateIdea from './ideas/create-new-idea'
+import EditIdea from './ideas/edit-idea'
 import IdeaDetail from './ideas/idea-detail'
 import LayoutAdmin from './layout/admin'
 import LayoutCoordinator from './layout/coordinator'
@@ -24,14 +27,11 @@ import LayoutManager from './layout/manager'
 import LayoutStaff from './layout/staff'
 import UserProfile from './user-profile'
 import OtherProfile from './user-profile/otherProfile'
-import EditIdea from './ideas/edit-idea'
-import DepartmentDetail from './departments/department-detail'
-import BackupDataManager from './backup-data'
 
 export default function App() {
   const navigate = useNavigate()
   const { login, logout, token, tokenVerified, userId, role } = useAuth()
-  const [verify, setVerify] = useState(false)
+  const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
 
   useEffect(() => {
     userCredential.updateState({
@@ -41,17 +41,13 @@ export default function App() {
       login: login,
       logout: logout,
     })
-  }, [])
 
-  useEffect(() => {
-    const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential) {
       if (credential?.token === '' || !credential?.token) {
         navigate('/login')
         return message.info('You need to login to access this application!')
       } else {
         if (credential.tokenVerified === true) {
-          setVerify(credential.tokenVerified)
           userCredential.updateState({
             userId: credential.userId,
             isLoggedIn: credential.tokenVerified,
@@ -61,8 +57,7 @@ export default function App() {
           const updateUserInfo = async () => {
             await Http.get(`/api/v1/users/getProfile/${credential.userId}`)
               .then(res => {
-                userStore.updateState(res.data.userInfo)
-                // setRole(res.data.userInfo.role)
+                userStore.updateState({ ...res.data.userInfo, loading: false })
               })
               .catch(err => console.error(err.message))
           }
@@ -78,13 +73,9 @@ export default function App() {
     }
   }, [])
 
-  useEffect(() => {
-    role && navigate(`/${role}`)
-  }, [])
-
   let routes: any
 
-  if (verify) {
+  if (credential?.tokenVerified) {
     routes = (
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -194,6 +185,7 @@ export default function App() {
     routes = (
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/*" element={<Navigate to={'/login'} replace />} />
       </Routes>
     )
   }
