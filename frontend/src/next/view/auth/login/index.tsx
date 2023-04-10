@@ -1,6 +1,6 @@
 import { Button, Card, Form, Input, message, Row, Space, Typography } from 'antd'
 import useRoleNavigate from 'next/libs/use-role-navigate'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Http, LOCALSTORAGE } from '../../../api/http'
 import { imgDir } from '../../../constants/img-dir'
 import { userCredential, userStore } from '../user-store'
@@ -8,6 +8,7 @@ const { Title } = Typography
 
 function Login() {
   const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
   const navigate = useRoleNavigate()
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
@@ -17,6 +18,7 @@ function Login() {
   }, [])
 
   const handleSubmit = async (val: any) => {
+    setLoading(true)
     await Http.post('/api/v1/auth/login', val)
       .then(async res => {
         if (res?.data?.success) {
@@ -36,6 +38,7 @@ function Login() {
           message.error(`Login failed, ${error?.message}`)
         }
       })
+      .finally(() => setLoading(false))
   }
 
   return (
@@ -80,7 +83,7 @@ function Login() {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={loading}>
                 Login
               </Button>
             </Form.Item>
