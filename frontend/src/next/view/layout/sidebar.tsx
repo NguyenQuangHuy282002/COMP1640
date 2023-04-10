@@ -20,7 +20,7 @@ function AppSidebar({ items }) {
             style={{
               position: 'sticky',
               zIndex: 3,
-              background: '#49708A',
+              background: 'linear-gradient(92.88deg, #455eb5 9.16%, #5643cc 43.89%, #673fd7 64.72%)',
               alignSelf: 'start',
               top: '10px',
               border: '1px solid #ccc',

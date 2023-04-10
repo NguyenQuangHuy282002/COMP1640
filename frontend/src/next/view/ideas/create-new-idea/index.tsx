@@ -8,12 +8,13 @@ import TermCondition from 'next/components/upload/term-conditions'
 import { DefaultUpload, DraggerUpload } from 'next/components/upload/upload'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useQuery } from 'next/utils/use-query'
-import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Http } from '../../../api/http'
 import useWindowSize from '../../../utils/useWindowSize'
 import HashtagInput from './HastagInput'
 import Tags from './tag'
+import { BlueColorButton } from 'next/components/custom-style-elements/button'
+import axios from 'axios'
 
 const { Title } = Typography
 
@@ -23,7 +24,11 @@ const fetchPresignedUrl = async (url: any, file: any) => {
     const type = file.type
     const requestUrl = url + `?ext=${fileExtension}&type=${type}`
     const uploadConfig = await Http.get(requestUrl)
-
+    const uploadFileToS3 = await axios.put(uploadConfig.data.url, file.originFileObj, {
+      headers: {
+        'Content-Type': type,
+      },
+    })
     return `https://yessir-bucket-tqt.s3.ap-northeast-1.amazonaws.com/${uploadConfig.data.key}`
   } catch (error) {
     console.error(error)
@@ -41,7 +46,6 @@ export const fetchAllToS3 = async (files: any) => {
 
 export default function CreateIdea() {
   const [form] = Form.useForm()
-  const { enqueueSnackbar } = useSnackbar()
   const navigate = useRoleNavigate()
   const query = useQuery()
   const defaultEventId = query.get('event')
@@ -65,7 +69,7 @@ export default function CreateIdea() {
           .then(res => {
             setSpecialEvent(res.data.data)
           })
-          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+          .catch(error => message.error(error.message))
       }
       getEventList()
     } else {
@@ -74,7 +78,7 @@ export default function CreateIdea() {
           .then(res => {
             setSpecialEvent(res.data.data)
           })
-          .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+          .catch(error => message.error(error.message))
       }
       getEventList()
     }
@@ -88,6 +92,9 @@ export default function CreateIdea() {
 
   const onSubmitPost = async () => {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    if(content.length <= 20) {
+      return message.error("Your description is too sparsing")
+    }
     const postForm = {
       title: form.getFieldValue('title'),
 
@@ -99,7 +106,13 @@ export default function CreateIdea() {
     if (hashTags.length > 0) {
       postForm['hashtags'] = hashTags
     }
-
+    if(categories.length === 0) {
+      return message.error('Atleast one category')
+    }
+    
+    if (!form.getFieldValue('specialevent')) {
+      return message.error('Must be in a special event')
+    }
     if (form.getFieldValue('specialevent')) {
       postForm['specialevent'] = form.getFieldValue('specialevent')
     }
@@ -153,7 +166,12 @@ export default function CreateIdea() {
             <Divider />
           </>
         ) : (
-          <Form.Item name="specialevent" label="Special event" style={{ marginBottom: '15px' }}>
+          <Form.Item 
+          name="specialevent" 
+          label="Special event" 
+          style={{ marginBottom: '15px' }} 
+          rules={[{ required: true, message: 'Please select one special event!' }]}
+          >
             <Select
               style={{
                 float: 'left',
@@ -170,7 +188,10 @@ export default function CreateIdea() {
           </Form.Item>
         )}
 
-        <Form.Item name="title" required label="Title">
+        <Form.Item 
+        name="title" 
+        rules={[{ required: true, message: "Please input your idea's title" }, { type: 'string', min: 30, message: "Your title is too sparsing, at least 30 characters" }]} 
+        label="Title">
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 30 characters to summary your idea)"
@@ -180,7 +201,10 @@ export default function CreateIdea() {
           ></Input>
         </Form.Item>
 
-        <Form.Item name="content" required label="Description">
+        <Form.Item 
+        name="content" 
+        required 
+        label="Description">
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
         </Form.Item>
 
@@ -190,7 +214,9 @@ export default function CreateIdea() {
         <Form.Item label="Anonymous Mode">
           <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
-        <Form.Item label="Tags (max: 5)">
+        <Form.Item label="Category (max: 1)" 
+        rules={[{ required: true, message: "At least one category, please" }]} 
+        >
           <Tags setCategories={setCategories} />
         </Form.Item>
         <FormItem label="HashTags (Optional)" style={{ width: '100%' }}>
@@ -222,9 +248,9 @@ export default function CreateIdea() {
         </Form.Item>
         <TermCondition isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
         <Form.Item wrapperCol={{ span: 15 }}>
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
+          <BlueColorButton type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
             Post
-          </Button>
+          </BlueColorButton>
         </Form.Item>
       </Form>
     </Card>

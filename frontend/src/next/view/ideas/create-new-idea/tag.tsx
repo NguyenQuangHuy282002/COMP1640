@@ -34,8 +34,8 @@ function Tags({ setCategories, selectedKeys }: { setCategories: any; selectedKey
   const filterOption = (inputValue: string, option: RecordType) => option.description.indexOf(inputValue) > -1
 
   const handleChange = (selectedKeys: string[]) => {
-    if (selectedKeys.length > 5) {
-      return message.info('Maximum: 5 Tags!!!')
+    if (selectedKeys.length > 1) {
+      return message.info('Maximum: 1 Category!!!')
     }
     setTargetKeys(selectedKeys)
   }
@@ -54,10 +54,10 @@ function Tags({ setCategories, selectedKeys }: { setCategories: any; selectedKey
       <Transfer
         titles={['Avai', 'Yours']}
         locale={{
-          itemUnit: 'Tags',
-          itemsUnit: 'Tags',
+          itemUnit: 'Categories',
+          itemsUnit: 'Categories',
           notFoundContent: 'The list is empty',
-          searchPlaceholder: 'Search Tags here',
+          searchPlaceholder: 'Search Categories here',
         }}
         dataSource={categoryList}
         showSearch
@@ -69,10 +69,10 @@ function Tags({ setCategories, selectedKeys }: { setCategories: any; selectedKey
         render={item => item.title}
       />
       <br />
-      <Form.Item label="Comfirm Tags" required>
+      <Form.Item label="Comfirm Category" required>
         <Switch
           unCheckedChildren="Not Yet"
-          checkedChildren="Confirm Tags"
+          checkedChildren="Confirm"
           checked={disabled}
           onChange={handleConfirm}
         />
