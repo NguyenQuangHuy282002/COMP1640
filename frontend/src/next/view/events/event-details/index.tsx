@@ -94,10 +94,6 @@ export default function EventDetails({ role }: { role?: string }) {
         <List
           itemLayout="vertical"
           size="large"
-          pagination={{
-            onChange: page => {},
-            pageSize: 5,
-          }}
           style={{
             marginBottom: '50px',
           }}
