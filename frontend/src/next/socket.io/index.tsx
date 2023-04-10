@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect } from 'react'
 import { io } from 'socket.io-client'
+import { SERVER_ENPOINT } from '../api/server-url'
 
-const socket = io('http://localhost:6969', {
+const socket = io(SERVER_ENPOINT, {
   transports: ['websocket', 'polling'],
 })
 
