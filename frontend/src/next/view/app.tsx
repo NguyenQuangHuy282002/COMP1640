@@ -81,8 +81,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" />
         <Route path="/" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
-        <Route path="/*" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
-        <Route path="/unauthorize" element={<UnAuthorize></UnAuthorize>}></Route>
+
         <Route
           path="/staff"
           element={
@@ -179,6 +178,8 @@ export default function App() {
           <Route path="account" element={<UserProfile />} />
           <Route path="profile" element={<OtherProfile />} />
         </Route>
+        <Route path="*" element={<Navigate to={role ? `/${role}` : '/'} replace />} />
+        <Route path="/unauthorize" element={<UnAuthorize></UnAuthorize>}></Route>
       </Routes>
     )
   } else {
