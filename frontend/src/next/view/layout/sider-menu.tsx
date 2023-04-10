@@ -30,7 +30,7 @@ export default function SiderMenu({ menuItems }) {
         onCollapse={toggleCollapsed}
         width={278}
         style={{
-          background: '#22bde9',
+          background: 'linear-gradient(92.88deg, #455eb5 9.16%, #5643cc 43.89%, #673fd7 64.72%)',
           position: 'sticky',
           zIndex: 1,
           alignSelf: 'start',

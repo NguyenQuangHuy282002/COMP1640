@@ -19,7 +19,7 @@ const initS3AWS = () => {
       accessKeyId: accesskeyId,
       secretAccessKey: secretAccessKey,
     },
-    region: 'us-east-1',
+    region: 'ap-northeast-1',
   }
 
   const s3 = new AWS.S3(config)

@@ -280,6 +280,7 @@ export const getIdea = async (req: any, res: any, next: any) => {
       .populate({
         path: 'publisherId',
         select: ['name', 'avatar', 'email', 'role'],
+        populate: 'department',
       })
       .populate('categories')
       .populate('specialEvent')

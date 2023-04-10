@@ -42,8 +42,12 @@ function EditProfileForm() {
       phone: form.getFieldValue('phone'),
       email: form.getFieldValue('email'),
       birthday: form.getFieldValue('birthday')?.$d,
+      avatar: undefined
     }
-
+    if(!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
+      return message.error("Please input the required fields")
+    }
+    console.log(files)
     if (files) {
       try {
         let fileNameList = await fetchAllToS3(files)
@@ -62,6 +66,7 @@ function EditProfileForm() {
           phone: form.getFieldValue('phone'),
           email: form.getFieldValue('email'),
           birthday: form.getFieldValue('birthday')?.$d,
+          avatar: userform?.avatar ? userform?.avatar : state.avatar
         })
       })
       .catch(err => message.error('Failed to update profile!'))
@@ -82,10 +87,28 @@ function EditProfileForm() {
         </Title>
       </Row>
 
-      <Form.Item name="name" label="Full name" labelAlign="left" required initialValue={state.name}>
+      <Form.Item
+        name="name"
+        label="Full name"
+        labelAlign="left"
+        initialValue={state.name}
+        rules={[
+          { required: true, message: 'Please input your name' },
+          { type: 'string', min: 7, message: 'Invalid username' },
+        ]}
+      >
         <Input />
       </Form.Item>
-      <Form.Item name="username" label="Username" labelAlign="left" required initialValue={state.username}>
+      <Form.Item
+        name="username"
+        label="Username"
+        labelAlign="left"
+        initialValue={state.username}
+        rules={[
+          { required: true, message: 'Please input your user name' },
+          { type: 'string', min: 7, message: 'Invalid name' },
+        ]}
+      >
         <Input />
       </Form.Item>
       <Form.Item
@@ -112,6 +135,7 @@ function EditProfileForm() {
             type: 'email',
             message: 'The input is not valid E-mail!',
           },
+          { required: true, message: 'Please input your email' },
         ]}
       >
         <Input />

@@ -14,6 +14,7 @@ import useWindowSize from '../../utils/useWindowSize'
 import HashtagInput from './create-new-idea/HastagInput'
 import Tags from './create-new-idea/tag'
 import FileDisplay from './idea-detail/file-display'
+import { BlueColorButton } from 'next/components/custom-style-elements/button'
 
 const { Title } = Typography
 
@@ -63,7 +64,7 @@ export default function EditIdea() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsShown(true)
-    }, 600)
+    }, 2000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -105,12 +106,19 @@ export default function EditIdea() {
 
   const onSubmitPost = async () => {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    if(content.length <= 20) {
+      return message.error("Your description is too sparsing")
+    }
     const postForm = {
       title: form.getFieldValue('title'),
       content: `${content}`,
       categories: categories,
       isAnonymous: isAnonymous,
     }
+    if(categories.length === 0) {
+      return message.error('At least one tags')
+    }
+
     if (!postForm.title || !postForm.content) {
       return message.error('Please fill the required fields')
     }
@@ -157,7 +165,9 @@ export default function EditIdea() {
           <Input style={{ lineHeight: 2.15 }} disabled></Input>
         </Form.Item>
 
-        <Form.Item name="title" required label="Title" initialValue={data[0]?.title}>
+        <Form.Item name="title" label="Title" initialValue={data[0]?.title}
+        rules={[{ required: true, message: "Please input your idea's title" }, { type: 'string', min: 30, message: "Your title is too sparsing, at least 30 characters" }]} 
+        >
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 50 characters to summary your idea)"
@@ -187,7 +197,9 @@ export default function EditIdea() {
             unCheckedChildren="Off"
           />
         </Form.Item>
-        <Form.Item label="Tags (max: 5)">
+        <Form.Item label="Category (max: 1)" 
+        rules={[{ required: true, message: "At least one category, please" }]} 
+        >
           <Tags setCategories={setCategories} selectedKeys={data[0]?.categories?.map(cate => cate._id)} />
         </Form.Item>
 
@@ -220,9 +232,9 @@ export default function EditIdea() {
         </Form.Item>
         <TermCondition isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
         <Form.Item wrapperCol={{ span: 15 }}>
-          <Button type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
-            Post
-          </Button>
+          <BlueColorButton type="primary" htmlType="submit" onClick={() => onSubmitPost()} style={{ marginTop: 10 }}>
+            Accept Change
+          </BlueColorButton>
         </Form.Item>
       </Form>
     </Card>
