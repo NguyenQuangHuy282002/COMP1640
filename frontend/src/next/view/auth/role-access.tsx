@@ -8,7 +8,11 @@ const RoleAccess = ({ roles = [], children }) => {
     state: { role, loading },
   } = useSubscription(userStore, ['role'])
   if (loading) {
-    return <Spin size="large" />
+    return (
+      <div className="center" style={{ width: '100wh', height: '100vh' }}>
+        <Spin size="large" />
+      </div>
+    )
   }
   return !roles.length || roles.includes(role) ? <>{children}</> : <Navigate to="/unauthorize" replace />
 }
