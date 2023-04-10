@@ -3,7 +3,6 @@ import useRoleNavigate from 'next/libs/use-role-navigate'
 import { useState } from 'react'
 import '../../../index.css'
 
-
 export default function SiderMenu({ menuItems }) {
   const navigate = useRoleNavigate()
   const [collapsed, setCollapsed] = useState(false)
@@ -41,7 +40,7 @@ export default function SiderMenu({ menuItems }) {
         }}
       >
         <Menu
-        className="menu-sidebar"
+          className="menu-sidebar"
           onClick={handleClickMenu}
           defaultSelectedKeys={tabKey}
           mode="inline"

@@ -19,8 +19,8 @@ function AppHeader() {
   const windowWidth = useWindowSize()
   const { enqueueSnackbar } = useSnackbar()
   const {
-    state: { avatar },
-  } = useSubscription(userStore, ['avatar'])
+    state: { avatar, username },
+  } = useSubscription(userStore, ['avatar', 'username'])
 
   const userMenu: MenuProps['items'] = [
     {
@@ -71,11 +71,19 @@ function AppHeader() {
         alignSelf: 'start',
         top: 0,
         width: '100%',
-        height: '54px',
+        height: '60px',
         lineHeight: 0,
+        padding: windowWidth < 1300 ? '0px 10px' : '0px 50px',
       }}
     >
-      <Row style={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', height: '54px' }}>
+      <Row
+        style={{
+          width: '100%',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: '60px',
+        }}
+      >
         <>
           <a href={'/'} style={{ marginRight: 20, marginBottom: 5, display: 'contents' }}>
             <img src={imgDir + 'logo.png'} height="50" alt="Logo" />
@@ -84,11 +92,12 @@ function AppHeader() {
         </>
         {windowWidth < 1300 ? (
           <Dropdown menu={{ items: userMenu }} trigger={['click']} overlayStyle={{ width: 200 }} placement="bottom">
-            <Button icon={<MenuOutlined style={{}} />} type="text" />
+            <Button icon={<MenuOutlined />} type="text" />
           </Dropdown>
         ) : (
           <Dropdown menu={{ items: userMenu }} trigger={['click']} arrow overlayStyle={{ width: 150 }}>
-            <Link>
+            <Button type="text" className="d-flex center" style={{ height: 'unset', gap: '8px' }}>
+              <Text style={{ fontWeight: 800 }}>{username}</Text>
               <Avatar
                 style={{
                   backgroundColor: 'rgb(246 247 248)',
@@ -99,7 +108,7 @@ function AppHeader() {
                 gap={0}
                 src={avatar}
               />
-            </Link>
+            </Button>
           </Dropdown>
         )}
       </Row>

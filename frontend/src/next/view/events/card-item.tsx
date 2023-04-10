@@ -6,7 +6,7 @@ import {
   FireTwoTone,
   RocketTwoTone,
 } from '@ant-design/icons'
-import { Badge, Button, Card, Space } from 'antd'
+import { Button, Card, Space } from 'antd'
 import Link from 'antd/es/typography/Link'
 import useRoleNavigate from 'next/libs/use-role-navigate'
 
@@ -38,50 +38,45 @@ function EventCardItem({
   }
 
   return (
-    <Badge.Ribbon
-      text={event?.ideas?.length}
-      color={new Date(event?.firstCloseDate) > new Date() ? (event?.ideas?.length === 0 ? 'red' : 'volcano') : 'green'}
+    <Card
+      title={
+        <Link style={{ fontSize: '20px', fontWeight: 600 }} onClick={() => handleViewEventDetails(event._id)}>
+          {event?.title}
+        </Link>
+      }
+      bordered={false}
+      style={{ width: '100%', display: 'block' }}
+      extra={
+        <Space wrap>
+          <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewEventDetails(event._id)} />
+          {role === 'admin' && <Button type="text" icon={<EditOutlined />} onClick={() => setEditEvent(event)} />}
+          {role === 'admin' && (
+            <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteEvent(event._id)} />
+          )}
+        </Space>
+      }
+      headStyle={{ borderBottom: '2px solid #d7d7d7' }}
     >
-      <Card
-        title={
-          <Link style={{ fontSize: '20px', fontWeight: 600 }} onClick={() => handleViewEventDetails(event._id)}>
-            {event?.title}
-          </Link>
-        }
-        bordered={false}
-        style={{ width: '100%', display: 'block' }}
-        extra={
-          <Space wrap>
-            <Button type="text" icon={<EyeTwoTone />} onClick={() => handleViewEventDetails(event._id)} />
-            {role === 'admin' && <Button type="text" icon={<EditOutlined />} onClick={() => setEditEvent(event)} />}
-            {role === 'admin' && (
-              <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDeleteEvent(event._id)} />
-            )}
-          </Space>
-        }
-        headStyle={{ borderBottom: '2px solid #d7d7d7' }}
-      >
-        <div>
-          <Space style={{ color: '#0055d5' }}>
-            <ClockCircleTwoTone twoToneColor="#0055d5" />
-            <p style={{ margin: 8 }}>Start date: {new Date(event.startDate).toLocaleString('en-US')}</p>
-          </Space>
-        </div>
-        <div>
-          <Space style={{ color: '#d59900' }}>
-            <FireTwoTone twoToneColor="#d59900" />
-            <p style={{ margin: 8 }}>First closure date: {new Date(event.firstCloseDate).toLocaleString('en-US')}</p>
-          </Space>
-        </div>
+      <div>
+        <Space style={{ color: '#0055d5' }}>
+          <ClockCircleTwoTone twoToneColor="#0055d5" />
+          <p style={{ margin: 8 }}>Start date: {new Date(event.startDate).toLocaleString('en-US')}</p>
+        </Space>
+      </div>
+      <div>
+        <Space style={{ color: '#d59900' }}>
+          <FireTwoTone twoToneColor="#d59900" />
+          <p style={{ margin: 8 }}>First closure date: {new Date(event.firstCloseDate).toLocaleString('en-US')}</p>
+        </Space>
+      </div>
 
-        <div>
-          <Space style={{ color: '#d52e00' }}>
-            <RocketTwoTone twoToneColor="#d52e00" />
-            <p style={{ margin: 8 }}>Final closure date: {new Date(event.finalCloseDate).toLocaleString('en-US')}</p>
-          </Space>
-        </div>
-      </Card>
-    </Badge.Ribbon>
+      <div>
+        <Space style={{ color: '#d52e00' }}>
+          <RocketTwoTone twoToneColor="#d52e00" />
+          <p style={{ margin: 8 }}>Final closure date: {new Date(event.finalCloseDate).toLocaleString('en-US')}</p>
+        </Space>
+      </div>
+    </Card>
   )
 }
 
