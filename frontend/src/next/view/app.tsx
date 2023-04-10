@@ -32,7 +32,7 @@ export default function App() {
   const navigate = useNavigate()
   const { login, logout, token, tokenVerified, userId, role } = useAuth()
   const [verify, setVerify] = useState(false)
-  console.log('env', process.env.REACT_APP_BASE_API_URL)
+
   useEffect(() => {
     userCredential.updateState({
       userId: userId,
