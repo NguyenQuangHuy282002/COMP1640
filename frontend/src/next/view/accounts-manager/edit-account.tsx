@@ -64,7 +64,10 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
             name="name"
             label="Full name"
             labelAlign="left"
-            rules={[{ required: true, message: 'Please input name' }, { type: 'string', min: 30, message: "Invalid name" }]}
+            rules={[
+              { required: true, message: 'Please input name' },
+              { type: 'string', min: 10, message: 'Invalid name (At least 10 characters)' },
+            ]}
           >
             <Input placeholder="Nguyen Van A" allowClear />
           </Form.Item>
@@ -110,9 +113,14 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
               />
             </Form.Item>
           ) : null}
-          <Form.Item name="username" label="Username" labelAlign="left" 
-            rules={[{ required: true, message: 'Please input name' }, { type: 'string', min: 30, message: "Invalid name" }]}
-          
+          <Form.Item
+            name="username"
+            label="Username"
+            labelAlign="left"
+            rules={[
+              { required: true, message: 'Please input name' },
+              { type: 'string', min: 30, message: 'Invalid name' },
+            ]}
           >
             <Input placeholder="user" autoComplete="off" allowClear />
           </Form.Item>
@@ -122,15 +130,25 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
           </Space>
           {show && (
             <>
-              <Form.Item name="password" label="New password" labelAlign="left" 
-            rules={[{ required: true, message: 'Please input password' }, { type: 'string', min: 6, message: "Invalid password" }]}
-              
+              <Form.Item
+                name="password"
+                label="New password"
+                labelAlign="left"
+                rules={[
+                  { required: true, message: 'Please input password' },
+                  { type: 'string', min: 6, message: 'Invalid password' },
+                ]}
               >
                 <Input.Password autoComplete="off" allowClear />
               </Form.Item>
-              <Form.Item name="re-password" label="Re-write new password" labelAlign="left" 
-            rules={[{ required: true, message: 'Please re-input password' }, { type: 'string', min: 6, message: "Invalid name" }]}
-              
+              <Form.Item
+                name="re-password"
+                label="Re-write new password"
+                labelAlign="left"
+                rules={[
+                  { required: true, message: 'Please re-input password' },
+                  { type: 'string', min: 6, message: 'Invalid name' },
+                ]}
               >
                 <Input.Password autoComplete="off" allowClear />
               </Form.Item>

@@ -49,7 +49,15 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
     >
       <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>
         <Col span={24} style={{ padding: '16px 16px 0px 16px' }}>
-          <Form.Item name="name" label="Full name" labelAlign="left" required>
+          <Form.Item
+            name="name"
+            label="Full name"
+            labelAlign="left"
+            rules={[
+              { required: true, message: 'Please input name' },
+              { type: 'string', min: 10, message: 'Invalid name (At least 10 characters)' },
+            ]}
+          >
             <Input placeholder="Nguyen Van A" allowClear />
           </Form.Item>
           <Form.Item
