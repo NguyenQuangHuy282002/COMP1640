@@ -15,6 +15,7 @@ function EditProfileForm() {
   const { state, setState } = useSubscription(userStore)
   const [form] = Form.useForm()
   const [files, setFiles] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   userStore.subscribe(newState => {
     form.setFieldsValue({
@@ -22,32 +23,28 @@ function EditProfileForm() {
       username: newState?.username,
       phone: newState.phone,
       email: !newState.email || newState.email === 'None' ? '' : newState.email,
-      birthday:
-        typeof newState?.birthday === 'string' && newState?.birthday ? dayjs(newState?.birthday, DATE_FORMAT) : null,
+      birthday: newState?.birthday ? dayjs(newState?.birthday.toString(), DATE_FORMAT) : null,
     })
   })
-
-  const onFinish = (values: any) => {
-    console.log(values)
-  }
 
   const onReset = () => {
     form.resetFields()
   }
 
   const handleUpdateProfile = async () => {
+    setLoading(true)
     const userform = {
       name: form.getFieldValue('name'),
       username: form.getFieldValue('username'),
       phone: form.getFieldValue('phone'),
       email: form.getFieldValue('email'),
       birthday: form.getFieldValue('birthday')?.$d,
-      avatar: undefined
+      avatar: undefined,
     }
-    if(!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
-      return message.error("Please input the required fields")
+    if (!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
+      return message.error('Please input the required fields')
     }
-    console.log(files)
+
     if (files) {
       try {
         let fileNameList = await fetchAllToS3(files)
@@ -56,7 +53,7 @@ function EditProfileForm() {
         console.error(error)
       }
     }
-    console.log(userform)
+
     await Http.put(`/api/v1/users/updateProfile/${state._id}`, userform)
       .then(() => {
         message.success('Updated profile successfully!')
@@ -66,21 +63,15 @@ function EditProfileForm() {
           phone: form.getFieldValue('phone'),
           email: form.getFieldValue('email'),
           birthday: form.getFieldValue('birthday')?.$d,
-          avatar: userform?.avatar ? userform?.avatar : state.avatar
+          avatar: userform?.avatar ? userform?.avatar : state.avatar,
         })
       })
       .catch(err => message.error('Failed to update profile!'))
+      .finally(() => setLoading(false))
   }
 
   return (
-    <Form
-      onFinish={onFinish}
-      labelCol={{ span: 6 }}
-      wrapperCol={{ span: 18 }}
-      layout="horizontal"
-      style={{ width: '100%' }}
-      form={form}
-    >
+    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} layout="horizontal" style={{ width: '100%' }} form={form}>
       <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
         <Title level={3} style={{ margin: '0px 10px 16px' }}>
           General
@@ -93,8 +84,8 @@ function EditProfileForm() {
         labelAlign="left"
         initialValue={state.name}
         rules={[
-          { required: true, message: 'Please input your name' },
-          { type: 'string', min: 7, message: 'Invalid username' },
+          { required: true, message: 'Please input your fullname' },
+          { type: 'string', min: 10, message: 'Invalid fullname (At least 10 characters)' },
         ]}
       >
         <Input />
@@ -105,8 +96,8 @@ function EditProfileForm() {
         labelAlign="left"
         initialValue={state.username}
         rules={[
-          { required: true, message: 'Please input your user name' },
-          { type: 'string', min: 7, message: 'Invalid name' },
+          { required: true, message: 'Please input your username' },
+          { type: 'string', min: 3, message: 'Invalid username (At least 3 characters)' },
         ]}
       >
         <Input />
@@ -166,8 +157,9 @@ function EditProfileForm() {
         }}
       >
         <Upload
-          name="logo"
-          listType="picture"
+          name="avatar"
+          listType="picture-card"
+          className="avatar-uploader"
           onPreview={previewFile}
           accept="image/*"
           beforeUpload={file => onChangeUpload(file)}
@@ -183,7 +175,7 @@ function EditProfileForm() {
       <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: '0px 16px' }}>
         <Form.Item>
           <Space direction="horizontal" align="end">
-            <Button type="primary" htmlType="submit" onClick={handleUpdateProfile}>
+            <Button type="primary" htmlType="submit" onClick={handleUpdateProfile} loading={loading}>
               Submit
             </Button>
             <Button htmlType="button" onClick={onReset} danger>
