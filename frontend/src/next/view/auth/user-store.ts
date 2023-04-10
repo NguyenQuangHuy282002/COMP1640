@@ -1,6 +1,7 @@
 import { createSubscription } from '../../libs/global-state-hook'
 
 export const userStore = createSubscription({
+  loading: true,
   isActivate: false,
   isBanned: false,
   role: '',
