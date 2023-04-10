@@ -22,13 +22,13 @@ function Login() {
         if (res?.data?.success) {
           userStore.updateState(res.data.userMetaData)
           userCredential.state.login(res.data.userMetaData._id, res.data.accessToken, 30000, true)
-          navigate('/')
-          // window.location.reload()
-          message.success('Login successful')
         }
         return res.data.userMetaData.role
       })
-      .then(enpoint => navigate(`/${enpoint}`))
+      .then(enpoint => {
+        navigate(`/${enpoint}`)
+        message.success('Login successful')
+      })
       .catch(error => {
         if (error?.response?.data.message) {
           message.error(error.response.data.message)
