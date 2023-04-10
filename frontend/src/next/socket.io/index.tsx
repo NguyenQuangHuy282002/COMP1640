@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import { SERVER_ENPOINT } from '../api/server-url'
 
-const socket = io(`leaks-env.eba-cxpj6rjc.ap-southeast-2.elasticbeanstalk.com`, {
+const socket = io(SERVER_ENPOINT, {
   transports: ['websocket', 'polling'],
 })
 
