@@ -6,7 +6,7 @@ import '../../../index.css'
 export default function SiderMenu({ menuItems }) {
   const navigate = useRoleNavigate()
   const [collapsed, setCollapsed] = useState(false)
-  const [tabKey, setTabKey] = useState(['home'])
+  const [tabKey, setTabKey] = useState([window.location.pathname.split('/')?.[2] || 'home'])
 
   const handleClickMenu = async (val: any) => {
     setTabKey([val.key])

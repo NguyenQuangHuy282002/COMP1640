@@ -18,7 +18,7 @@ export const useAuth = () => {
     const expirationDateToken = new Date(new Date().getTime() + 1000 * 60 * 60)
     setTokenExpirationDate(expirationDateToken)
     const payload = jwt_decode(token)
-    console.log('payload', payload)
+
     setRole(payload['user']['role'])
     userStore.updateState({ role: payload['user']['role'] })
     localStorage.setItem(

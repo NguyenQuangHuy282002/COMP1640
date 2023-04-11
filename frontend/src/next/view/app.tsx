@@ -59,7 +59,10 @@ export default function App() {
               .then(res => {
                 userStore.updateState({ ...res.data.userInfo, loading: false })
               })
-              .catch(err => console.error(err.message))
+              .catch(err => {
+                console.error(err.message)
+                updateUserInfo()
+              })
           }
           updateUserInfo()
         } else {

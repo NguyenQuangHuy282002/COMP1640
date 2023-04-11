@@ -9,11 +9,14 @@ import { createSubscription, useSubscription } from '../../libs/global-state-hoo
 import useWindowSize from '../../utils/useWindowSize'
 import { userCredential, userStore } from '../auth/user-store'
 
-const { Text, Link } = Typography
+const { Text } = Typography
 
 export const ideaCount = createSubscription({ number: 0 })
 
 function AppHeader() {
+  const {
+    state: { logout },
+  } = useSubscription(userCredential)
   const navigate = useRoleNavigate()
   const navigator = useNavigate()
   const windowWidth = useWindowSize()
@@ -44,7 +47,7 @@ function AppHeader() {
   ]
 
   const handleLogout = () => {
-    userCredential.state.logout()
+    logout()
     navigator('/login')
     // window.location.reload();
     return enqueueSnackbar("You're logout! man")
