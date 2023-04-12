@@ -1,4 +1,4 @@
-import { Layout, Space, Spin, Typography, message, Alert } from 'antd'
+import { Alert, Layout, Space, Spin, Typography, message } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import { Http } from 'next/api/http'
 import { useSubscription } from 'next/libs/global-state-hook'
@@ -22,7 +22,7 @@ function IdeaDetail() {
   const [showComment, setShowComment] = useState(false)
   const [updateIdea, setUpdateIdea] = useState(0)
   const [commentCount, setCommentCount] = useState(0)
-  const [isShown, setIsShown] = useState(false)
+  const [loading, setLoading] = useState(false)
   const query = useQuery()
   const id = query.get('id')
   const { name, avatar } = useSubscription(userStore).state
@@ -32,14 +32,9 @@ function IdeaDetail() {
   const handleShowComment = () => {
     setShowComment(!showComment)
   }
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsShown(true)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [])
 
   useEffect(() => {
+    setLoading(true)
     const getIdea = async () =>
       await Http.get(`/api/v1/idea/detail?id=${id}`)
         .then(res => {
@@ -47,6 +42,7 @@ function IdeaDetail() {
           setCommentCount(res.data.data.comments.length)
         })
         .catch(error => message.error('Failed to fetch idea !'))
+        .finally(() => setLoading(false))
     getIdea()
   }, [updateIdea])
 
@@ -71,7 +67,7 @@ function IdeaDetail() {
 
   return (
     <>
-      {isShown ? (
+      {!loading ? (
         <Layout className="layout" style={{ padding: padding }}>
           <StyledContent>
             <Space direction="horizontal" align="start">

@@ -22,7 +22,7 @@ export default function ListIdeas({ userId }) {
   }, [])
 
   const loadMoreButton =
-    !loading && myIdea?.length < loadmore ? (
+    myIdea?.length < loadmore ? (
       <div
         style={{
           textAlign: 'center',
@@ -31,14 +31,17 @@ export default function ListIdeas({ userId }) {
           lineHeight: '32px',
         }}
       >
-        <Button onClick={() => setLoadmore(Number(loadmore + 5))}>Loading more</Button>
+        <Button onClick={() => setLoadmore(Number(loadmore + 5))} loading={loading}>
+          Loading more
+        </Button>
       </div>
-    ) : (
+    ) : myIdea?.length ? (
       <Divider plain>It is all, nothing more 🤐</Divider>
-    )
+    ) : null
 
   return (
     <List
+      loading={loading}
       loadMore={loadMoreButton}
       itemLayout="vertical"
       size="large"

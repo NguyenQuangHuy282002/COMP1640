@@ -51,7 +51,7 @@ function HomePage() {
 
   useEffect(() => {
     getTotalIdea()
-  },[])
+  }, [])
 
   const loadMoreData = (reset: boolean = false, filter?, page?) => {
     setLoading(true)
@@ -80,9 +80,6 @@ function HomePage() {
     getAllIdeas()
   }
   return (
-
-
-
     <Layout.Content
       style={{
         display: 'block',
@@ -90,26 +87,28 @@ function HomePage() {
         height: 'auto',
       }}
     >
-      {
-        role === 'staff' ? <StyledRow style={{}}>
-        <Col flex="60px">
-          <Badge status="success" count={<SmileFilled style={{ color: '#52c41a' }} />}>
-            <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src={avatar} />
-          </Badge>
-        </Col>
-        <Col flex="auto">
-          <Input
-            style={{ lineHeight: 2.15, background: '#f6f7f8' }}
-            placeholder="Create Your Idea"
-            onClick={() => {
-              handleClickTyping()
-            }}
-          ></Input>
-        </Col>
-      </StyledRow> : <ManagerBar></ManagerBar>
-      }
+      {role === 'staff' ? (
+        <StyledRow style={{}}>
+          <Col flex="60px">
+            <Badge status="success" count={<SmileFilled style={{ color: '#52c41a' }} />}>
+              <Avatar shape="square" size={40} style={{ background: '#f6f7f8' }} src={avatar} />
+            </Badge>
+          </Col>
+          <Col flex="auto">
+            <Input
+              style={{ lineHeight: 2.15, background: '#f6f7f8' }}
+              placeholder="Create Your Idea"
+              onClick={() => {
+                handleClickTyping()
+              }}
+            ></Input>
+          </Col>
+        </StyledRow>
+      ) : role === 'manager' ? (
+        <ManagerBar />
+      ) : null}
       <StyledRow style={{}}>
-        <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea}/>
+        <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea} />
       </StyledRow>
       <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
     </Layout.Content>

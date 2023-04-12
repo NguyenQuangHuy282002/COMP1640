@@ -195,12 +195,10 @@ export default function App() {
   }
 
   return (
-    // <Router>
     <>
       <GlobalStyle />
       {routes}
     </>
-    // </Router>
   )
 }
 
