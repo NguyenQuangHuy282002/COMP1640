@@ -17,6 +17,7 @@ function Login() {
   useEffect(() => {
     const credential = JSON.parse(localStorage.getItem(LOCALSTORAGE.CREDENTIALS))
     if (credential && credential.tokenVerified) {
+      navigate('/')
       message.info('You already logged in!')
     }
   }, [])

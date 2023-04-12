@@ -1,21 +1,21 @@
-import { CompassOutlined, EyeOutlined, LinkedinOutlined, TagsTwoTone } from '@ant-design/icons'
+import { CompassOutlined, EyeOutlined, LinkedinOutlined, TagsTwoTone, UserOutlined } from '@ant-design/icons'
 import { Avatar, Space, Tag, Typography } from 'antd'
-import { imgDir } from 'next/constants/img-dir'
 import { formatDayTime } from 'next/utils/helperFuncs'
 const { Text } = Typography
 
 export default function IdeaDetailInfo({ item }) {
+  console.log(item)
   return (
     <>
       <Space direction="horizontal">
-        <Avatar
-          style={{ background: '#ccc', margin: '0px' }}
-          size={45}
-          src={!item?.isAnonymous ? item?.publisherId.avatar : imgDir + 'anonymous.jpg'}
-        ></Avatar>
+        {!item?.isAnonymous && item?.publisherId?.name ? (
+          <Avatar style={{ margin: '0px' }} size={45} src={item?.publisherId?.avatar} />
+        ) : (
+          <Avatar style={{ margin: '0px' }} size={45} icon={<UserOutlined />} />
+        )}
         <Space direction="vertical" size={[0, 0]}>
           <span>
-            <Text strong> {!item?.isAnonymous ? item?.publisherId.name ?? 'unknown' : 'Anonymous'}</Text>
+            <Text strong> {!item?.isAnonymous ? item?.publisherId?.name ?? 'Account deleted' : 'Anonymous'}</Text>
             <Text type="secondary" style={{ marginLeft: 10 }}>
               Posted {formatDayTime(item?.createdAt ? item?.createdAt : Date.now())}
             </Text>

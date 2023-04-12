@@ -9,6 +9,7 @@ import {
   MessageTwoTone,
   PaperClipOutlined,
   TagsTwoTone,
+  UserOutlined,
 } from '@ant-design/icons'
 import { Avatar, Card, Empty, List, Popconfirm, Skeleton, Space, Tag, Typography } from 'antd'
 import { imgDir } from 'next/constants/img-dir'
@@ -158,12 +159,11 @@ function IdeaCard({ idea, isLoading }) {
             <List.Item.Meta
               key={idea._id}
               avatar={
-                <>
-                  <Avatar
-                    src={!idea.isAnonymous ? idea.publisherId?.avatar ?? 'Unknown' : imgDir + 'anonymous.jpg'}
-                    style={{ background: '#f6f7f8' }}
-                  />
-                </>
+                !idea?.isAnonymous && idea?.publisherId?.name ? (
+                  <Avatar style={{ margin: '0px' }} size={45} src={idea?.publisherId?.avatar} />
+                ) : (
+                  <Avatar style={{ margin: '0px' }} size={45} icon={<UserOutlined />} />
+                )
               }
               title={
                 <Space wrap direction="horizontal" size={'small'}>
@@ -173,7 +173,7 @@ function IdeaCard({ idea, isLoading }) {
                     }
                     style={{ fontSize: '15px', fontWeight: '500', marginRight: '10px' }}
                   >
-                    {!idea.isAnonymous ? idea.publisherId?.name ?? 'Unknown' : 'Anonymous'}
+                    {!idea.isAnonymous ? idea.publisherId?.name ?? 'Account deleted' : 'Anonymous'}
                   </Link>
                   <Typography.Text type="secondary">
                     <Tag icon={<LinkedinOutlined />} color="#007E80">

@@ -12,6 +12,7 @@ import React from 'react'
 import { formatDayTime } from '../../utils/helperFuncs'
 import { userStore } from '../auth/user-store'
 import { deleteComment, editComment } from './comment-services'
+import useRoleNavigate from 'next/libs/use-role-navigate'
 
 const handleMenuClick = (text: unknown, id: unknown) => {
   switch (text) {
@@ -34,7 +35,14 @@ const IconText = ({ icon, text, id }: { icon: React.FC; text: string; id: string
 )
 
 function Comment({ item, loading }) {
+  const navigate = useRoleNavigate()
   const { _id } = useSubscription(userStore).state
+
+  const handleViewProfile = id => {
+    if (id !== 'Anonymous' && id !== 'Unknown') {
+      navigate(`/profile?id=${id}`)
+    }
+  }
 
   let action = [
     <IconText id={item._id} icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
@@ -65,7 +73,9 @@ function Comment({ item, loading }) {
               }
               title={
                 <>
-                  <Typography.Link>{!item.isAnonymous ? item.userId?.name : 'Anonymous'}</Typography.Link>
+                  <Typography.Link onClick={() => !item.isAnonymous && handleViewProfile(item.userId?._id)}>
+                    {!item.isAnonymous ? item.userId?.name : 'Anonymous'}
+                  </Typography.Link>
                   {'  '}
                   <Typography.Text italic disabled type="secondary" style={{ fontSize: 13 }}>
                     {item.userId._id === _id ? 'Your Comment' : ''}

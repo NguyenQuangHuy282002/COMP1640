@@ -1,6 +1,6 @@
 import { Card, Col, Divider, Image, Row, Space, Tag, Typography, message } from 'antd'
 import { Http } from 'next/api/http'
-import { formatDayTime } from 'next/utils/helperFuncs'
+import { formatDay } from 'next/utils/helperFuncs'
 import { useQuery } from 'next/utils/use-query'
 import { useEffect, useState } from 'react'
 import ListIdeas from './listIdeas'
@@ -21,13 +21,15 @@ function OtherProfile() {
   useEffect(() => forceUpdate({}), [userId])
 
   const [userProfile, setUserProfile] = useState(null)
-
+  const [loading, setLoading] = useState(false)
   const [activeTabKey, setActiveTabKey] = useState('ideas')
 
   const findUser = async id => {
+    setLoading(true)
     await Http.get(`/api/v1/users/getProfile/${id}`)
       .then(res => setUserProfile(res.data.userInfo))
       .catch(err => message.error('Failed to get user profile!'))
+      .finally(() => setLoading(false))
   }
   useEffect(() => {
     if (userId) {
@@ -39,6 +41,7 @@ function OtherProfile() {
     <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: 20 }}>
       <Col className="gutter-row" xs={24} sm={24} md={6} xxl={6} style={{ marginBottom: 16 }}>
         <Card
+          loading={loading}
           bodyStyle={{ padding: 16 }}
           cover={
             <Image
@@ -56,7 +59,7 @@ function OtherProfile() {
             <Divider style={{ margin: 0 }} />
             <Text>
               <b>DOB: </b>
-              {formatDayTime(userProfile?.birthday)}
+              {formatDay(userProfile?.birthday)}
             </Text>
             <Text>
               <b>Phone number: </b>

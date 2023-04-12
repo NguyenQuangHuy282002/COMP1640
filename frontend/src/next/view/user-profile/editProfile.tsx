@@ -71,7 +71,14 @@ function EditProfileForm() {
   }
 
   return (
-    <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} layout="horizontal" style={{ width: '100%' }} form={form}>
+    <Form
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 18 }}
+      layout="horizontal"
+      style={{ width: '100%' }}
+      form={form}
+      onFinish={handleUpdateProfile}
+    >
       <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
         <Title level={3} style={{ margin: '0px 10px 16px' }}>
           General
@@ -175,7 +182,7 @@ function EditProfileForm() {
       <Row gutter={{ xs: 8, sm: 16, md: 24 }} style={{ padding: '0px 16px' }}>
         <Form.Item>
           <Space direction="horizontal" align="end">
-            <Button type="primary" htmlType="submit" onClick={handleUpdateProfile} loading={loading}>
+            <Button type="primary" htmlType="submit" loading={loading}>
               Submit
             </Button>
             <Button htmlType="button" onClick={onReset} danger>
