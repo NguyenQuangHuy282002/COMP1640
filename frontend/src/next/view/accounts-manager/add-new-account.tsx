@@ -114,10 +114,30 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
           <Form.Item name="username" label="Username" labelAlign="left" required>
             <Input placeholder="user" autoComplete="off" allowClear />
           </Form.Item>
-          <Form.Item name="password" label="Password" labelAlign="left" required>
+          <Form.Item name="password" label="Password" labelAlign="left" required
+          rules={[
+            {
+              required: true,
+              message: 'Please input password',
+            },
+          ]}>
             <Input.Password autoComplete="off" allowClear />
           </Form.Item>
-          <Form.Item name="re-password" label="Re-write password" labelAlign="left" required>
+          <Form.Item name="re-password" label="Re-write password" labelAlign="left" required
+          rules={[
+            {
+              required: true,
+              message: 'Please confirm your password!',
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The repasswords that you entered do not match!'));
+              },
+            }),
+          ]}>
             <Input.Password autoComplete="off" allowClear />
           </Form.Item>
           <Form.Item className="w-100 d-flex" style={{ justifyContent: 'end' }}>
