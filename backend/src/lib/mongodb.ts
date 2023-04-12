@@ -29,12 +29,12 @@ async function Process(db1, db2) {
   const collections = await Promise.all((await db1.listCollections().toArray()).map(el => el.name))
   let total = +0
   let totalCollections = collections?.length
-  let progress = 0
-  for (let c of collections) {
-    const col = await db1.collection(c)
+
+  for (let i = 0; i < collections.length; i++) {
+    const col = await db1.collection(collections[i])
     const docs = await col.find().toArray()
-    const col_backup = await db2.collection(c)
-    if (await CheckCollectionExist(db2, c)) {
+    const col_backup = await db2.collection(collections[i])
+    if (await CheckCollectionExist(db2, collections[i])) {
       await col_backup.drop()
     }
     let count = +0
@@ -50,9 +50,9 @@ async function Process(db1, db2) {
     }
     total += count
     console.clear()
-    console.log(`Copy collection ${c} done...`)
-    progress++
-    io.emit('backup', { total: totalCollections, progress: progress })
+    console.log(`Copy collection ${collections[i]} done...`)
+
+    io.emit('backup', { total: totalCollections, progress: i })
   }
   return total
 }
