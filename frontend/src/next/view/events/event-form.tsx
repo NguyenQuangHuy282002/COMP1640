@@ -21,6 +21,7 @@ const DATE_FORMAT = 'YYYY-MM-DD HH:mm'
 export default function CreateEventField(props: IEventModalProps) {
   const { onClose, onFinish, event } = props
   const { enqueueSnackbar } = useSnackbar()
+  const [loading, setLoading] = useState(false)
   const windowWidth = useWindowSize()
   const initialState = () => EditorState.createEmpty()
   const blockHTML = convertFromHTML(event?.description || '')
@@ -36,6 +37,7 @@ export default function CreateEventField(props: IEventModalProps) {
     title: event?.title || '',
   }
   const handleOnFinish = async () => {
+    setLoading(true)
     const eventForm = {
       _id: event?._id || null,
       title: form.getFieldValue('title'),
@@ -52,6 +54,7 @@ export default function CreateEventField(props: IEventModalProps) {
         onFinish(eventForm)
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
   }
   return (
     <Card
@@ -61,7 +64,7 @@ export default function CreateEventField(props: IEventModalProps) {
           <Title style={{ fontSize: 18, margin: 0 }}> Add new event</Title>
         </Space>
       }
-      style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0 }}
+      style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0, height: '100vh' }}
     >
       <Form
         initialValues={initFormValues}
@@ -70,8 +73,20 @@ export default function CreateEventField(props: IEventModalProps) {
         layout="horizontal"
         style={{ width: '100%', padding: 16 }}
         form={form}
+        onFinish={handleOnFinish}
       >
-        <Form.Item name="title" label="Title" labelAlign="left" required>
+        <Form.Item
+          name="title"
+          label="Title"
+          labelAlign="left"
+          required
+          rules={[
+            {
+              required: true,
+              message: 'Please input event title!',
+            },
+          ]}
+        >
           <Input placeholder="Enter event title" maxLength={100} />
         </Form.Item>
         <Form.Item label="Description" labelAlign="left">
@@ -133,11 +148,12 @@ export default function CreateEventField(props: IEventModalProps) {
             }}
           />
         </Form.Item>
+        <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
+          <Button type="primary" htmlType="submit" loading={loading}>
+            Save
+          </Button>
+        </Form.Item>
       </Form>
-
-      <Button type="primary" onClick={handleOnFinish} style={{ float: 'right' }}>
-        Save
-      </Button>
     </Card>
   )
 }

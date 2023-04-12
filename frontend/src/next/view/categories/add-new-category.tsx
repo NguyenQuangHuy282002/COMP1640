@@ -14,7 +14,9 @@ export default function AddCategoryModal({
   const [form] = Form.useForm()
 
   const onFinish = async () => {
-    if (form.getFieldValue('name') || currentCategory.name !== form.getFieldValue('name')) {
+    if (!form.getFieldValue('name')) {
+      message.error('Name is empty!')
+    } else if (currentCategory.name !== form.getFieldValue('name')) {
       setLoading(true)
       const categoryForm = {
         name: form.getFieldValue('name'),
@@ -39,8 +41,6 @@ export default function AddCategoryModal({
         })
         .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
         .finally(() => setLoading(false))
-    } else if (!form.getFieldValue('name')) {
-      message.error('Name is empty!')
     } else {
       message.error('Please type a different name!')
     }

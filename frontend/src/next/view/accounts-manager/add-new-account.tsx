@@ -1,13 +1,15 @@
-import { Col, Form, Input, Modal, Select } from 'antd'
+import { Button, Col, Form, Input, Modal, Select, Space } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Http } from '../../api/http'
+import ButtonGroup from 'antd/es/button/button-group'
 
 export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
   const { enqueueSnackbar } = useSnackbar()
   const [form] = Form.useForm()
   const [accountRole, setAccountRole] = useState('')
   const [departmentOptions, setDepartmentOptions] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const getAllDepartment = async () =>
     await Http.get('/api/v1/department')
@@ -18,9 +20,8 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
     getAllDepartment()
   }, [])
 
-  console.log(departmentOptions)
-
   const onFinish = async () => {
+    setLoading(true)
     const accountForm = {
       name: form.getFieldValue('name'),
       username: form.getFieldValue('username'),
@@ -35,6 +36,7 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
         onCloseModal()
       })
       .catch(error => enqueueSnackbar(error.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
   }
 
   return (
@@ -45,9 +47,16 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
         form.resetFields()
       }}
       title="Register new account"
-      onOk={onFinish}
+      footer={null}
     >
-      <Form labelCol={{ span: 10 }} wrapperCol={{ span: 14 }} layout="horizontal" style={{ width: '100%' }} form={form}>
+      <Form
+        labelCol={{ span: 10 }}
+        wrapperCol={{ span: 14 }}
+        layout="horizontal"
+        style={{ width: '100%' }}
+        onFinish={onFinish}
+        form={form}
+      >
         <Col span={24} style={{ padding: '16px 16px 0px 16px' }}>
           <Form.Item
             name="name"
@@ -110,6 +119,22 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
           </Form.Item>
           <Form.Item name="re-password" label="Re-write password" labelAlign="left" required>
             <Input.Password autoComplete="off" allowClear />
+          </Form.Item>
+          <Form.Item className="w-100 d-flex" style={{ justifyContent: 'end' }}>
+            <Space>
+              <Button
+                type="default"
+                onClick={() => {
+                  onCloseModal()
+                  form.resetFields()
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="primary" htmlType="submit" loading={loading}>
+                Save
+              </Button>
+            </Space>
           </Form.Item>
         </Col>
       </Form>
