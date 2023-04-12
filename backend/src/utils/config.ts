@@ -9,7 +9,7 @@ async function ReadConfig() {
       },
       slave: {
         db_url: process.env.SLAVE_DB,
-        db_name: process.env.SDB_NAME,
+        db_name: process.env.SDB_NAME + `-version-${new Date().getTime()}`,
       },
     },
   }
