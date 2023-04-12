@@ -42,7 +42,7 @@ function PointInfoModal({ isOpen, onCloseModal, likers, dislikers }) {
           />
           <br />
           <List
-            header={<h4 style={{ color: 'black', margin: 0 }}>DisLikers</h4>}
+            header={<h4 style={{ color: 'black', margin: 0 }}>Dislikers</h4>}
             bordered
             size="small"
             itemLayout="vertical"
