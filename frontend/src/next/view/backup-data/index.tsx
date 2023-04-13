@@ -19,6 +19,8 @@ export default function BackupDataManager() {
   const [failToBackUp, setFailToBackUp] = useState(false)
   const [percents, setPercents] = useState(0)
   const [listDB, setListDB] = useState([])
+  const [loadingRestore, setLoadingRestore] = useState(false)
+  const [restoringVersion, setRestoringVersion] = useState('')
 
   const backupData = async () => {
     setFailToBackUp(false)
@@ -71,9 +73,18 @@ export default function BackupDataManager() {
   return (
     <Space direction="vertical" style={{ padding: 20 }} className="w-100">
       <Title style={{ margin: 0, marginBottom: 20 }}>Backup data feature!</Title>
-      <BlueColorButton loading={loading} onClick={backupData} disabled={loading}>
-        Start backup data
-      </BlueColorButton>
+      {!loadingRestore && (
+        <BlueColorButton loading={loading} onClick={backupData} disabled={loading}>
+          Start backup data
+        </BlueColorButton>
+      )}
+
+      {loadingRestore && (
+        <>
+          <RubikLoader />
+          <Text>Restoring version history...</Text>
+        </>
+      )}
 
       {loading && (
         <>
@@ -100,7 +111,17 @@ export default function BackupDataManager() {
       >
         <List
           dataSource={listDB}
-          renderItem={(db, index) => <ListDBItem db={db} key={index} setListDB={setListDB} />}
+          renderItem={(db, index) => (
+            <ListDBItem
+              db={db}
+              key={index}
+              setListDB={setListDB}
+              setLoadingRestore={setLoadingRestore}
+              loadingRestore={loadingRestore}
+              restoringVersion={restoringVersion}
+              setRestoringVersion={setRestoringVersion}
+            />
+          )}
         />
       </Card>
     </Space>
