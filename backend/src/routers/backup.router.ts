@@ -31,7 +31,48 @@ backupRouter.get('/', authProtect, authorize(['admin']), async (req, res) => {
       message: 'Backup data is successful',
     })
   } catch (err) {
-    console.log(err)
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    })
+  }
+})
+
+backupRouter.post('/restore', authProtect, authorize(['admin']), async (req, res) => {
+  try {
+    const { name } = req.body
+
+    const log = console.log
+    console.log = function (...args) {
+      args.unshift(new Date())
+      log.apply(console, args)
+    }
+    /**************************************************************************/
+    const config = await ReadConfig()
+    console.log(config)
+    /**************************************************************************/
+    const primary = await Connect(config.database.primary.db_url)
+    const database = primary.db(config.database.primary.db_name)
+    console.log(`Connect db primary....`)
+    const slave = await Connect(config.database.slave.db_url)
+    const backup_db = slave.db(name)
+
+    console.log(`Connect db slave....`)
+    /**************************************************************************/
+    const total = await Process(backup_db, database)
+    console.log(`${total} documents backup done...`)
+    await primary.close()
+    await slave.close()
+
+    res.status(200).json({
+      success: true,
+      message: 'Restore data is successful',
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: true,
+      message: err.message,
+    })
   }
 })
 
