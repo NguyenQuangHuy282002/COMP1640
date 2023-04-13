@@ -1,10 +1,11 @@
-import { Progress, Result, Space, Typography } from 'antd'
+import { Card, List, Progress, Result, Space, Typography } from 'antd'
 import { Http } from 'next/api/http'
 import { BlueColorButton } from 'next/components/custom-style-elements/button'
 import RubikLoader from 'next/components/loader/rubik-loader'
 import { useSocket } from 'next/socket.io'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import ListDBItem from './list-item'
 
 const { Text, Title } = Typography
 
@@ -14,8 +15,10 @@ export default function BackupDataManager() {
   const { enqueueSnackbar } = useSnackbar()
   const { appSocket } = useSocket()
   const [loading, setLoading] = useState(false)
+  const [loadingListDB, setLoadingListDB] = useState(false)
   const [failToBackUp, setFailToBackUp] = useState(false)
   const [percents, setPercents] = useState(0)
+  const [listDB, setListDB] = useState([])
 
   const backupData = async () => {
     setFailToBackUp(false)
@@ -33,6 +36,20 @@ export default function BackupDataManager() {
   const backupProcessing = data => {
     setPercents(Math.ceil((Number(data.progress) / Number(data.total)) * 100))
   }
+
+  const getAllBackups = async () => {
+    setLoadingListDB(true)
+    await Http.get('/api/v1/backup/all')
+      .then(res => setListDB(res.data.data))
+      .catch(error => {
+        enqueueSnackbar('Failed to backup data!', { variant: 'error' })
+      })
+      .finally(() => setLoadingListDB(false))
+  }
+
+  useEffect(() => {
+    getAllBackups()
+  }, [])
 
   useEffect(() => {
     appSocket.on('backup', backupProcessing)
@@ -72,6 +89,15 @@ export default function BackupDataManager() {
       {!loading && failToBackUp && countSuccess > 0 && (
         <Result status="error" title="Backup data failed" subTitle="Please trying to backup data again!" />
       )}
+      <Card
+        title="Version history"
+        bordered={false}
+        className="w-100"
+        style={{ marginTop: 16 }}
+        loading={loadingListDB}
+      >
+        <List dataSource={listDB} renderItem={(db, index) => <ListDBItem db={db} key={index} />} />
+      </Card>
     </Space>
   )
 }
