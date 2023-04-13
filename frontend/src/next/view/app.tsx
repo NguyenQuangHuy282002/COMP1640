@@ -61,7 +61,8 @@ export default function App() {
               })
               .catch(err => {
                 console.error(err.message)
-                updateUserInfo()
+                navigate('/login')
+                return message.info('Failed to login!')
               })
           }
           updateUserInfo()
