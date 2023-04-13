@@ -52,7 +52,7 @@ async function Process(db1, db2) {
     console.clear()
     console.log(`Copy collection ${collections[i]} done...`)
 
-    io.emit('backup', { total: totalCollections, progress: i })
+    io.emit('backup', { total: totalCollections, progress: i + 1 })
   }
   return total
 }

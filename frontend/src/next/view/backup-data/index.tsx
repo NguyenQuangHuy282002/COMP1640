@@ -48,8 +48,10 @@ export default function BackupDataManager() {
   }
 
   useEffect(() => {
-    getAllBackups()
-  }, [])
+    if (!loading) {
+      getAllBackups()
+    }
+  }, [loading])
 
   useEffect(() => {
     appSocket.on('backup', backupProcessing)
@@ -96,7 +98,10 @@ export default function BackupDataManager() {
         style={{ marginTop: 16 }}
         loading={loadingListDB}
       >
-        <List dataSource={listDB} renderItem={(db, index) => <ListDBItem db={db} key={index} />} />
+        <List
+          dataSource={listDB}
+          renderItem={(db, index) => <ListDBItem db={db} key={index} setListDB={setListDB} />}
+        />
       </Card>
     </Space>
   )
