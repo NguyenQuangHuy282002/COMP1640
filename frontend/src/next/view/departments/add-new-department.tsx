@@ -16,7 +16,7 @@ export default function AddDepartmentModal({
   const onFinish = async () => {
     if (!form.getFieldValue('name')) {
       message.error('Name is empty!')
-    } else if (currentDepartment.name !== form.getFieldValue('name')) {
+    } else if (currentDepartment?.name !== form.getFieldValue('name')) {
       const accountForm = {
         name: form.getFieldValue('name'),
         _id: currentDepartment?._id || null,

@@ -63,7 +63,7 @@ export default function IdeaCard({ ideaId, index }) {
       >
         <List.Item.Meta
           avatar={
-            ideaDetails.isAnonymous ? (
+            ideaDetails.isAnonymous || !ideaDetails?.publisherId?._id ? (
               <Tooltip title="Anonymous user" color="#2db7f5" mouseEnterDelay={1}>
                 <Avatar icon={<UserOutlined />} />
               </Tooltip>

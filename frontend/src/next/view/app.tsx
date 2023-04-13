@@ -47,7 +47,7 @@ export default function App() {
         navigate('/login')
         return message.info('You need to login to access this application!')
       } else {
-        if (credential.tokenVerified === true) {
+        if (credential?.tokenVerified === true && credential?.userId) {
           userCredential.updateState({
             userId: credential.userId,
             isLoggedIn: credential.tokenVerified,
@@ -61,8 +61,7 @@ export default function App() {
               })
               .catch(err => {
                 console.error(err.message)
-                navigate('/login')
-                return message.info('Failed to login!')
+                navigate('/')
               })
           }
           updateUserInfo()
