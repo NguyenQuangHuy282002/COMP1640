@@ -9,6 +9,7 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
   const [accountRole, setAccountRole] = useState('')
   const [departmentOptions, setDepartmentOptions] = useState([])
   const [show, setShow] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const getAllDepartment = async () =>
     await Http.get('/api/v1/department')
@@ -29,6 +30,7 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
   }, [userProfile])
 
   const onFinish = async () => {
+    setLoading(true)
     const accountForm = {
       _id: userProfile._id,
       name: form.getFieldValue('name'),
@@ -146,8 +148,18 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
                 label="Re-write new password"
                 labelAlign="left"
                 rules={[
-                  { required: true, message: 'Please re-input password' },
-                  { type: 'string', min: 6, message: 'Invalid name' },
+                  {
+                    required: true,
+                    message: 'Please confirm your repassword!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                    },
+                  }),
                 ]}
               >
                 <Input.Password autoComplete="off" allowClear />
