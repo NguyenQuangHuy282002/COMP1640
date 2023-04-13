@@ -16,7 +16,7 @@ export default function AddCategoryModal({
   const onFinish = async () => {
     if (!form.getFieldValue('name')) {
       message.error('Name is empty!')
-    } else if (currentCategory.name !== form.getFieldValue('name')) {
+    } else if (currentCategory?.name !== form.getFieldValue('name')) {
       setLoading(true)
       const categoryForm = {
         name: form.getFieldValue('name'),
