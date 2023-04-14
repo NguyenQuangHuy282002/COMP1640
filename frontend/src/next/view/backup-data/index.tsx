@@ -93,13 +93,13 @@ export default function BackupDataManager() {
           <Progress percent={percents} strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }} />
         </>
       )}
-      {!loading && !failToBackUp && countSuccess > 0 && (
+      {!loadingRestore && !loading && !failToBackUp && countSuccess > 0 && (
         <Space direction="vertical" className="w-100 center" style={{ paddingTop: 50 }}>
           <Progress type="circle" percent={100} strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }} />
           <Title>Backup data successfull!</Title>
         </Space>
       )}
-      {!loading && failToBackUp && countSuccess > 0 && (
+      {!loadingRestore && !loading && failToBackUp && countSuccess > 0 && (
         <Result status="error" title="Backup data failed" subTitle="Please trying to backup data again!" />
       )}
       <Card
