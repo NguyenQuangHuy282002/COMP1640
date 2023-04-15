@@ -67,7 +67,7 @@ function EventsPage({ role }: { role?: string }) {
               <Radio.Button value="available">
                 <Space>
                   <FireFilled style={{ color: '#c1381d' }} />
-                  Incomming event
+                  Incoming event
                 </Space>
               </Radio.Button>
               <Radio.Button value="all">

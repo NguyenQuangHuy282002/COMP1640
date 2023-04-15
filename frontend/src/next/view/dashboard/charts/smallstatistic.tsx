@@ -78,7 +78,7 @@ const SmallStatistic: React.FC = () => {
       <Col xs={24} sm={24} md={8} xxl={8} style={{ marginBottom: 10 }}>
         <Card bordered={false}>
           <Title level={3} style={{ margin: 0 }}>
-            Total event incomming
+            Total event incoming
           </Title>
           <Title level={4} type="success">
             {totalEvent?.toString()} events
