@@ -50,7 +50,7 @@ function CategoryManager() {
       <div style={{ padding: 20, margin: 0 }}>
         <Row justify="space-between">
           <Title level={3} style={{ margin: 0 }}>
-            Categorys list
+            Categories list
           </Title>
           <BlueColorButton
             icon={<PlusCircleTwoTone twoToneColor={'#005ec2'} />}
