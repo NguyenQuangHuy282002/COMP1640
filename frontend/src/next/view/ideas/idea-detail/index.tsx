@@ -44,7 +44,7 @@ function IdeaDetail() {
         .catch(error => message.error('Failed to fetch idea !'))
         .finally(() => setLoading(false))
     getIdea()
-  }, [updateIdea])
+  }, [])
 
   const updateCommentLength = info => {
     if (info.action === 'create') {
