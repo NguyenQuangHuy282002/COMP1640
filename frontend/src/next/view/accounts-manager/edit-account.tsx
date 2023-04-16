@@ -138,7 +138,7 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
                 labelAlign="left"
                 rules={[
                   { required: true, message: 'Please input password' },
-                  { type: 'string', min: 6, message: 'Invalid password' },
+                  { type: 'string', min: 3, message: 'Invalid password (at least 3 characters)' },
                 ]}
               >
                 <Input.Password autoComplete="off" allowClear />
@@ -155,9 +155,9 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue('password') === value) {
-                        return Promise.resolve();
+                        return Promise.resolve()
                       }
-                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                      return Promise.reject(new Error('The two passwords that you entered do not match!'))
                     },
                   }),
                 ]}
