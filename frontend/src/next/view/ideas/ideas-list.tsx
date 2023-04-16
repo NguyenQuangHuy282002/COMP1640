@@ -37,7 +37,7 @@ function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
       style={{
         marginBottom: '50px',
       }}
-      renderItem={idea => <IdeaCard key={`${idea}`} idea={idea} isLoading={loading}></IdeaCard>}
+      renderItem={idea => <IdeaCard key={`${idea}`} idea={idea} isLoading={loading} />}
     />
   )
 }

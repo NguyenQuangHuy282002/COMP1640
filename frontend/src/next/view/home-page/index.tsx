@@ -11,8 +11,10 @@ import { userStore } from '../auth/user-store'
 import IdeasList from '../ideas/ideas-list'
 import ManagerBar from './manager-homepage-bar'
 import MenuFilter from './menu-filter'
+import IdeasTable from './idea-table'
 
-function HomePage() {
+function HomePage(props: { accessRole?: string }) {
+  const { accessRole } = props
   const navigate = useRoleNavigate()
   const windowWidth = useWindowSize()
   const [ideas, setIdeas] = useState([])
@@ -27,14 +29,6 @@ function HomePage() {
   const handleClickTyping = async () => {
     navigate('/submit')
   }
-  // const eventData: EventDetailProps = {
-  //   title: 'Sample Event Title',
-  //   description: 'Sample event description',
-  //   department: 'Sample Department',
-  //   startDate: '2022-01-01',
-  //   firstClosedDate: '2022-01-20',
-  //   finalClosedDate: '2022-02-01',
-  // };
 
   useEffect(() => {
     setEnd(false)
@@ -44,7 +38,7 @@ function HomePage() {
   }, [filter])
 
   const getTotalIdea = async () => {
-    await Http.get('/api/v1/idea/totalIdea')
+    await Http.get('/api/v1/idea/totalIdea', { accessRole: accessRole || null })
       .then(res => setTotalIdea(res.data?.total))
       .catch(err => message.error('Failed to get total ideas!'))
   }
@@ -57,11 +51,16 @@ function HomePage() {
     setLoading(true)
     const tabQuery = filter ? filter : optionsQuery
     const curPage = page ? page : currentPage
+    console.log(curPage)
     const getAllIdeas = async () =>
-      await Http.get(`/api/v1/idea?page=${curPage}&${tabQuery}`)
+      await Http.get(
+        accessRole !== 'manager'
+          ? `/api/v1/idea?page=${curPage}&${tabQuery}`
+          : `/api/v1/idea/manager?page=${curPage}&${tabQuery}`
+      )
         .then(res => {
           if (reset === true) {
-            setIdeas([...res.data.data])
+            setIdeas(res.data.data)
             if (res.data?.next?.page) {
               setCurrentPage(res.data.next.page)
             }
@@ -73,7 +72,7 @@ function HomePage() {
             setEnd(true)
             setCurrentPage(1)
           }
-          setIdeas([...ideas, ...res.data.data])
+          setIdeas(res.data.data)
         })
         .catch(error => message.error('Failed to get all accounts !'))
         .finally(() => setLoading(false))
@@ -110,7 +109,11 @@ function HomePage() {
       <StyledRow style={{}}>
         <MenuFilter setFilter={setFilter} filter={filter} totalIdea={totalIdea} />
       </StyledRow>
-      <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
+      {accessRole !== 'manager' ? (
+        <IdeasList ideas={ideas} loading={loading} loadMoreData={loadMoreData} isEnd={isEnd} />
+      ) : (
+        <IdeasTable ideas={ideas} loading={loading} />
+      )}
     </Layout.Content>
   )
 }

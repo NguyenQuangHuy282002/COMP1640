@@ -50,8 +50,8 @@ export const createIdea = async (req: any, res: any, next: any) => {
 
     if (user.department) {
       activeMailer(user.name, new Date(), savedIdea._id, user.department, savedIdea.title)
-        .then((data) => console.log('isSent', data))
-        .catch((error) => console.log('error', error))
+        .then(data => console.log('isSent', data))
+        .catch(error => console.log('error', error))
     }
 
     user.ideas.push(savedIdea._id)
@@ -70,23 +70,26 @@ export const createIdea = async (req: any, res: any, next: any) => {
 
 export const activeMailer = async (name: any, date: any, ideaId: any, department: any, ideaTitle: any, email?: any) => {
   try {
-    console.log('department: ', department)
     const sendMails = department.qacGmails.map(async (mail: string) => {
       return (async function () {
         const title = `Your department has received a new idea`
-        const content = `${name} has posted new idea - "${ideaTitle}". Department: <a href="http://localhost:3000/coordinator/department?id=${department._id}">${department.name}</a>, posted at ${new Date(date).toUTCString()}.  Check now by click the link bellow`
+        const content = `${name} has posted new idea - "${ideaTitle}". Department: <a href="http://localhost:3000/coordinator/department?id=${
+          department._id
+        }">${department.name}</a>, posted at ${new Date(date).toUTCString()}.  Check now by click the link bellow`
         const url = `http://localhost:3000/coordinator/idea?id=${ideaId}`
-        const isSent = await sendNotification(mail, content, title, date, url);
+        const isSent = await sendNotification(mail, content, title, date, url)
         console.log(isSent)
         if (isSent.status === 400) {
-          return new ApiErrorResponse(`Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`, 500)
+          return new ApiErrorResponse(
+            `Send Email Failed, status code: ${isSent.status}, \nData: ${isSent.response} \n`,
+            500
+          )
         }
         return isSent
       })()
     })
 
     return await Promise.all(sendMails)
-
   } catch (err) {
     return new ApiErrorResponse(`${err.message}`, 500)
   }
@@ -165,9 +168,98 @@ export const getIdeas = async (req: any, res: any, next: any) => {
   }
 }
 
+export const getIdeasByManager = async (req: any, res: any, next: any) => {
+  try {
+    const reqQuery = req.query
+
+    const page = parseInt(reqQuery.page) || 1
+    const limit = parseInt(reqQuery.limit) || 5
+    const offset = (page - 1) * limit
+    const trending = reqQuery.tab || null
+    const endIndex = page * limit
+    let keyWord = reqQuery.keyword || null
+    const results = {}
+
+    let options: any = {
+      $expr: {
+        $gt: [{ $size: { $ifNull: ['$files', []] } }, 0],
+      },
+    }
+
+    if (keyWord) {
+      keyWord = keyWord.replace(/-/g, ' ').toLowerCase()
+      const rgx = pattern => new RegExp(`.*${pattern}.*`)
+      const searchRegex = rgx(keyWord)
+      options = {
+        $expr: {
+          $gt: [{ $size: { $ifNull: ['$files', []] } }, 0],
+        },
+        $or: [{ title: { $regex: searchRegex, $options: 'i' } }, { content: { $regex: searchRegex, $options: 'i' } }],
+      }
+    }
+
+    let ideas = Idea.find(options)
+      .select('title meta likes dislikes createdAt comments isAnonymous specialEvent content files')
+      .populate('specialEvent')
+      .populate({
+        path: 'publisherId',
+        select: ['name', 'avatar', 'email', 'role'],
+        populate: 'department',
+      })
+      .populate('categories')
+
+    if (endIndex < (await Idea.find(options).count())) {
+      results['next'] = {
+        page: page + 1,
+        limit: limit,
+      }
+    }
+
+    if (offset > 0) {
+      results['previous'] = {
+        page: page - 1,
+        limit: limit,
+      }
+    }
+
+    if (trending == 'hot') {
+      ideas.sort({ 'meta.views': -1 })
+    } else if (trending == 'best') {
+      ideas.sort({ 'meta.likesCount': -1 })
+    } else if (trending == 'worst') {
+      ideas.sort({ 'meta.dislikesCount': -1 })
+    } else if (trending == 'oldest') {
+      ideas.sort({ createdAt: 1 })
+    } else {
+      ideas.sort({ createdAt: -1 })
+    }
+
+    results['results'] = await ideas.exec()
+
+    res.status(200).json({
+      success: true,
+      count: results['results'].length,
+      next: results['next'],
+      previous: results['previous'],
+      data: results['results'],
+    })
+  } catch (err) {
+    return next(new ApiErrorResponse(`${err.message}`, 500))
+  }
+}
+
 export const getTotalIdea = async (req: any, res: any, next: any) => {
   try {
-    const ideasLength = await Idea.count()
+    const { accessRole } = req.query
+    const ideasLength = await Idea.find(
+      accessRole === 'manager'
+        ? {
+            $expr: {
+              $gt: [{ $size: { $ifNull: ['$files', []] } }, 0],
+            },
+          }
+        : {}
+    ).count()
 
     res.status(200).json({
       success: true,
@@ -403,8 +495,7 @@ export const likeIdea = async (req: any, res: any, next: any) => {
   try {
     const { ideaId } = req.body
     const userId = req.payload.user.id
-    let idea = await Idea.findById(ideaId)
-                        .select('createdAt dislikes likes')
+    let idea = await Idea.findById(ideaId).select('createdAt dislikes likes')
     if (idea.likes.indexOf(userId) >= 0) {
       return res.status(200).json({ success: true, message: 'already like!' })
     }
@@ -416,10 +507,10 @@ export const likeIdea = async (req: any, res: any, next: any) => {
     }
     await idea.save()
     User.findById(userId)
-    .select('comments name email avatar role')
-    .then((user) => {
-      io.emit('votes', { action: 'like', ideaId: ideaId, user: user })
-    })
+      .select('comments name email avatar role')
+      .then(user => {
+        io.emit('votes', { action: 'like', ideaId: ideaId, user: user })
+      })
     res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -430,8 +521,7 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
   try {
     const { ideaId } = req.body
     const userId = req.payload.user.id
-    let idea = await Idea.findById(ideaId)
-                        .select('createdAt dislikes likes')
+    let idea = await Idea.findById(ideaId).select('createdAt dislikes likes')
     if (idea.dislikes.indexOf(userId) >= 0) {
       return res.status(200).json({ success: true, message: 'already dislike!' })
     }
@@ -444,10 +534,10 @@ export const disLikeIdea = async (req: any, res: any, next: any) => {
 
     await idea.save()
     User.findById(userId)
-    .select('comments name email avatar role')
-    .then((user) => {
-      io.emit('votes', { action: 'dislike', ideaId: ideaId, user: user })
-    })
+      .select('comments name email avatar role')
+      .then(user => {
+        io.emit('votes', { action: 'dislike', ideaId: ideaId, user: user })
+      })
     res.status(200).json({ success: true, message: 'idea liked!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -458,8 +548,7 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
   try {
     const { ideaId } = req.body
     const userId = req.payload.user.id
-    let idea = await Idea.findById(ideaId)
-                        .select('createdAt dislikes likes')
+    let idea = await Idea.findById(ideaId).select('createdAt dislikes likes')
     if (idea.dislikes.indexOf(userId) === -1 && idea.likes.indexOf(userId) === -1) {
       return res.status(200).json({ success: true, message: 'already omit!' })
     }
@@ -472,10 +561,10 @@ export const omitVoteIdea = async (req: any, res: any, next: any) => {
 
     await idea.save()
     User.findById(userId)
-    .select('comments name email avatar role')
-    .then((user) => {
-      io.emit('votes', { action: 'omit', ideaId: ideaId, user: user })
-    })
+      .select('comments name email avatar role')
+      .then(user => {
+        io.emit('votes', { action: 'omit', ideaId: ideaId, user: user })
+      })
     res.status(200).json({ success: true, message: 'omit oke!' })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
@@ -507,20 +596,17 @@ export const getPostLikes = async (req: any, res: any, next: any) => {
   }
 }
 
-
 export const ideaTotalByDuration = async (req: any, res: any, next: any) => {
   try {
-    const results = await Idea.aggregate(
-      [
-        { $project: { week: { $week: { date: '$createdAt', timezone: 'GMT' } }, date: '$createdAt' } },
-        { $group: { _id: { weeK: '$week' }, count: { $sum: 1 } } }
-      ])
+    const results = await Idea.aggregate([
+      { $project: { week: { $week: { date: '$createdAt', timezone: 'GMT' } }, date: '$createdAt' } },
+      { $group: { _id: { weeK: '$week' }, count: { $sum: 1 } } },
+    ])
     res.status(201).json({
       success: true,
-      data: results
+      data: results,
     })
   } catch (error) {
     return next(new ApiErrorResponse(`${error.message}`, 500))
-
   }
 }

@@ -168,7 +168,7 @@ export default function App() {
             </RoleAccess>
           }
         >
-          <Route path="" element={<HomePage />} />
+          <Route path="" element={<HomePage accessRole={'manager'} />} />
           <Route path="dashboard" element={<DashboardAdmin />} />
           <Route path="categories" element={<CategoryManager />} />
           <Route path="category/:id" element={<CategoryDetails />} />

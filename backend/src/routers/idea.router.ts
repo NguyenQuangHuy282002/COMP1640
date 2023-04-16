@@ -10,6 +10,7 @@ import {
   getDataSuggestion,
   getIdea,
   getIdeas,
+  getIdeasByManager,
   getPostLikes,
   getTotalIdea,
   ideaTotalByDuration,
@@ -22,6 +23,7 @@ import { authorize, authProtect } from '../middlewares/auth'
 export const ideaRouter = express.Router()
 
 ideaRouter.get('/', authProtect, getIdeas)
+ideaRouter.get('/manager', authProtect, authorize(['manager']), getIdeasByManager)
 ideaRouter.get('/suggest', authProtect, getDataSuggestion)
 ideaRouter.get('/ideasOfUser', authProtect, getAllIdeasOfUser)
 ideaRouter.get('/ideasByCategory', authProtect, getAllIdeasByCategory)
