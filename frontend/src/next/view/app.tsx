@@ -129,6 +129,7 @@ export default function App() {
           <Route path="submit" element={<CreateIdea />} />
           <Route path="idea" element={<IdeaDetail />} />
           <Route path="profile" element={<OtherProfile />} />
+          <Route path="departments/:id" element={<DepartmentDetail />} />
         </Route>
 
         <Route

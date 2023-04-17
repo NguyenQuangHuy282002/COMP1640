@@ -18,7 +18,7 @@ function IdeasList({ ideas, loading, isEnd, loadMoreData }) {
           }}
         >
           <BlueColorButton onClick={loadMoreData} loading={loading}>
-            Loading more
+            Load more
           </BlueColorButton>
         </div>
       ) : (

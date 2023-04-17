@@ -61,7 +61,7 @@ export default function CreateEventField(props: IEventModalProps) {
       title={
         <Space align="center" size="middle">
           <Button icon={<ArrowLeftOutlined />} onClick={() => onClose()} />
-          <Title style={{ fontSize: 18, margin: 0 }}> Add new event</Title>
+          <Title style={{ fontSize: 18, margin: 0 }}> Event form</Title>
         </Space>
       }
       style={{ minWidth: windowWidth < 969 ? 'unset' : '80%', borderRadius: 0, height: '100vh' }}

@@ -34,6 +34,7 @@ function Login() {
       })
       .then(enpoint => {
         navigate(`/${enpoint}`)
+        window.location.reload()
         message.success('Login successful')
       })
       .catch(error => {

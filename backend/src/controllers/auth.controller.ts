@@ -155,7 +155,7 @@ const sendTokenResponse = async (userData: any, statusCode: any, message: any, r
         description: userData.description || '',
         interests: userData.interests || [],
         isBanned: userData.isBanned || false,
-        department: userData.department?.name || 'None',
+        department: {name: userData?.department?.name, _id: userData?.department?._id} || {},
       },
       message,
       accessToken: accessToken,

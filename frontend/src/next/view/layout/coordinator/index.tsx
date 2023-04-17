@@ -1,10 +1,13 @@
-import { CalendarOutlined, HomeFilled, UngroupOutlined, WeiboOutlined } from '@ant-design/icons'
+import { CalendarOutlined, HomeFilled, LinkedinOutlined, UngroupOutlined, WeiboOutlined } from '@ant-design/icons'
 import { Layout, MenuProps } from 'antd'
 import { Content } from 'antd/es/layout/layout'
 import React from 'react'
 import useWindowSize from '../../../utils/useWindowSize'
 import AppHeader from '../header'
 import AppSidebar from '../sidebar'
+import RightSideBar from '../staff/right-sidebar'
+import { useSubscription } from 'next/libs/global-state-hook'
+import { userStore } from 'next/view/auth/user-store'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -24,6 +27,8 @@ function getItem(
   } as MenuItem
 }
 
+let departmentId
+
 const items: MenuProps['items'] = [
   getItem('Home', 'home', <HomeFilled />),
   { type: 'divider' },
@@ -31,12 +36,14 @@ const items: MenuProps['items'] = [
     'PUBLIC',
     'grp',
     null,
-    [getItem('Your Profile', 'account', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />)],
+    [getItem('Your Profile', 'account', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />), getItem('Your Department', `department/${departmentId}`, <LinkedinOutlined />)],
     'group'
   ),
 ]
 
 const LayoutCoordinator = ({ children }) => {
+  const { department } = useSubscription(userStore).state
+  departmentId = department._id
   const windowWidth = useWindowSize()
   const contentStyle =
     windowWidth > 1000
@@ -64,6 +71,7 @@ const LayoutCoordinator = ({ children }) => {
       >
         <AppSidebar items={items} />
         <Content style={contentStyle}>{<>{children}</>}</Content>
+        <RightSideBar />
       </Layout>
     </>
   )
