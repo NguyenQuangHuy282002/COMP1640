@@ -1,4 +1,4 @@
-import { Col, Form, Input, Modal, Select, Space, Switch, Typography } from 'antd'
+import { Col, Form, Input, Modal, Select, Space, Switch, Typography, message } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Http } from '../../api/http'
@@ -30,6 +30,12 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
   }, [userProfile])
 
   const onFinish = async () => {
+    if (!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
+      return message.error('Please input the required fields')
+    }
+    if (form.getFieldValue('username').length <= 3 || form.getFieldValue('name').length <= 10) {
+      return message.error('Please input the valid fields')
+    }
     setLoading(true)
     const accountForm = {
       _id: userProfile._id,
@@ -120,8 +126,8 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
             label="Username"
             labelAlign="left"
             rules={[
-              { required: true, message: 'Please input name' },
-              { type: 'string', min: 30, message: 'Invalid name' },
+              { required: true, message: 'Please input user name' },
+              { type: 'string', min: 4, message: 'Invalid user name' },
             ]}
           >
             <Input placeholder="user" autoComplete="off" allowClear />
@@ -138,7 +144,7 @@ export default function EditAccountModal({ userProfile, onCloseModal, onSubmit }
                 labelAlign="left"
                 rules={[
                   { required: true, message: 'Please input password' },
-                  { type: 'string', min: 3, message: 'Invalid password (at least 3 characters)' },
+                  { type: 'string', min: 6, message: 'Invalid password (at least 3 characters)' },
                 ]}
               >
                 <Input.Password autoComplete="off" allowClear />

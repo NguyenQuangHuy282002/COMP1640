@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Select, Space } from 'antd'
+import { Button, Col, Form, Input, Modal, Select, Space, message } from 'antd'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Http } from '../../api/http'
@@ -21,6 +21,12 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
   }, [])
 
   const onFinish = async () => {
+    if (!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
+      return message.error('Please input the required fields')
+    }
+    if (form.getFieldValue('username').length <= 4 || form.getFieldValue('name').length <= 10) {
+      return message.error('Please input the valid fields')
+    }
     setLoading(true)
     const accountForm = {
       name: form.getFieldValue('name'),
@@ -100,7 +106,12 @@ export default function AddAccountModal({ isOpen, onCloseModal, onSubmit }) {
             />
           </Form.Item>
           {['coordinator', 'staff'].includes(accountRole) ? (
-            <Form.Item name="department" label="Department" labelAlign="left" required>
+            <Form.Item name="department" label="Department" labelAlign="left" required
+            rules={[
+              { required: true, message: 'Please input user name' },
+              { type: 'string', min: 4, message: 'Invalid user name' },
+            ]}
+            >
               <Select
                 style={{ width: '100%' }}
                 options={departmentOptions.map(department => ({
