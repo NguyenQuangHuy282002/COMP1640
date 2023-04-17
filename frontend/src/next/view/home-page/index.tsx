@@ -72,7 +72,7 @@ function HomePage(props: { accessRole?: string }) {
             setEnd(true)
             setCurrentPage(1)
           }
-          setIdeas(res.data.data)
+          setIdeas(prev => [...ideas, ...res.data.data])
         })
         .catch(error => message.error('Failed to get all accounts !'))
         .finally(() => setLoading(false))

@@ -14,7 +14,7 @@ export const userStore = createSubscription({
   description: '',
   username: '',
   interests: [],
-  department: { name: '' },
+  department: { name: '', _id: '' },
 })
 
 export const userCredential = createSubscription({
