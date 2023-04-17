@@ -44,6 +44,9 @@ function EditProfileForm() {
     if (!form.getFieldValue('name') || !form.getFieldValue('username') || !form.getFieldValue('email')) {
       return message.error('Please input the required fields')
     }
+    if (form.getFieldValue('username').length <= 4 || form.getFieldValue('name').length <= 10) {
+      return message.error('Please input the valid fields')
+    }
 
     if (files) {
       try {

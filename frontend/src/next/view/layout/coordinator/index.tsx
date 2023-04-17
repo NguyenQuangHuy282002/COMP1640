@@ -27,23 +27,23 @@ function getItem(
   } as MenuItem
 }
 
-let departmentId
 
-const items: MenuProps['items'] = [
-  getItem('Home', 'home', <HomeFilled />),
-  { type: 'divider' },
-  getItem(
-    'PUBLIC',
-    'grp',
-    null,
-    [getItem('Your Profile', 'account', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />), getItem('Your Department', `departments/${departmentId}`, <LinkedinOutlined />)],
-    'group'
-  ),
-]
+
 
 const LayoutCoordinator = ({ children }) => {
   const { department } = useSubscription(userStore).state
-  departmentId = department._id
+  console.log(department)
+  const items: MenuProps['items'] = [
+    getItem('Home', 'home', <HomeFilled />),
+    { type: 'divider' },
+    getItem(
+      'PUBLIC',
+      'grp',
+      null,
+      [getItem('Your Profile', 'account', <WeiboOutlined />), getItem('Events', 'event', <CalendarOutlined />), getItem('Your Department', `departments/${department._id}`, <LinkedinOutlined />)],
+      'group'
+    ),
+  ]
   const windowWidth = useWindowSize()
   const contentStyle =
     windowWidth > 1000
