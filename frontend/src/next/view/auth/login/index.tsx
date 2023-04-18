@@ -60,7 +60,7 @@ function Login() {
     >
       <Card>
         <Space align="center" direction="vertical">
-          <img src={`${imgDir}logo.png`} height={300} alt="logo" />
+          <img src={`${imgDir}logologin.png`} height={300} alt="logo" />
           <Title>Login to use this application</Title>
           <Form
             name="basic"
