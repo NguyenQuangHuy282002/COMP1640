@@ -17,7 +17,7 @@ const items: MenuProps['items'] = [
     null,
     [
       getItem('Your Profile', 'account', <WeiboOutlined />),
-      getItem('Tags', 'categories', <TagOutlined />),
+      getItem('Categories', 'categories', <TagOutlined />),
       getItem('Events', 'event', <CalendarOutlined />),
     ],
     'group'
