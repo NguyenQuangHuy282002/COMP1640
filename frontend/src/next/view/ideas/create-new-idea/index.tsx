@@ -92,8 +92,8 @@ export default function CreateIdea() {
 
   const onSubmitPost = async () => {
     const content = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    if(content.length <= 20) {
-      return message.error("Your description is too sparsing")
+    if (content.length <= 20) {
+      return message.error('Your description is too sparsing')
     }
     const postForm = {
       title: form.getFieldValue('title'),
@@ -106,11 +106,11 @@ export default function CreateIdea() {
     if (hashTags.length > 0) {
       postForm['hashtags'] = hashTags
     }
-    if(categories.length === 0) {
+    if (categories.length === 0) {
       return message.error('Atleast one category')
     }
-    
-    if (!form.getFieldValue('specialevent')) {
+
+    if (!defaultEventId && !form.getFieldValue('specialevent')) {
       return message.error('Must be in a special event')
     }
     if (form.getFieldValue('specialevent')) {
@@ -166,11 +166,11 @@ export default function CreateIdea() {
             <Divider />
           </>
         ) : (
-          <Form.Item 
-          name="specialevent" 
-          label="Special event" 
-          style={{ marginBottom: '15px' }} 
-          rules={[{ required: true, message: 'Please select one special event!' }]}
+          <Form.Item
+            name="specialevent"
+            label="Special event"
+            style={{ marginBottom: '15px' }}
+            rules={[{ required: true, message: 'Please select one special event!' }]}
           >
             <Select
               style={{
@@ -188,10 +188,14 @@ export default function CreateIdea() {
           </Form.Item>
         )}
 
-        <Form.Item 
-        name="title" 
-        rules={[{ required: true, message: "Please input your idea's title" }, { type: 'string', min: 30, message: "Your title is too sparsing, at least 30 characters" }]} 
-        label="Title">
+        <Form.Item
+          name="title"
+          rules={[
+            { required: true, message: "Please input your idea's title" },
+            { type: 'string', min: 30, message: 'Your title is too sparsing, at least 30 characters' },
+          ]}
+          label="Title"
+        >
           <Input
             style={{ lineHeight: 2.15 }}
             placeholder="Title (at least 30 characters to summary your idea)"
@@ -201,10 +205,7 @@ export default function CreateIdea() {
           ></Input>
         </Form.Item>
 
-        <Form.Item 
-        name="content" 
-        required 
-        label="Description">
+        <Form.Item name="content" required label="Description">
           <RichTextEditor editorState={editorState} setEditorState={setEditorState} />
         </Form.Item>
 
@@ -214,9 +215,7 @@ export default function CreateIdea() {
         <Form.Item label="Anonymous Mode">
           <Switch onChange={() => setAnonymous(!isAnonymous)} checkedChildren="On" unCheckedChildren="Off" />
         </Form.Item>
-        <Form.Item label="Category (max: 1)" 
-        rules={[{ required: true, message: "At least one category, please" }]} 
-        >
+        <Form.Item label="Category (max: 1)" rules={[{ required: true, message: 'At least one category, please' }]}>
           <Tags setCategories={setCategories} />
         </Form.Item>
         <FormItem label="HashTags (Optional)" style={{ width: '100%' }}>
