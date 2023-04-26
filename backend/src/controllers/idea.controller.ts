@@ -73,10 +73,10 @@ export const activeMailer = async (name: any, date: any, ideaId: any, department
     const sendMails = department.qacGmails.map(async (mail: string) => {
       return (async function () {
         const title = `Your department has received a new idea`
-        const content = `${name} has posted new idea - "${ideaTitle}". Department: <a href="http://localhost:3000/coordinator/department?id=${
+        const content = `${name} has posted new idea - "${ideaTitle}". Department: <a href="https://main--leaks-app.netlify.app/coordinator/department?id=${
           department._id
         }">${department.name}</a>, posted at ${new Date(date).toUTCString()}.  Check now by click the link bellow`
-        const url = `http://localhost:3000/coordinator/idea?id=${ideaId}`
+        const url = `https://main--leaks-app.netlify.app/coordinator/idea?id=${ideaId}`
         const isSent = await sendNotification(mail, content, title, date, url)
         console.log(isSent)
         if (isSent.status === 400) {

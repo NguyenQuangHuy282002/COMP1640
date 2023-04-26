@@ -19,8 +19,7 @@ export const createComment = async (req: any, res: any, next: any) => {
       return next(new ApiErrorResponse('Lack of required information.', 400))
     }
 
-    let idea = await Idea.findById(commentBody.ideaId)
-                      .select('createdAt comments specialEvent')
+    let idea = await Idea.findById(commentBody.ideaId).select('createdAt comments specialEvent')
     if (idea?.specialEvent) {
       idea = await idea.populate({
         path: 'specialEvent',
@@ -35,8 +34,7 @@ export const createComment = async (req: any, res: any, next: any) => {
     const newComment = { ...data, userId: req.payload?.user?.id }
     let savedComment = await Comment.create(newComment)
 
-    const user = await User.findById(req.payload?.user?.id)
-                          .select('comments name email avatar role')
+    const user = await User.findById(req.payload?.user?.id).select('comments name email avatar role')
     user.comments.push(savedComment._id)
     idea.comments.push(savedComment._id)
     user.save()
@@ -67,7 +65,7 @@ export const activeMailer = async (name: any, email: any, date: any, ideaId: any
     const content = `${name} has commented on your idea, commented at ${new Date(
       date
     ).toUTCString()}.  Check now by click the link bellow`
-    const url = `http://localhost:3000/staff/idea?id=${ideaId}`
+    const url = `https://main--leaks-app.netlify.app/staff/idea?id=${ideaId}`
     const isSent = await sendNotification(email, content, title, date, url)
     console.log(isSent)
     if (isSent.status === 400) {
